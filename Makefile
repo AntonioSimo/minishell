@@ -6,7 +6,7 @@
 #    By: asimone <asimone@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/07 14:29:32 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/07 17:12:59 by asimone       ########   odam.nl          #
+#    Updated: 2023/06/07 18:15:11 by asimone       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,9 @@ SOURCES := $(SRC_DIR)/main.c
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror 
 LFLAGS := -lreadline -lhistory
-
+ 
 ifeq ($(shell uname -s),Darwin)
 	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
 	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
