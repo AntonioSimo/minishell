@@ -6,7 +6,7 @@
 #    By: asimone <asimone@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/07 14:29:32 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/07 18:15:11 by asimone       ########   odam.nl          #
+#    Updated: 2023/06/07 21:12:25 by asimone       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,18 +17,22 @@ SRC_DIR := src
 OBJ_DIR := obj
 LIBFT_DIR := lib/Libft
 LIBFT := $(LIBFT_DIR)/libft.a
-HEADERS := -Iinclude -I$(LIBFT_DIR)/include
 HEAD := ./include/minishell.h
 SOURCES := $(SRC_DIR)/main.c 
+#HEADERS := $(shell find include -type f -name '*.h')
+#SOURCES = $(shell find $(SRC_DIR) -type f -name '*.c')
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
 CFLAGS := -Wall -Wextra -Werror 
 LFLAGS := -lreadline -lhistory
+IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  
 ifeq ($(shell uname -s),Darwin)
 	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
 	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
+#	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
+#	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
 endif
 
 GREEN = \x1b[32;01m
@@ -44,14 +48,14 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) --quiet
 
 $(NAME): $(LIBFT) $(HEAD) $(OBJ_DIR) $(OBJECTS)
-	@$(CC) $(CFLAGS) $(LFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(LFLAGS) $(IFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(HEADERS) $(CFLAGS) -c $< -o $@
+	@$(CC) $(HEADERS) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 
 clean:

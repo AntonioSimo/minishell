@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/07 18:36:32 by asimone       ########   odam.nl         */
+/*   Updated: 2023/06/07 22:15:40 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 #define BOLD "\033[1m"
 #define RESET  "\x1b[0m"
 
+#include <fcntl.h>
+#include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
