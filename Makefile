@@ -6,22 +6,30 @@
 #    By: asimone <asimone@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/07 14:29:32 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/07 15:26:03 by asimone       ########   odam.nl          #
+#    Updated: 2023/06/07 17:12:59 by asimone       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-SRC_DIR = src
-OBJ_DIR = obj
-LIBFT_DIR = lib/Libft
-LIBFT = $(LIBFT_DIR)/libft.a
-HEADERS = -Iinclude -I$(LIBFT_DIR)/include
-HEAD = ./include/minishell.h
-SOURCES = $(SRC_DIR)/main.c 
+SHELL :=  /bin/bash
 
-OBJECTS = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+NAME := minishell
+SRC_DIR := src
+OBJ_DIR := obj
+LIBFT_DIR := lib/Libft
+LIBFT := $(LIBFT_DIR)/libft.a
+HEADERS := -Iinclude -I$(LIBFT_DIR)/include
+HEAD := ./include/minishell.h
+SOURCES := $(SRC_DIR)/main.c 
+
+OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
+CC := cc
+CFLAGS := -Wall -Wextra -Werror
+LFLAGS := -lreadline -lhistory
+
+ifeq ($(shell uname -s),Darwin)
+	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
+	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
+endif
 
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
@@ -36,7 +44,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) --quiet
 
 $(NAME): $(LIBFT) $(HEAD) $(OBJ_DIR) $(OBJECTS)
-	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(LFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):
