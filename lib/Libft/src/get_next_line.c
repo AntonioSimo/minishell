@@ -119,7 +119,7 @@ char	*ft_read_line(char	*str)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer[OPEN_MAX];
+	static char	*buffer[FOPEN_MAX];
 	char		*line;
 
 	if (BUFFER_SIZE < 1 && read(fd, 0, 0) < 0)
