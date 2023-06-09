@@ -62,10 +62,12 @@ SRC =	src/ft_atoi.c \
 SRC_DIR = src
 OBJ_DIR := obj_files
 OBJ := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC:.c=.o)) #you convert the .c files in .o files
+
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
 BOLD = \033[1m
 RESET = \x1b[0m
+
 AR = ar
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror

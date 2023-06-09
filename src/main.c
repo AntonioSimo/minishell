@@ -54,11 +54,17 @@
 //    return 0;
 //}
 
-int main(int argc, char **argv)
-{
-	(void) argv;
-	if (argc < 2)
-		write(2, "Error\n", 6);
-	write(1, "\n", 1);
-	return (0);
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+    char *binaryPath = "/bin/echo";
+    char *args[] = {"echo", "Hello, additional message!", NULL};
+    char *env[] = {NULL};
+
+    execve(binaryPath, args, env);
+
+    // execve will only return if an error occurs
+    perror("execve");
+    return 1;
 }
