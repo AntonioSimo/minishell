@@ -54,11 +54,95 @@
 //    return 0;
 //}
 
-int main(int argc, char **argv)
+char *get_path(char **env)
 {
+	int i;
+	//printf("here \n");
+
+	i = 0;
+	while (env[i])
+	{
+		//printf("line: %s\n", env[i]);
+		if (!ft_strncmp("PATH=", env[i], 5))
+			return (env[i]);
+		i++;
+	}
+	return ("NIC");
+	
+}
+
+void	loop(char **env)
+{
+	char *line;
+	char **args;
+	pid_t	pid;
+	int  status;
+	char pwd[100];
+	
+	while (1)
+	{
+	line = readline(GREEN BOLD "mustash> "RESET);
+	args = ft_split(line, ' ');
+	add_history(line);
+	//rl_on_new_line();
+		if (!ft_strncmp("ls", *args, 3))
+		{
+			pid = fork();
+			if (pid == 0)
+			{
+				char* arr[] = {"-la", NULL};
+				execve("./ls", arr, env);
+				exit(EXIT_SUCCESS);
+			}
+			waitpid(pid, &status, 0);
+		}
+		if (!ft_strncmp("pwd", *args, 4))
+		{
+			printf("%s\n", getcwd(pwd, sizeof(pwd)));
+		}
+		if (!ft_strncmp("cd", args[0], 3) && !ft_strncmp("..", args[1], 3))
+		{
+			printf("im here!\n");
+			chdir("../");
+		}
+		else if (!ft_strncmp("exit", *args, 5))
+			exit(EXIT_SUCCESS);
+	}
+	free(line);
+	free(args);
+}
+
+int	main(int argc, char** argv, char** envep)
+{
+	//int i = 0;
 	(void) argv;
-	if (argc < 2)
-		write(2, "Error\n", 6);
-	write(1, "\n", 1);
-	return (0);
+	(void) argc;
+	//char pwd[100];
+
+	//char *path = get_path(envep);
+
+	//path++;
+	//path++;
+	//path++;
+	//path++;
+	//path++;
+
+	//printf("path: %s\n", getcwd(pwd, 100));
+	//printf("path: %s\n", getcwd(pwd, 100));
+	
+	//char *trimmed_path = ft_strtrim(path, "")
+	
+	//if (argc >= 0)
+	//{
+	//	while (envep[i])
+	//	{
+	//		printf("%s\n", envep[i]);
+	//		i++;
+	//	}
+	while (1)
+	{
+		
+		loop(envep);	
+	}
+	exit (EXIT_SUCCESS);
 }

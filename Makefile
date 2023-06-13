@@ -28,12 +28,12 @@ CFLAGS := -Wall -Wextra -Werror
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  
-ifeq ($(shell uname -s),Darwin)
-	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
-	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
-#	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
-#	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-endif
+#ifeq ($(shell uname -s),Darwin)
+#	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
+#	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
+##	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
+##	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
+#endif
 
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
@@ -48,7 +48,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR) --quiet
 
 $(NAME): $(LIBFT) $(HEAD) $(OBJ_DIR) $(OBJECTS)
-	@$(CC) $(CFLAGS) $(LFLAGS) $(IFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(IFLAGS) $(SOURCES) $(LIBFT) $(LFLAGS) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):
