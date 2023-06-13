@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/07 22:15:40 by asimone       ########   odam.nl         */
+/*   Updated: 2023/06/12 15:26:47 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #define YELLOW "\033[33;1m"
 #define BOLD "\033[1m"
 #define RESET  "\x1b[0m"
+
+# include "../lib/Libft/include/libft.h"
 
 #include <fcntl.h>
 #include <stdio.h>
