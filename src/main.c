@@ -6,11 +6,26 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:32:04 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/13 20:39:01 by asimone       ########   odam.nl         */
+/*   Updated: 2023/06/29 17:06:22 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+#define MUSTACHE "                                                   			   \n\
+                        ████████░░      ██████████                ██               \n\
+    ██                ██████████████  ██████████████░░            ░░██             \n\
+ ██▒▒            ▒▒██████████████████████████████████▒▒            ████            \n\
+ ██            ████████████████████████████████████████▒▒          ████            \n\
+░██          ██████████████████████████████████████████████        ████            \n\
+ ██▒▒    ▒▒██████████████████████████████████████████████████      ████            \n\
+ ██████████████████████████████████████████████████████████████████████            \n\
+ ██████████████████████████████████░░██████████████████████████████████            \n\
+ ████████████████████████████████    ░░██████████████████████████████▒▒            \n\
+ ░░████████████████████████████          ████████████████████████████              \n\
+   ░░██████████████████████                ▒▒██████████████████████                \n\
+       ████████████████                          ██████████████                    \n\
+                                                                       \n"
 
 //int main()
 //{
@@ -112,37 +127,44 @@ void	loop()
 	free(args);
 }
 
-int	main(int argc, char** argv, char** envep)
+
+
+void	print_mustache()
 {
-	//int i = 0;
-	(void) argv;
-	(void) argc;
-	//char pwd[100];
-
-	char *path = get_path(envep);
-
-	path++;
-	path++;
-	path++;
-	path++;
-	path++;
-
-	//printf("path: %s\n", getcwd(pwd, 100));
-	//printf("path: %s\n", getcwd(pwd, 100));
-	
-	//char *trimmed_path = ft_strtrim(path, "")
-	
-	//if (argc >= 0)
-	//{
-	//	while (envep[i])
-	//	{
-	//		printf("%s\n", envep[i]);
-	//		i++;
-	//	}
-	while (1)
-	{
-		
-		loop();	
-	}
-	exit (EXIT_SUCCESS);
+write(1, MUSTACHE, sizeof MUSTACHE);         
 }
+//int	main(int argc, char** argv, char** envep)
+//{
+//	//int i = 0;
+//	(void) argv;
+//	(void) argc;
+//	//char pwd[100];
+
+//	char *path = get_path(envep);
+
+//	path++;
+//	path++;
+//	path++;
+//	path++;
+//	path++;
+//	print_mustache();
+//	printf("%s\n", *envep);
+//	//printf("path: %s\n", getcwd(pwd, 100));
+//	//printf("path: %s\n", getcwd(pwd, 100));
+	
+//	//char *trimmed_path = ft_strtrim(path, "")
+	
+//	//if (argc >= 0)
+//	//{
+//	//	while (envep[i])
+//	//	{
+//	//		printf("%s\n", envep[i]);
+//	//		i++;
+//	//	}
+//	while (1)
+//	{
+		
+//		loop();	
+//	}
+//	exit (EXIT_SUCCESS);
+//}
