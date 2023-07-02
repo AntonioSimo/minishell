@@ -1,7 +1,8 @@
 #include "../include/minishell.h"
 
-char *read_command(void)
+void	parse(char *line)
 {
-	char	**buffer;
+
+	ft_printf("this is my line: %s\n", line);
 	
 }

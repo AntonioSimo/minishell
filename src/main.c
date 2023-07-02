@@ -76,7 +76,7 @@ char *get_path(char **env)
 		}
 		i++;
 	}
-	return ("NIC");
+	return (NULL);
 	
 }
 
@@ -104,60 +104,30 @@ void	execute_command(char **single_path, char **env)
 	printf("command not found\n");
 	exit(EXIT_FAILURE);
 }
-
-void	loop(char **env)
-{
-	char *line;
-	char **args;
-	pid_t	pid;
-	int  status;
-	char pwd[FILENAME_MAX + 1];
-	char *path;
-	char **single_path;
-
-	path = get_path(env);
-	printf("path: %s", path);
-	
-	while (1)
-	{
-	line = readline(GREEN BOLD "mustash> "RESET);
-	args = ft_split(line, ' ');
-	add_history(line);
-	//rl_on_new_line();
-		if (!ft_strncmp("ls", *args, 3))
-		{
-			single_path = ft_split(path, ':');
-			if (!single_path)
-				exit(EXIT_FAILURE);
-			pid = fork();
-			if (pid == 0)
-			{
-				execute_command(single_path, env);
-			}
-			waitpid(pid, &status, 0);
-		}
-		if (!ft_strncmp("pwd", *args, 4))
-		{
-			printf("%s\n", getcwd(pwd, sizeof(pwd)));
-		}
-		if (!ft_strncmp("cd", args[0], 3))
-		{
-			if (chdir(args[1]))
-				printf("no such file or directory\n");
-		}
-		else if (!ft_strncmp("exit", *args, 5))
-			exit(EXIT_SUCCESS);
-	}
-	free(line);
-	free(args);
-}	
-
-
-
 void	print_mustache()
 {
 write(1, MUSTACHE, sizeof MUSTACHE);         
 }
+
+void	loop(char **env)
+{
+	char *line;
+
+	//printf("path: %s", path);
+	print_mustache();
+	(void)env;
+	
+	while (1)
+	{
+		line = readline(GREEN BOLD "mustash> "RESET);
+		add_history(line);
+		parse(line);
+	}
+	free(line);
+}	
+
+
+
 //int	main(int argc, char** argv, char** envep)
 //{
 //	//int i = 0;

@@ -111,4 +111,6 @@ int	ft_isspace(int c);
 void	perror_exit(char *str);
 void	strerror_exit();
 
+void	parse(char *line);
+
 #endif

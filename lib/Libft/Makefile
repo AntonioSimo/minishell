@@ -66,6 +66,7 @@ OBJ := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC:.c=.o)) #you convert the .c file
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
 BOLD = \033[1m
+YELLOW = \033[33;1m
 RESET = \x1b[0m
 
 AR = ar
@@ -84,7 +85,7 @@ $(OBJ_DIR):
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) -Iinclude $(CFLAGS) -c $^ -o $@
-	@printf "$(GREEN) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
+	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 		
 clean:
 	@$(RM) -rf $(OBJ_DIR)
