@@ -1,16 +1,19 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/06/07 14:32:04 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/13 20:39:01 by asimone       ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minishell.h"
+
+#define MUSTACHE "                                                   			   \n\
+                        ████████░░      ██████████                ██               \n\
+    ██                ██████████████  ██████████████░░            ░░██             \n\
+ ██▒▒            ▒▒██████████████████████████████████▒▒            ████            \n\
+ ██            ████████████████████████████████████████▒▒          ████            \n\
+░██          ██████████████████████████████████████████████        ████            \n\
+ ██▒▒    ▒▒██████████████████████████████████████████████████      ████            \n\
+ ██████████████████████████████████████████████████████████████████████            \n\
+ ██████████████████████████████████░░██████████████████████████████████            \n\
+ ████████████████████████████████    ░░██████████████████████████████▒▒            \n\
+ ░░████████████████████████████          ████████████████████████████              \n\
+   ░░██████████████████████                ▒▒██████████████████████                \n\
+       ████████████████                          ██████████████                    \n\
+                                                                       \n"
 
 //int main()
 //{
@@ -57,18 +60,49 @@
 char *get_path(char **env)
 {
 	int i;
+	int j;
 	//printf("here \n");
 
 	i = 0;
+	j = 6;
 	while (env[i])
 	{
 		//printf("line: %s\n", env[i]);
 		if (!ft_strncmp("PATH=", env[i], 5))
+		{
+			while (--j)
+				env[i]++;
 			return (env[i]);
+		}
 		i++;
 	}
 	return ("NIC");
 	
+}
+
+void	execute_command(char **single_path, char **env)
+{
+	char* arr[] = {"/ls", "-la", NULL};
+	int i;
+	char *path_with_command;
+
+	
+	//(void)env;
+	i = 0;
+	while (single_path[i])
+	{
+		path_with_command = ft_free_strjoin(single_path[i], arr[0]);
+		if (!path_with_command)
+			exit(EXIT_FAILURE);
+		printf("path with command: >>%s<<\n", path_with_command);
+		//printf("path: >>%s<<\n", single_path[i]);
+		execve(path_with_command, arr, env);
+		i++;
+		free(path_with_command);
+		path_with_command = NULL;
+	}
+	printf("command not found\n");
+	exit(EXIT_FAILURE);
 }
 
 void	loop(char **env)
@@ -77,7 +111,12 @@ void	loop(char **env)
 	char **args;
 	pid_t	pid;
 	int  status;
-	char pwd[100];
+	char pwd[FILENAME_MAX + 1];
+	char *path;
+	char **single_path;
+
+	path = get_path(env);
+	printf("path: %s", path);
 	
 	while (1)
 	{
@@ -87,12 +126,13 @@ void	loop(char **env)
 	//rl_on_new_line();
 		if (!ft_strncmp("ls", *args, 3))
 		{
+			single_path = ft_split(path, ':');
+			if (!single_path)
+				exit(EXIT_FAILURE);
 			pid = fork();
 			if (pid == 0)
 			{
-				char* arr[] = {"-la", NULL};
-				execve("./ls", arr, env);
-				exit(EXIT_SUCCESS);
+				execute_command(single_path, env);
 			}
 			waitpid(pid, &status, 0);
 		}
@@ -100,49 +140,68 @@ void	loop(char **env)
 		{
 			printf("%s\n", getcwd(pwd, sizeof(pwd)));
 		}
-		if (!ft_strncmp("cd", args[0], 3) && !ft_strncmp("..", args[1], 3))
+		if (!ft_strncmp("cd", args[0], 3))
 		{
-			printf("im here!\n");
-			chdir("../");
+			if (chdir(args[1]))
+				printf("no such file or directory\n");
 		}
 		else if (!ft_strncmp("exit", *args, 5))
 			exit(EXIT_SUCCESS);
 	}
 	free(line);
 	free(args);
-}
+}	
 
-int	main(int argc, char** argv, char** envep)
+
+
+void	print_mustache()
+{
+write(1, MUSTACHE, sizeof MUSTACHE);         
+}
+//int	main(int argc, char** argv, char** envep)
+//{
+//	//int i = 0;
+//	(void) argv;
+//	(void) argc;
+//	//char pwd[100];
+
+//	char *path = get_path(envep);
+
+//	path++;
+//	path++;
+//	path++;
+//	path++;
+//	path++;
+//	print_mustache();
+//	printf("%s\n", *envep);
+//	//printf("path: %s\n", getcwd(pwd, 100));
+//	//printf("path: %s\n", getcwd(pwd, 100));
+int	main(int argc, char** argv, char** env)
 {
 	//int i = 0;
 	(void) argv;
 	(void) argc;
 	//char pwd[100];
 
-	//char *path = get_path(envep);
-
-	//path++;
-	//path++;
-	//path++;
-	//path++;
-	//path++;
-
 	//printf("path: %s\n", getcwd(pwd, 100));
 	//printf("path: %s\n", getcwd(pwd, 100));
 	
-	//char *trimmed_path = ft_strtrim(path, "")
+//	//char *trimmed_path = ft_strtrim(path, "")
 	
-	//if (argc >= 0)
-	//{
-	//	while (envep[i])
-	//	{
-	//		printf("%s\n", envep[i]);
-	//		i++;
-	//	}
-	while (1)
-	{
+//	//if (argc >= 0)
+//	//{
+//	//	while (envep[i])
+//	//	{
+//	//		printf("%s\n", envep[i]);
+//	//		i++;
+//	//	}
+//	while (1)
+//	{
 		
-		loop(envep);	
-	}
+//		loop();	
+//	}
+//	exit (EXIT_SUCCESS);
+//}
+		loop(env);	
 	exit (EXIT_SUCCESS);
 }
