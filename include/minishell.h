@@ -112,5 +112,6 @@ void	perror_exit(char *str);
 void	strerror_exit();
 
 void	parse(char *line);
+void	lexer(char *line);
 
 #endif

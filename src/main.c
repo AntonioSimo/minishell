@@ -114,16 +114,16 @@ void	loop(char **env)
 	char *line;
 
 	//printf("path: %s", path);
-	print_mustache();
+	//print_mustache();
 	(void)env;
 	
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
 		add_history(line);
-		parse(line);
+		lexer(line);
+		free(line);
 	}
-	free(line);
 }	
 
 

@@ -47,7 +47,7 @@ all: $(LIBFT) $(NAME)
 $(LIBFT):
 	@make -C $(LIBFT_DIR) --quiet
 
-$(NAME): $(LIBFT) $(HEAD) $(OBJ_DIR) $(OBJECTS)
+$(NAME): $(LIBFT) $(HEAD) $(OBJ_DIR) $(OBJECTS) $(SOURCES)
 	@$(CC) $(CFLAGS) $(IFLAGS) $(SOURCES) $(LIBFT) $(LFLAGS) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
