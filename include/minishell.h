@@ -28,6 +28,7 @@
 # include <readline/history.h>
 # include <signal.h>
 #include <sys/types.h>
+#include <stdbool.h>
 #include <sys/wait.h>
 
 typedef enum e_type

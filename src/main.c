@@ -120,6 +120,8 @@ void	loop(char **env)
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
+		if (!line)
+			break ;
 		add_history(line);
 		lexer(line);
 		free(line);
