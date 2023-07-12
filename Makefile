@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: asimone <asimone@student.42.fr>              +#+                      #
-#                                                    +#+                       #
-#    Created: 2023/06/07 14:29:32 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/29 17:07:53 by asimone       ########   odam.nl          #
-#                                                                              #
-# **************************************************************************** #
-
 SHELL :=  /bin/bash
 
 NAME := minishell
@@ -18,8 +6,11 @@ OBJ_DIR := obj
 LIBFT_DIR := lib/Libft
 LIBFT := $(LIBFT_DIR)/libft.a
 HEAD := ./include/minishell.h
-SOURCES := 	$(SRC_DIR)/main.c \
-			$(SRC_DIR)/lexer.c
+SOURCES := 	$(SRC_DIR)/cd.c \
+			$(SRC_DIR)/lexer.c \
+			$(SRC_DIR)/ls.c \
+			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/pwd.c
 #HEADERS := $(shell find include -type f -name '*.h')
 #SOURCES = $(shell find $(SRC_DIR) -type f -name '*.c')
 

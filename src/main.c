@@ -60,91 +60,127 @@
 char *get_path(char **env)
 {
 	int i;
-	int j;
-	//printf("here \n");
 
 	i = 0;
-	j = 6;
 	while (env[i])
 	{
-		//printf("line: %s\n", env[i]);
 		if (!ft_strncmp("PATH=", env[i], 5))
-		{
-			while (--j)
-				env[i]++;
-			return (env[i]);
-		}
+			return (env[i] + 5);
 		i++;
 	}
-	return ("NIC");
+	return (NULL);
 	
 }
 
-void	execute_command(char **single_path, char **env)
-{
-	char* arr[] = {"/ls", "-la", NULL};
-	int i;
-	char *path_with_command;
+//void	execute_command(char **single_path, char **env)
+//{
+//	char *arr[] = {"ls", NULL, NULL};
+//	int i;
+//	char *path_with_command;
+//	int fd;
 
-	
-	//(void)env;
+//	i = 0;
+//	while (single_path[i])
+//	{
+//		path_with_command = ft_free_strjoin(single_path[i], arr[0]);
+//		printf("%s\n", path_with_command);
+//		if (!path_with_command)
+//			exit(EXIT_FAILURE);
+//		fd = access(arr[0], F_OK | X_OK);
+//		if (fd == 0)
+//			execve(path_with_command, arr, env);
+//		//printf("path with command: >>%s<<\n", path_with_command);
+//		//printf("path: >>%s<<\n", single_path[i]);
+//		i++;
+//		free(path_with_command);
+//		path_with_command = NULL;
+//	}
+//	if (fd == -1)
+//		perror("command not found\n");
+//	exit(EXIT_FAILURE);
+//}
+
+int execute_command(char **arguments, char **environment)
+{
+	pid_t pid;
+	int childStatus;
+
+    if (access(arguments[0], F_OK | X_OK) != -1) 
+	{ 
+        pid = fork();
+        if (pid == 0) 
+		{
+			ft_printf("%s", arguments[0]);
+            execve(arguments[0], arguments, environment);
+            //perror("Errore nell'esecuzione di execve");
+            //exit(1);
+        } 
+		else if (pid > 0) 
+		{
+            waitpid(pid, &childStatus, 0);
+            if (WIFEXITED(childStatus)) 
+			{
+                int exitStatus = WEXITSTATUS(childStatus);
+                printf("Processo figlio terminato con stato di uscita: %d\n", exitStatus);
+            }
+        } 
+		else 
+		{
+            perror("Errore nella creazione del processo figlio");
+            return (1);
+        }
+    }
+	else
+        printf("Il file o il percorso non è disponibile.\n");
+    return (0);
+}
+
+char **add_command_to_path(char **path, char *command)
+{
+    int count;
+    int i;
+	char **new_path;
+
 	i = 0;
-	while (single_path[i])
+	count = 0;
+    while (path[count] != NULL)
+        count++;
+    new_path = malloc((count + 2) * sizeof(char *));
+    if (!new_path)
+        exit(EXIT_FAILURE);
+    while (i < count)
 	{
-		path_with_command = ft_free_strjoin(single_path[i], arr[0]);
-		if (!path_with_command)
-			exit(EXIT_FAILURE);
-		printf("path with command: >>%s<<\n", path_with_command);
-		//printf("path: >>%s<<\n", single_path[i]);
-		execve(path_with_command, arr, env);
+        new_path[i] = path[i];
 		i++;
-		free(path_with_command);
-		path_with_command = NULL;
 	}
-	printf("command not found\n");
-	exit(EXIT_FAILURE);
+    new_path[i] = command;
+    //new_path[i + 1] = NULL;
+    free(path);
+    return (new_path);
 }
 
 void	loop(char **env)
 {
-	char *line;
-	char **args;
-	pid_t	pid;
-	int  status;
-	char pwd[FILENAME_MAX + 1];
-	char *path;
-	char **single_path;
+	char	*line;
+	char	**args;
+	char	*path;
 
 	path = get_path(env);
-	printf("path: %s", path);
-	
 	while (1)
 	{
 	line = readline(GREEN BOLD "mustash> "RESET);
 	args = ft_split(line, ' ');
 	add_history(line);
-	//rl_on_new_line();
 		if (!ft_strncmp("ls", *args, 3))
-		{
-			single_path = ft_split(path, ':');
-			if (!single_path)
-				exit(EXIT_FAILURE);
-			pid = fork();
-			if (pid == 0)
-			{
-				execute_command(single_path, env);
-			}
-			waitpid(pid, &status, 0);
-		}
+			execute_ls(env);
 		if (!ft_strncmp("pwd", *args, 4))
-		{
-			printf("%s\n", getcwd(pwd, sizeof(pwd)));
-		}
-		if (!ft_strncmp("cd", args[0], 3))
-		{
-			if (chdir(args[1]))
-				printf("no such file or directory\n");
-		}
+			get_current_working_dir();
+		if (!ft_strncmp("cd", *args, 3))
+			execute_cd(*args);
+		//if (!ft_strncmp("clear", *args, 6))
+		//{
+		//	clearScreen();
+		//}
 		else if (!ft_strncmp("exit", *args, 5))
 			exit(EXIT_SUCCESS);
 	}
@@ -153,55 +189,53 @@ void	loop(char **env)
 }	
 
 
-
 void	print_mustache()
 {
 write(1, MUSTACHE, sizeof MUSTACHE);         
 }
-//int	main(int argc, char** argv, char** envep)
-//{
-//	//int i = 0;
-//	(void) argv;
-//	(void) argc;
-//	//char pwd[100];
-
-//	char *path = get_path(envep);
-
-//	path++;
-//	path++;
-//	path++;
-//	path++;
-//	path++;
-//	print_mustache();
-//	printf("%s\n", *envep);
-//	//printf("path: %s\n", getcwd(pwd, 100));
-//	//printf("path: %s\n", getcwd(pwd, 100));
-int	main(int argc, char** argv, char** env)
+int	main(int argc, char** argv, char** envep)
 {
 	//int i = 0;
 	(void) argv;
 	(void) argc;
 	//char pwd[100];
 
-	//printf("path: %s\n", getcwd(pwd, 100));
-	//printf("path: %s\n", getcwd(pwd, 100));
+	char *path = get_path(envep);
+
+	path++;
+	path++;
+	path++;
+	path++;
+	path++;
+	print_mustache();
+//	printf("%s\n", *envep);
+//	//printf("path: %s\n", getcwd(pwd, 100));
+//	//printf("path: %s\n", getcwd(pwd, 100));
+//int	main(int argc, char** argv, char** env)
+//{
+//	//int i = 0;
+//	(void) argv;
+//	(void) argc;
+//	//char pwd[100];
+
+//	//printf("path: %s\n", getcwd(pwd, 100));
+//	//printf("path: %s\n", getcwd(pwd, 100));
 	
-//	//char *trimmed_path = ft_strtrim(path, "")
+////	//char *trimmed_path = ft_strtrim(path, "")
 	
-//	//if (argc >= 0)
-//	//{
-//	//	while (envep[i])
-//	//	{
-//	//		printf("%s\n", envep[i]);
-//	//		i++;
-//	//	}
-//	while (1)
-//	{
+////	//if (argc >= 0)
+////	//{
+////	//	while (envep[i])
+////	//	{
+////	//		printf("%s\n", envep[i]);
+////	//		i++;
+////	//	}
+////	while (1)
+////	{
 		
-//		loop();	
-//	}
-//	exit (EXIT_SUCCESS);
-//}
-		loop(env);	
-	}
+		loop(envep);	
+////	}
 	exit (EXIT_SUCCESS);
+}
+//		loop(env);	
+//}

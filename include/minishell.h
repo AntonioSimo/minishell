@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:25:58 by asimone       ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define  MINISHELL_H
 
@@ -100,6 +88,15 @@ typedef struct s_token
 	char	*command;
 	t_type	type;
 }	t_token;
+
+// pwd command
+void	get_current_working_dir(void);
+
+// cd command
+int execute_cd(char *arg);
+
+// ls command
+int	execute_ls(char **environment);
 
 // lexer
 int	ft_isspace(int c);
