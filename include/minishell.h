@@ -27,9 +27,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-#include <sys/types.h>
-#include <stdbool.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <stdbool.h>
+# include <sys/wait.h>
+# include <stdio.h>
 
 typedef enum e_type
 {
@@ -123,6 +124,9 @@ t_token	*create_token(char *string, t_type type);
 void	tokenize_space(t_list **token_lst, char *line, int *i);
 void	tokenize_pipe(t_list **token_lst, int *i);
 void	tokenize_symbols(t_list **token_lst, char *line, int *i);
+
+//utils
+void	print_list(t_list *token_lst);
 
 
 #endif
