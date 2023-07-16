@@ -26,3 +26,14 @@ void	perror_exit(char *str)
 	perror(str);
 	exit(EXIT_FAILURE);
 }
+
+void	*ptr_check(void *ptr)
+{
+	if (ptr != NULL)
+		return (ptr);
+	else
+	{
+		perror("Error");
+		exit(EXIT_FAILURE);
+	}
+}

@@ -1,22 +1,5 @@
 #include "../include/minishell.h"
 
-//static void	remove_quotes(char *line)
-//{
-
-//}
-
-//int	is_in_quotes(char *line, int i)
-//{
-//	int j;
-//	(void)line;
-
-//	j = 0;
-//	while (j <= i)
-//	{
-		
-//	}
-//}
-
 int	ft_isspace(int c)
 {
 	if ((c >= 9 && c <= 13) || c == ' ')
@@ -24,128 +7,41 @@ int	ft_isspace(int c)
 	return (0);
 }
 
-//void split_by_meta(char *line)
-//{
-//	int i;
-
-//	i = 0;
-//	while (line[i])
-//	{
-//		if (!is_in_quotes(line, i))
-
-//	}
-//}
-
-bool check_quotes(char *line)
+void tokenize_word(t_list **token_lst, char *line, int *position)
 {
-	bool d_quotes;
-	bool s_quotes;
-
-	d_quotes = true;
-	s_quotes = true;
-	while (*line)
-	{
-		if (*line == '\'')
-			s_quotes = !(s_quotes && d_quotes);
-		if (*line == '\"')
-			d_quotes = !(s_quotes && d_quotes);
-		line++;
-	}
-	return (d_quotes && s_quotes);
-}
-
-//int	find_here_doc(char* line, int position)
-//{
-//	int len;
-
-//	len = ft_strlen(line+position);
-//	if (len > 1)
-//}
-
-//t_type set_state(char *line, int position)
-//{
-//	t_type state;
-
-//	if (find_here_doc(line, position))
-//		return (HEREDOC);
-//	if (find_pipe(line, position))
-//		return (PIPE);
-//	if (find_redir_out(line, position))
-//		return (REDIR_OUTPUT);
-//	if (find_redit_out_app(line, position))
-//		return (REDIR_OUTPUT_APPEND);
-//	if (find_redir_in(line, position))
-//		return (REDIR_INPUT);
-//}
-
-//void tokenize(char *line)
-//{
-//	int i;
-//	t_type state;
-
-//	i = 0;
-//	while(line[i])
-//	{
-//		if (state == DEFAULT)
-//		{
-
-//		}
-
-//		i++;
-//	}
-//	ft_printf("len: %i", i);
-//}
-
-t_type	quotes_type(char *line, int pos)
-{
-	bool d_quotes;
-	bool s_quotes;
-	int	i;
+	char	*word;
+	int		i;
+	t_token	*token;
 
 	i = 0;
-	d_quotes = true;
-	s_quotes = true;
-	while (i <= pos)
-	{
-		if (line[i] == '\'')
-			s_quotes = !(s_quotes && d_quotes);
-		if (line[i] == '\"')
-			d_quotes = !(s_quotes && d_quotes);
+	while (line[*position + i] && !ft_strchr("|<>\'\"", line[*position + i])
+			&& !ft_isspace(line[*position + i]))
 		i++;
-	}
-	if (!d_quotes)
-		return (DOUBLE_QUOTED);
-	else if (!s_quotes)
-		return (SINGLE_QUOTED);
-	else
-		return (DEFAULT);
-
+	word = ft_substr(line, *position, i);
+	*position += i;
+	token = create_token(word, DEFAULT);
+	ft_lstadd_back(token_lst, ft_lstnew(token));
+	ft_printf("word: %s\n", word);
 }
 
-int	strlen_quoted(char *line, int position, t_type quotes_type)
+void	tokenize_quotted(t_list **token_lst, char *line, int *position, t_type quotes)
 {
-	int	length;
-	
-	length = 0;
-	position++;
-	while (line[position + length])
-	{
-		if (quotes_type == SINGLE_QUOTED && line[position + length] == '\'')
-			return (length);
-		if (quotes_type == DOUBLE_QUOTED && line[position + length] == '\"')
-			return (length);
-		length++;
-	}
-	ft_printf("error quotted\n");
-	return (0);
+	int		quotes_len;
+	char	*quotted_sentence;
+	t_token	*token;
+
+	quotes_len = strlen_quoted(line, *position, quotes);
+	//ft_printf("quottes len: %i\n", quotes_len);
+	quotted_sentence = ptr_check(ft_substr(line, *position + 1, quotes_len));
+	token = create_token(quotted_sentence, quotes);
+	ft_lstadd_back(token_lst, ft_lstnew(token));
+	ft_printf("token in quotes: %s\n", quotted_sentence);
+	*position += quotes_len + 2;
 }
 
-void check_pipes(char *line)
+void scanner(char *line, t_list **token_lst)
 {
 	int i;
-	int	quotes_len;
-	char *quotted_sentence;
-
 	t_type	quotes;
 
 	i = 0;
@@ -153,78 +49,38 @@ void check_pipes(char *line)
 	{
 		quotes = quotes_type(line, i);
 		if (quotes == SINGLE_QUOTED || quotes == DOUBLE_QUOTED)
-		{
-			ft_printf("im here at %i\n", i);
-			if (quotes == SINGLE_QUOTED)
-				ft_printf("sq\n\n");
-			if (quotes == DOUBLE_QUOTED)
-				ft_printf("DQ\n");
-			quotes_len = strlen_quoted(line, i, quotes);
-			ft_printf("quottes len: %i\n", quotes_len);
-			quotted_sentence = ft_substr(line, i + 1, quotes_len);   //make function to check null ptr and exit
-			if (!quotted_sentence)    
-				exit(EXIT_FAILURE);
-			ft_printf("token in quotes: %s\n", quotted_sentence);
-			i += quotes_len + 2;
-			//ft_printf("my i is on %i position\n", i);
-
-		}	
+			tokenize_quotted(token_lst, line, &i, quotes);
 		if (quotes == DEFAULT)
 		{
 			if (ft_isspace(line[i]))
-			{
-				ft_printf("space!");
-				while (ft_isspace(line[i]))
-				{
-					ft_printf("skip ");
-					i++;
-				}
-				printf("\n");
-			}
+				tokenize_space(token_lst, line, &i);
 			else
 			{
-
-				if (line[i] == '|')
-				{
-					ft_printf("pipe\n");
-				}
-				else if (line[i] == '<' && line[i+1] == '<')
-				{
-					ft_printf("HEREDOC\n");
-					i++;
-				}
-				else if (line[i] == '<')
-				{
-					ft_printf("redir in\n");
-				}
-				else if(line[i] == '>' && line[i+1] == '>')
-				{
-					ft_printf("redir out append\n");
-				}
-				else if(line[i] == '>')
-					ft_printf("redir out\n");
-				i++;
+				if (ft_strchr("|<>", line[i]))
+					tokenize_symbols(token_lst, line, &i);
+				else
+					tokenize_word(token_lst, line, &i);
 			}
-			
 		}
 	}
 }
 
 void	lexer(char *line)
 {
-	//split_by_meta(line);
-	//ft_printf("%s", line);
-	
-	bool quotes = check_quotes(line);
+	bool quotes;
+	t_list	*tokens;
+
+	tokens = NULL;	
+	quotes = check_quotes(line);
 	if (quotes)
-		ft_printf("closed\n");
+	{
+		scanner(line, &tokens);
+		ft_printf("size list: %i\n", ft_lstsize(tokens));
+	}	
 	else
 	{
 		ft_printf("Unclosed quotes.\n");
 		//exit(EXIT_FAILURE);
 	}
-	check_pipes(line);
-	
-	//tokenize(line);
 }
 

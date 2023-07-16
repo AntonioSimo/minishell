@@ -1,28 +1,5 @@
 #include "../include/minishell.h"
 
-char *get_path(char **env)
-{
-	int i;
-	int j;
-	//printf("here \n");
-
-	i = 0;
-	j = 6;
-	while (env[i])
-	{
-		//printf("line: %s\n", env[i]);
-		if (!ft_strncmp("PATH=", env[i], 5))
-		{
-			while (--j)
-				env[i]++;
-			return (env[i]);
-		}
-		i++;
-	}
-	return (NULL);
-	
-}
-
 void	loop(char **env)
 {
 	char *line;

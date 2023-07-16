@@ -41,8 +41,7 @@ typedef enum e_type
 	REDIR_OUTPUT,
 	REDIR_OUTPUT_APPEND,
 	PIPE,
-	SEPERATOR,
-	UNCLOSED
+	SEPERATOR
 }	t_type;
 
 typedef enum e_fileflags
@@ -107,12 +106,23 @@ typedef struct s_token
 
 // lexer
 int	ft_isspace(int c);
+int	strlen_quoted(char *line, int position, t_type quotes_type);
+t_type	quotes_type(char *line, int pos);
+bool check_quotes(char *line);
 
 //error
 void	perror_exit(char *str);
 void	strerror_exit();
+void	*ptr_check(void *ptr);
 
 void	parse(char *line);
 void	lexer(char *line);
+
+//tokenization
+t_token	*create_token(char *string, t_type type);
+void	tokenize_space(t_list **token_lst, char *line, int *i);
+void	tokenize_pipe(t_list **token_lst, int *i);
+void	tokenize_symbols(t_list **token_lst, char *line, int *i);
+
 
 #endif
