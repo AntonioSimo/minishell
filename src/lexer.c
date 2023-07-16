@@ -21,7 +21,6 @@ void tokenize_word(t_list **token_lst, char *line, int *position)
 	*position += i;
 	token = create_token(word, DEFAULT);
 	ft_lstadd_back(token_lst, ft_lstnew(token));
-	//ft_printf("word: %s\n", word);
 }
 
 void	tokenize_quotted(t_list **token_lst, char *line, int *position, t_type quotes)
@@ -31,11 +30,9 @@ void	tokenize_quotted(t_list **token_lst, char *line, int *position, t_type quot
 	t_token	*token;
 
 	quotes_len = strlen_quoted(line, *position, quotes);
-	//ft_printf("quottes len: %i\n", quotes_len);
 	quotted_sentence = ptr_check(ft_substr(line, *position + 1, quotes_len));
 	token = create_token(quotted_sentence, quotes);
 	ft_lstadd_back(token_lst, ft_lstnew(token));
-	//ft_printf("token in quotes: %s\n", quotted_sentence);
 	*position += quotes_len + 2;
 }
 
@@ -75,12 +72,12 @@ void	lexer(char *line)
 	if (quotes)
 	{
 		scanner(line, &tokens);
+		//combine_tokens(tokens);
+		//check_pipes(tokens);
+		//expander(tokens);
 		print_list(tokens);
 	}	
 	else
-	{
 		ft_printf("Unclosed quotes.\n");
-		//exit(EXIT_FAILURE);
-	}
 }
 

@@ -1,5 +1,15 @@
 #include "../include/minishell.h"
 
+t_token	*create_token(char *string, t_type type)
+{
+	t_token	*token;
+
+	token = ptr_check(malloc(sizeof(t_token)));
+	token->command = ptr_check(ft_strdup(string));
+	token->type = type;
+	return (token);
+}
+
 static void	print_token(void *data)
 {
 	t_token		*token;
