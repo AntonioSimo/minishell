@@ -55,3 +55,17 @@ t_envepval	*create_env_node(char *key, char *value)
 	node->val = ptr_check(ft_strdup(value));
 	return (node);
 }
+
+int	find_equal(char *line)
+{
+	int	i;
+	
+	i = 0;
+	while(line[i])
+	{
+		if (line[i] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}

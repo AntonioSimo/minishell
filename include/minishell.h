@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/07/18 14:45:13 by pskrucha         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.h                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asimone <asimone@student.42.fr>              +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
+/*   Updated: 2023/07/18 18:19:15 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct s_envepval
 {
 	char		*key;
 	char		*val;
+	t_envepval	*next;
 }				t_envepval;
 
 typedef struct s_token
@@ -128,6 +129,7 @@ void 	tokenize(char *line, t_list **token_lst);
 
 //utils
 void	print_list(t_list *token_lst);
-
+int		find_equal(char *line);
+t_envepval	*create_env_node(char *key, char *value);
 
 #endif
