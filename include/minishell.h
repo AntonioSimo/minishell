@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/29 17:25:58 by asimone       ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
+/*   Updated: 2023/07/18 14:45:13 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ t_token	*create_token(char *string, t_type type);
 void	tokenize_space(t_list **token_lst, char *line, int *i);
 void	tokenize_pipe(t_list **token_lst, int *i);
 void	tokenize_symbols(t_list **token_lst, char *line, int *i);
+void 	tokenize(char *line, t_list **token_lst);
 
 //utils
 void	print_list(t_list *token_lst);

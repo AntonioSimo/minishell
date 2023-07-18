@@ -48,18 +48,18 @@ void	scanner(char *line)
 void	lexer(char *line)
 {
 	bool quotes;
-	//t_list	*tokens;
+	t_list	*tokens;
 
-	//tokens = NULL;	
+	tokens = NULL;	
 	quotes = check_quotes(line);
 	if (quotes)
 	{
-		scanner(line);
-		//tokenize(line, &tokens);
+		//scanner(line);
+		tokenize(line, &tokens);
 		//combine_tokens(tokens);
 		//check_pipes(tokens);
 		//expander(tokens);
-		//print_list(tokens);
+		print_list(tokens);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

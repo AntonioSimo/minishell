@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   libft.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2022/10/12 11:29:16 by asimone       #+#    #+#                 */
-/*   Updated: 2023/03/07 15:36:46 by asimone       ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/12 11:29:16 by asimone           #+#    #+#             */
+/*   Updated: 2023/07/18 14:42:01 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ be used while writing large C programs.*/
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <X11/Xlocale.h>  // in Mac change to <xlocale.h>
+# include <xlocale.h>  // in Mac change to <xlocale.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 

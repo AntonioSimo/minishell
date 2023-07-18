@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: asimone <asimone@student.42.fr>              +#+                      #
-#                                                    +#+                       #
-#    Created: 2023/06/07 14:29:32 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/07 21:12:25 by asimone       ########   odam.nl          #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/07 14:29:32 by asimone           #+#    #+#              #
+#    Updated: 2023/07/18 14:43:55 by pskrucha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,12 +28,12 @@ CFLAGS := -Wall -Wextra -Werror
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  
-#ifeq ($(shell uname -s),Darwin)
-#	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
-#	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
-##	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
-##	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-#endif
+ifeq ($(shell uname -s),Darwin)
+	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
+	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
+#	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
+#	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
+endif
 
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
@@ -69,5 +69,8 @@ fclean: clean
 	@printf "$(RED) $(BOLD) Deleting $(NAME)... $(RESET)\n"
 
 re: fclean all
+
+run:
+	make && ./minishell
 
 .PHONY: all clean fclean re
