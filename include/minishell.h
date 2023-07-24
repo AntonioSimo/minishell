@@ -97,7 +97,6 @@ typedef struct s_envepval
 {
 	char		*key;
 	char		*val;
-	t_envepval	*next;
 }				t_envepval;
 
 typedef struct s_token

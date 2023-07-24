@@ -25,7 +25,7 @@ void	print_val(t_envepval *node)
 	ft_printf("key: %s | value: %s\n", node->key, node->val);
 }
 
-void	print_env(t_list *my_env)
+void	print_my_env(t_list *my_env)
 {
 	while (my_env)
 	{
@@ -68,10 +68,9 @@ int	main(int argc, char** argv, char** env)
 	(void) argc;
 	t_list	*my_env = NULL;
 
-	print_or_env(my_env);
 
 	set_env(&my_env, env);
-	print_env(my_env);
+	print_my_env(my_env);
 
 	
 
