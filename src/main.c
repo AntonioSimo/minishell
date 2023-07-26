@@ -50,8 +50,8 @@ void	loop(char **env)
 	}
 }	
 
-void	print_env(char **env)
-{
+void	print_or_env(char **env)
+{=
 	int	i;
 
 	i = 0;
@@ -68,8 +68,7 @@ int	main(int argc, char** argv, char** env)
 	(void) argc;
 	t_list	*my_env = NULL;
 
-	print_or_env(my_env);
-
+	print_or_env(env);
 	set_env(&my_env, env);
 	print_env(my_env);
 
