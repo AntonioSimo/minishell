@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/07/18 18:29:00 by asimone       ########   odam.nl         */
+/*   Updated: 2023/07/26 17:00:28 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ typedef struct s_envepval
 	char				*key;
 	char				*val;
 	struct s_envepval	*next;
+	char		*key;
+	char		*val;
 }				t_envepval;
 
 typedef struct s_token

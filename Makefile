@@ -31,8 +31,8 @@ IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
 ifeq ($(shell uname -s),Darwin)
 	IFLAGS := $(IFLAGS) -I$(shell brew --prefix readline)/include
 	LFLAGS := $(LFLAGS) -L$(shell brew --prefix readline)/lib
-#	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
-#	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
+	IFLAGS := $(IFLAGS) -I .brew/opt/readline/include
+	LFLAGS := $(LFLAGS) -L /opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
 endif
 
 GREEN = \x1b[32;01m
