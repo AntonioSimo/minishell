@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/08/16 20:06:09 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
+
+int	g_error_code;
 
 void	set_env(t_list	**my_env, char **env)
 {
@@ -34,7 +48,7 @@ void	print_my_env(t_list *my_env)
 	}
 }
 
-void	loop(char **env)
+void	loop(char **env, t_list *my_env)
 {
 	char *line;
 
@@ -45,35 +59,19 @@ void	loop(char **env)
 		if (!line)
 			break ;
 		add_history(line);
-		lexer(line);
+		lexer(line, my_env);
 		free(line);
 	}
 }	
-
-void	print_or_env(char **env)
-{=
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		ft_printf("%s\n", env[i]);
-		i++;
-	}
-}
 
 int	main(int argc, char** argv, char** env)
 {
 	(void) argv;
 	(void) argc;
 	t_list	*my_env = NULL;
+	g_error_code = 0;
 
-	print_or_env(env);
 	set_env(&my_env, env);
-	print_my_env(my_env);
-
-	
-
-		loop(env);	
+	loop(env, my_env);	
 	exit (EXIT_SUCCESS);
 }

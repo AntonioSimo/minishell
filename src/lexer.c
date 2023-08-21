@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/08/16 20:07:55 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
+
+extern int g_error_code;
 
 void	skip_quotes(char *line, int *i, t_type *quotes)
 {
@@ -8,7 +22,6 @@ void	skip_quotes(char *line, int *i, t_type *quotes)
 	ft_printf("quoted len: %i \n", quotted_len);
 	*i += quotted_len + 2;
 	*quotes = DEFAULT;
-
 }
 
 void	scanner(char *line)
@@ -45,7 +58,7 @@ void	scanner(char *line)
 	}
 }
 
-void	lexer(char *line)
+void	lexer(char *line, t_list *my_env)
 {
 	bool quotes;
 	t_list	*tokens;
@@ -58,7 +71,9 @@ void	lexer(char *line)
 		tokenize(line, &tokens);
 		//combine_tokens(tokens);
 		//check_pipes(tokens);
-		//expander(tokens);
+		expander(tokens, my_env);
+		
+		//printf("error code: %i\n", g_error_code);
 		print_list(tokens);
 	}	
 	else
