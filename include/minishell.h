@@ -119,7 +119,7 @@ void	strerror_exit();
 void	*ptr_check(void *ptr);
 
 void	parse(char *line);
-void	lexer(char *line, t_list *my_env);
+void	lexer(char *line, t_envepval *my_env);
 
 //tokenization
 t_token	*create_token(char *string, t_type type);
@@ -134,11 +134,15 @@ t_envepval	*create_env_node(char *key, char *value);
 
 
 //expander
-void	expander(t_token *tokens, t_list *my_env);
+void	expander(t_token *tokens, t_envepval *my_env);
 
 //list utils
 void	lstadd_back(t_token **lst, t_token *new);
 t_token	*lstnew(char *str, t_type type);
 
+
+//env
+void	set_env(t_envepval	**my_env, char **env);
+void	print_my_env(t_envepval *my_env);
 
 #endif

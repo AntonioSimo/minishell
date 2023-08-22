@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-static void	update_token(t_token *tokens, t_list *my_env)
+static void	update_token(t_token *tokens, t_envepval *my_env)
 {
 	//char *str;
 	(void) my_env;
@@ -21,7 +21,7 @@ static void	update_token(t_token *tokens, t_list *my_env)
 	printf("jest $!\n");
 }
 
-void	expander(t_token *tokens, t_list *my_env)
+void	expander(t_token *tokens, t_envepval *my_env)
 {
 	while (tokens)
 	{

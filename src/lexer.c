@@ -58,7 +58,7 @@ void	scanner(char *line)
 	}
 }
 
-void	lexer(char *line, t_list *my_env)
+void	lexer(char *line, t_envepval *my_env)
 {
 	bool quotes;
 	t_token	*tokens;

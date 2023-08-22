@@ -17,15 +17,7 @@ t_token	*create_token(char *string, t_type type)
 	return (token);
 }
 
-t_envepval	*create_env_node(char *key, char *value)
-{
-	t_envepval	*node;
 
-	node = ptr_check(malloc(sizeof(t_envepval)));
-	node->key = ptr_check(ft_strdup(key));
-	node->val = ptr_check(ft_strdup(value));
-	return (node);
-}
 
 int	find_equal(char *line)
 {
