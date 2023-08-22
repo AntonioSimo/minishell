@@ -102,8 +102,9 @@ typedef struct s_envepval
 
 typedef struct s_token
 {
-	char	*command;
-	t_type	type;
+	char			*command;
+	t_type			type;
+	struct s_token	*next;
 }	t_token;
 
 // lexer
@@ -135,6 +136,11 @@ t_envepval	*create_env_node(char *key, char *value);
 
 //expander
 void	expander(t_list	*tokens, t_list *my_env);
+
+
+//list utils
+void	lstadd_back(t_token **lst, t_token *new);
+t_token	*lstnew(char *str, t_type type);
 
 
 #endif

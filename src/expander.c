@@ -14,8 +14,10 @@
 
 static void	update_token(t_list	*tokens, t_list *my_env)
 {
-	char *command;
+	//char *str;
+	(void) my_env;
 	(void) tokens;
+
 	printf("jest $!\n");
 }
 
