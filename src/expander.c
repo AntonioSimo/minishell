@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-static void	update_token(t_list	*tokens, t_list *my_env)
+static void	update_token(t_token *tokens, t_list *my_env)
 {
 	//char *str;
 	(void) my_env;
@@ -21,23 +21,15 @@ static void	update_token(t_list	*tokens, t_list *my_env)
 	printf("jest $!\n");
 }
 
-
-static int	is_expandable(t_token	*token)
-{
-	if (token->type == DEFAULT || token->type == DOUBLE_QUOTED)
-	{
-		if (ft_strchr(token->command, '$'))
-			return (1);
-	}
-	return (0);
-}
-
-void	expander(t_list	*tokens, t_list *my_env)
+void	expander(t_token *tokens, t_list *my_env)
 {
 	while (tokens)
 	{
-		if (is_expandable(tokens->content))
-			update_token(tokens, my_env);
+		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED)
+		{
+			if (ft_strchr(tokens->command, '$'))
+				update_token(tokens, my_env);
+		}
 		tokens = tokens->next;
 	}
 }

@@ -1,61 +1,43 @@
 #include "../include/minishell.h"
 
-void	tokenize_space(t_list **token_lst, char *line, int *i)
+void	tokenize_space(t_token **token_lst, char *line, int *i)
 {
-	t_token	*token;
-
-	token = create_token(" ", SEPERATOR);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew(" ", SEPERATOR));
 	while (ft_isspace(line[*i]))
 		*i += 1;
 }
 
-void	tokenize_pipe(t_list **token_lst, int *i)
+void	tokenize_pipe(t_token **token_lst, int *i)
 {
-	t_token *token;
-
-	token = create_token("|", PIPE);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew("|", PIPE));
 	*i += 1;
 }
 
-void	tokenize_redir_in(t_list **token_lst, int *i)
+void	tokenize_redir_in(t_token **token_lst, int *i)
 {
-	t_token *token;
-
-	token = create_token("<", REDIR_INPUT);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew("<", REDIR_INPUT));
 	*i += 1;
 }
 
-void	tokenize_redir_out(t_list **token_lst, int *i)
+void	tokenize_redir_out(t_token **token_lst, int *i)
 {
-	t_token *token;
-
-	token = create_token(">", REDIR_OUTPUT);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew(">", REDIR_OUTPUT));
 	*i += 1;
 }
 
-void	tokenize_redir_outapp(t_list **token_lst, int *i)
+void	tokenize_redir_outapp(t_token **token_lst, int *i)
 {
-	t_token *token;
-
-	token = create_token(">>", REDIR_OUTPUT_APPEND);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew(">>", REDIR_OUTPUT_APPEND));
 	*i += 2;
 }
 
-void	tokenize_heredoc(t_list **token_lst, int *i)
+void	tokenize_heredoc(t_token **token_lst, int *i)
 {
-	t_token *token;
-
-	token = create_token("<<", HEREDOC);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew("<<", HEREDOC));
 	*i += 2;
 }
 
-void	tokenize_symbols(t_list **token_lst, char *line, int *i)
+void	tokenize_symbols(t_token **token_lst, char *line, int *i)
 {
 	if (line[*i] == '|')
 		tokenize_pipe(token_lst, i);
@@ -69,11 +51,10 @@ void	tokenize_symbols(t_list **token_lst, char *line, int *i)
 		tokenize_redir_out(token_lst, i);
 }
 
-void	tokenize_word(t_list **token_lst, char *line, int *position)
+void	tokenize_word(t_token **token_lst, char *line, int *position)
 {
 	char	*word;
 	int		i;
-	t_token	*token;
 
 	i = 0;
 	while (line[*position + i] && !ft_strchr("|<>\'\"", line[*position + i])
@@ -81,24 +62,21 @@ void	tokenize_word(t_list **token_lst, char *line, int *position)
 		i++;
 	word = ft_substr(line, *position, i);
 	*position += i;
-	token = create_token(word, DEFAULT);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
+	lstadd_back(token_lst, lstnew(word, DEFAULT));
 }
 
-void	tokenize_quotted(t_list **token_lst, char *line, int *position, t_type quotes)
+void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
 {
 	int		quotes_len;
 	char	*quotted_sentence;
-	t_token	*token;
 
-	quotes_len = strlen_quoted(line, *position, quotes);
-	quotted_sentence = ptr_check(ft_substr(line, *position + 1, quotes_len));
-	token = create_token(quotted_sentence, quotes);
-	ft_lstadd_back(token_lst, ft_lstnew(token));
-	*position += quotes_len + 2;
+	quotes_len = strlen_quoted(line, *pos, quotes);
+	quotted_sentence = ptr_check(ft_substr(line, *pos + 1, quotes_len));
+	lstadd_back(token_lst, lstnew(quotted_sentence, quotes));
+	*pos += quotes_len + 2;
 }
 
-void tokenize(char *line, t_list **token_lst)
+void tokenize(char *line, t_token **token_lst)
 {
 	int i;
 	t_type	quotes;

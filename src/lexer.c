@@ -61,7 +61,7 @@ void	scanner(char *line)
 void	lexer(char *line, t_list *my_env)
 {
 	bool quotes;
-	t_list	*tokens;
+	t_token	*tokens;
 
 	tokens = NULL;	
 	quotes = check_quotes(line);
