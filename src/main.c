@@ -38,7 +38,7 @@ int	main(int argc, char** argv, char** env)
 	g_error_code = 0;
 
 	set_env(&my_env, env);
-print_my_env(my_env);
+	print_my_env(my_env);
 	loop(env, my_env);	
 	exit (EXIT_SUCCESS);
 }
