@@ -75,7 +75,7 @@ void	lexer(char *line, t_envepval *my_env)
 		
 		//printf("error code: %i\n", g_error_code);
 		print_list(tokens);
-		//destroy_tokens(tokens);
+		destroy_tokens(tokens);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");
