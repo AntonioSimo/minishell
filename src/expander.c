@@ -32,13 +32,14 @@ static void	replace_string(char *expanded, char	*str, int start, int end)
 	
 	before = ft_substr(str, 0, start - 1);
 	after = ft_substr(str, end, ft_strlen(str) - end);
-	//printf("before exp:%s \nexp:%s \n after exp:%s \n", before, expanded, after);
+	printf("before exp:%s \nexp:%s \n after exp:%s \n", before, expanded, after);
 	temp = ft_strjoin(before, expanded);
-	temp = ft_free_strjoin(temp, after);
 	ft_free(str);
-	str = ft_strdup(temp);
+	str = ft_strjoin(temp, after);
 	ft_free(temp);
-	//printf("my expanded command:%s\nstring to replace:%s\nstarting position: %i\n ending position: %i", expanded, str, start, end);
+	ft_free(before);
+	ft_free(after);
+	//printf("after exp: %s\n", str);
 }
 
 static void	update_token(t_token *tokens, t_envepval *my_env)
@@ -66,8 +67,12 @@ static void	update_token(t_token *tokens, t_envepval *my_env)
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
-			printf("str:%s \n",expanded);
+			//printf("expanded:%s \n",expanded);
+			//printf("replace string from:%i to: %i", j , i);
 			replace_string(expanded, tokens->command, j, i);
+			//printf("str: %s\n", tokens->command);
+			ft_free(to_expand);
+			ft_free(expanded);
 			i = 0;
 		}
 		else
