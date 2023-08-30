@@ -26,7 +26,7 @@ void	loop(char **env, t_envepval *my_env)
 			break ;
 		add_history(line);
 		lexer(line, my_env);
-		free(line);
+		ft_free(line);
 	}
 }	
 

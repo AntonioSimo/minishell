@@ -56,3 +56,15 @@ void	print_list(t_token *token_lst)
 		token_lst = token_lst->next;
 	}
 }
+
+void	destroy_tokens(t_token	*tokens)
+{
+	if (!tokens)
+		return ;
+	while (tokens)
+	{
+		ft_free(tokens->command);
+		tokens = tokens->next;
+	}
+	tokens = NULL;
+}

@@ -24,27 +24,28 @@ char	*find_expandable(t_envepval	*env, char	*key)
 	return (ft_strdup(""));
 }
 
-static void	replace_string(char *expanded, char	*str, int start, int end)
+char	*replace_string(char *expanded, char	*str, int start, int end)
 {
 	char	*before;
 	char	*after;
 	char	*temp;
+	char	*new_line;
 	
 	before = ft_substr(str, 0, start - 1);
 	after = ft_substr(str, end, ft_strlen(str) - end);
 	printf("before exp:%s \nexp:%s \n after exp:%s \n", before, expanded, after);
 	temp = ft_strjoin(before, expanded);
-	ft_free(str);
-	str = ft_strjoin(temp, after);
-	ft_free(temp);
-	ft_free(before);
-	ft_free(after);
-	//printf("after exp: %s\n", str);
+	new_line = ft_strjoin(temp, after);
+	//ft_free(temp);
+	//ft_free(before);
+	//ft_free(after);
+	printf("after exp: %s\n", new_line);
+	return (new_line);
 }
 
 static void	update_token(t_token *tokens, t_envepval *my_env)
 {
-	//char	*command;
+	char	*new_command;
 	char	*to_expand;
 	char	*expanded;
 	int i;
@@ -54,29 +55,35 @@ static void	update_token(t_token *tokens, t_envepval *my_env)
 	i = 0;
 	(void)my_env;
 	//command = ft_strdup(tokens->command);
-	while(tokens->command[i])
+	while(strchr(tokens->command, '$'))
 	{
 		//printf("tu");
 		if (tokens->command[i] == '$')
 		{
 			i++;
 			j = i;
-			while (tokens->command[i] != '$' && tokens->command[i])
+			while (tokens->command[i] && tokens->command[i] != '$')
 				i++;
-			if (!tokens->command[i])
-				i++;
-			to_expand = ft_substr(tokens->command, j, i - j);	
+			//if (!tokens->command[i])
+			//	i++;
+			to_expand = ft_substr(tokens->command, j, i - j);
+			//printf("to expand:%s\n", to_expand);	
 			expanded = find_expandable(my_env, to_expand);
-			//printf("expanded:%s \n",expanded);
-			//printf("replace string from:%i to: %i", j , i);
-			replace_string(expanded, tokens->command, j, i);
-			//printf("str: %s\n", tokens->command);
-			ft_free(to_expand);
-			ft_free(expanded);
+			printf("replace string from:%i to: %i\n", j , i);
+			new_command = replace_string(expanded, tokens->command, j, i);
+			ft_free(tokens->command);
+			tokens->command = ft_strdup(new_command);
+			ft_free(new_command);
+			//printf("str po: %s\n", tokens->command);
+			//ft_free(to_expand);
+			//ft_free(expanded);
 			i = 0;
 		}
 		else
-			i++;
+		{
+			while (tokens->command[i] && tokens->command[i] != '$')
+				i++;
+		}
 	}
 	
 }

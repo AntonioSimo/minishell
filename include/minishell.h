@@ -139,6 +139,7 @@ void	expander(t_token *tokens, t_envepval *my_env);
 //list utils
 void	lstadd_back(t_token **lst, t_token *new);
 t_token	*lstnew(char *str, t_type type);
+void	destroy_tokens(t_token	*tokens);
 
 
 //env
