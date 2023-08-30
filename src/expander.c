@@ -32,7 +32,7 @@ static void	replace_string(char *expanded, char	*str, int start, int end)
 	
 	before = ft_substr(str, 0, start - 1);
 	after = ft_substr(str, end, ft_strlen(str) - end);
-	printf("before exp:%s \nexp:%s \n after exp:%s \n", before, expanded, after);
+	//printf("before exp:%s \nexp:%s \n after exp:%s \n", before, expanded, after);
 	temp = ft_strjoin(before, expanded);
 	temp = ft_free_strjoin(temp, after);
 	ft_free(str);
@@ -43,7 +43,7 @@ static void	replace_string(char *expanded, char	*str, int start, int end)
 
 static void	update_token(t_token *tokens, t_envepval *my_env)
 {
-	char	*command;
+	//char	*command;
 	char	*to_expand;
 	char	*expanded;
 	int i;
@@ -52,20 +52,23 @@ static void	update_token(t_token *tokens, t_envepval *my_env)
 	j = 0;
 	i = 0;
 	(void)my_env;
-	command = ft_strdup(tokens->command);
-	while(command[i])
+	//command = ft_strdup(tokens->command);
+	while(tokens->command[i])
 	{
 		//printf("tu");
-		if (command[i] == '$')
+		if (tokens->command[i] == '$')
 		{
 			i++;
 			j = i;
-			while (command[i] != '$' && command[i])
+			while (tokens->command[i] != '$' && tokens->command[i])
 				i++;
-			to_expand = ft_substr(command, j, i - j);	
+			if (!tokens->command[i])
+				i++;
+			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
 			printf("str:%s \n",expanded);
 			replace_string(expanded, tokens->command, j, i);
+			i = 0;
 		}
 		else
 			i++;
