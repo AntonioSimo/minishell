@@ -124,13 +124,17 @@ void	lexer(char *line, t_envepval *my_env);
 //tokenization
 t_token	*create_token(char *string, t_type type);
 void	tokenize_space(t_token **token_lst, char *line, int *i);
-void	tokenize_pipe(t_token **token_lst, int *i);
 void	tokenize_symbols(t_token **token_lst, char *line, int *i);
 void tokenize(char *line, t_token **token_lst);
 //utils
 void	print_list(t_token *token_lst);
 int		find_equal(char *line);
 t_envepval	*create_env_node(char *key, char *value);
+void	tokenize_pipe(t_token **token_lst, int *i);
+void	tokenize_redir_in(t_token **token_lst, int *i);
+void	tokenize_redir_out(t_token **token_lst, int *i);
+void	tokenize_redir_outapp(t_token **token_lst, int *i);
+void	tokenize_heredoc(t_token **token_lst, int *i);
 
 
 //expander

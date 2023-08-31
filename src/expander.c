@@ -38,10 +38,11 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	ft_free(temp);
 	ft_free(before);
 	ft_free(after);
+	printf("new line: %s\n", new_line);
 	return (new_line);
 }
 
-static void	update_token(t_token *tokens, t_envepval *my_env)
+static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 {
 	char	*new_command;
 	char	*to_expand;
@@ -80,13 +81,27 @@ static void	update_token(t_token *tokens, t_envepval *my_env)
 	}
 }
 
+static void tilde_expansion(t_token *tokens, t_envepval *my_env)
+{
+	char	*home;
+	char	*new_command;
+
+	home = find_expandable(my_env, "HOME");
+	new_command = replace_string(home, tokens->command, 1 , 1);
+	ft_free(tokens->command);
+	tokens->command = ft_strdup(new_command);
+	ft_free(home);
+}
+
 void	expander(t_token *tokens, t_envepval *my_env)
 {
 	while (tokens)
 	{
 		if ((tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED)
 			&& ft_strchr(tokens->command, '$'))
-				update_token(tokens, my_env);
+				dollar_expansion(tokens, my_env);
+		if (tokens->type == DEFAULT && tokens->command[0] == '~')
+			tilde_expansion(tokens, my_env);
 		tokens = tokens->next;
 	}
 }
