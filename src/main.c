@@ -6,11 +6,11 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:32:04 by asimone       #+#    #+#                 */
-/*   Updated: 2023/06/07 14:33:12 by asimone       ########   odam.nl         */
+/*   Updated: 2023/09/01 15:23:43 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "../include/minishell.h"
 
 int main()
 {
