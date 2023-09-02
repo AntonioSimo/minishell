@@ -38,7 +38,6 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	ft_free(temp);
 	ft_free(before);
 	ft_free(after);
-	printf("new line: %s\n", new_line);
 	return (new_line);
 }
 

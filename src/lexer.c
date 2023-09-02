@@ -60,12 +60,10 @@ void	scanner(char *line)
 
 void	lexer(char *line, t_envepval *my_env)
 {
-	bool quotes;
 	t_token	*tokens;
 
 	tokens = NULL;	
-	quotes = check_quotes(line);
-	if (quotes)
+	if (check_quotes(line))
 	{
 		//scanner(line);
 		tokenize(line, &tokens);
