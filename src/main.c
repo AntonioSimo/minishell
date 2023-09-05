@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/07 14:32:04 by asimone       #+#    #+#                 */
-/*   Updated: 2023/09/05 12:00:20 by asimone       ########   odam.nl         */
+/*   Updated: 2023/09/05 12:42:29 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,9 @@ int	main(int argc, char** argv, char** env)
 	(void) argc;
 	t_envepval	*my_env = NULL;
 
-	char *path = get_path(env);
+	printf("%s", *env);
 
+	char *path = get_path(env);
 	path++;
 	path++;
 	path++;
