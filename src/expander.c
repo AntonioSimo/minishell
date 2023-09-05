@@ -60,7 +60,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 		{
 			i++;
 			j = i;
-			while (tokens->command[i] && tokens->command[i] != '$')
+			while (tokens->command[i] && ft_isalpha(tokens->command[i]))
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
@@ -80,27 +80,33 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 	}
 }
 
-static void tilde_expansion(t_token *tokens, t_envepval *my_env)
+static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
 {
 	char	*home;
 	char	*new_command;
 
 	home = find_expandable(my_env, "HOME");
+	if (ft_strlen(home) == 0)
+	{
+		ft_free(home);
+		home = ft_strdup(or_home);
+	}
 	new_command = replace_string(home, tokens->command, 1 , 1);
 	ft_free(tokens->command);
 	tokens->command = ft_strdup(new_command);
 	ft_free(home);
 }
 
-void	expander(t_token *tokens, t_envepval *my_env)
+void	expander(t_token *tokens, t_envepval *my_env, char *or_home)
 {
 	while (tokens)
 	{
 		if ((tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED)
 			&& ft_strchr(tokens->command, '$'))
 				dollar_expansion(tokens, my_env);
-		if (tokens->type == DEFAULT && tokens->command[0] == '~')
-			tilde_expansion(tokens, my_env);
+		else if (tokens->type == DEFAULT && tokens->command[0] == '~')
+				tilde_expansion(tokens, my_env, or_home);
+
 		tokens = tokens->next;
 	}
 }

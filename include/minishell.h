@@ -119,7 +119,7 @@ void	strerror_exit();
 void	*ptr_check(void *ptr);
 
 void	parse(char *line);
-void	lexer(char *line, t_envepval *my_env);
+void	lexer(char *line, t_envepval *my_env, char *or_home);
 
 //tokenization
 t_token	*create_token(char *string, t_type type);
@@ -138,7 +138,8 @@ void	tokenize_heredoc(t_token **token_lst, int *i);
 
 
 //expander
-void	expander(t_token *tokens, t_envepval *my_env);
+void	expander(t_token *tokens, t_envepval *my_env, char *or_home);
+char	*find_expandable(t_envepval	*env, char	*key);
 
 //list utils
 void	lstadd_back(t_token **lst, t_token *new);

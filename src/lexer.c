@@ -58,7 +58,7 @@ void	scanner(char *line)
 	}
 }
 
-void	lexer(char *line, t_envepval *my_env)
+void	lexer(char *line, t_envepval *my_env, char *or_home)
 {
 	t_token	*tokens;
 
@@ -69,8 +69,8 @@ void	lexer(char *line, t_envepval *my_env)
 		tokenize(line, &tokens);
 		//combine_tokens(tokens);
 		//check_pipes(tokens);
-		expander(tokens, my_env);
-		
+		expander(tokens, my_env, or_home);
+		merge_tokens
 		//printf("error code: %i\n", g_error_code);
 		print_list(tokens);
 		destroy_tokens(tokens);

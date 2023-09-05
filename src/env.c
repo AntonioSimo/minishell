@@ -53,9 +53,9 @@ void	set_env(t_envepval	**my_env, char **env)
 	while (env[i])
 	{
 		equal_pos = find_equal(env[i]);
-		key = ft_substr(env[i], 0, equal_pos);
-		value = ft_substr(env[i], equal_pos + 1, ft_strlen(env[i]) - equal_pos);
-		envlst_add(my_env, ptr_check(create_env_node(key, value)));
+		key = ptr_check(ft_substr(env[i], 0, equal_pos));
+		value = ptr_check(ft_substr(env[i], equal_pos + 1, ft_strlen(env[i]) - equal_pos));
+		envlst_add(my_env, create_env_node(key, value));
 		ft_free(key);
 		ft_free(value);
 		i++;
