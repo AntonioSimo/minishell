@@ -36,7 +36,7 @@ int	main(int argc, char** argv, char** env)
 	(void) argv;
 	(void) argc;
 	t_envepval	*my_env;
-	
+
 	g_error_code = 0;
 	my_env = NULL;
 	set_env(&my_env, env);

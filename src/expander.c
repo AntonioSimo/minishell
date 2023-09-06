@@ -59,25 +59,30 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 	j = 0;
 	i = 0;
 	(void)my_env;
-	while(strchr(tokens->command, '$'))
+	while(i < (int)ft_strlen(tokens->command))
 	{
-		if (tokens->command[i] == '$' && !tokens->command[i + 1])
-			break ;
+		//if (tokens->command[i] == '$' && !tokens->command[i + 1])
+		//	break ;
 		if (tokens->command[i] == '$')
 		{
 			i++;
+			//if (tokens->command[i] == '{')
+			//	i++;
 			j = i;
 			while (tokens->command[i] && char_to_expand(tokens->command[i]))
 				i++;
-			to_expand = ft_substr(tokens->command, j, i - j);	
-			expanded = find_expandable(my_env, to_expand);
-			new_command = replace_string(expanded, tokens->command, j, i);
-			ft_free(tokens->command);
-			tokens->command = ft_strdup(new_command);
-			ft_free(new_command);
-			ft_free(to_expand);
-			ft_free(expanded);
-			i = 0;
+			if (i > j)
+			{
+				to_expand = ft_substr(tokens->command, j, i - j);	
+				expanded = find_expandable(my_env, to_expand);
+				new_command = replace_string(expanded, tokens->command, j, i);
+				ft_free(tokens->command);
+				tokens->command = ft_strdup(new_command);
+				ft_free(new_command);
+				ft_free(to_expand);
+				ft_free(expanded);
+				i = 0;
+			}
 		}
 		else
 		{

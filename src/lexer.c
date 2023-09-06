@@ -14,11 +14,60 @@
 
 extern int g_error_code;
 
-// t_command	*merge_tokens(t_token	*tokens)
-// {
-// 	t_command	*commands;
+int	is_divider(t_type type)
+{
+	if (type == PIPE || type == REDIR_INPUT || type == REDIR_OUTPUT
+		|| type == REDIR_OUTPUT_APPEND || type == HEREDOC)
+		return (1);
+	return (0);
+}
 
-// }
+int	is_word(t_type type)
+{
+	if (type == DEFAULT || type == SINGLE_QUOTED
+		|| type == DOUBLE_QUOTED || type == SEPERATOR)
+		return (1);
+	return (0);
+}
+
+ t_command	*merge_tokens(t_token	*tokens)
+ {
+ 	t_command	*commands;
+	char		*args;
+	char		*temp;
+
+	commands = NULL;
+	args = NULL;
+	temp = NULL;
+	while (tokens)
+	{
+		if (is_word(tokens->type))
+		{
+			temp = ft_strjoin(args, tokens->command);
+			ft_free(args);
+			args = NULL;
+			args = ft_strdup(temp);
+			ft_free(temp);
+			temp = NULL;
+
+		}
+		else if (is_divider(tokens->type))
+		{
+			//printf("one time\n");
+			push_cmd(&commands, lst_cmd_new(args));
+			ft_free(args);
+			args = NULL;
+		}
+		tokens = tokens->next;
+	}
+	if (args)
+	{
+		//printf("args here lol: %s \n",args);
+		push_cmd(&commands, lst_cmd_new(args));
+		ft_free(args);
+	}
+	return (commands);
+ }
 
 void	scanner(char *line)
 {
@@ -57,7 +106,7 @@ void	scanner(char *line)
 void	lexer(char *line, t_envepval *my_env, char *or_home)
 {
 	t_token		*tokens;
-	// t_command	*commands;
+	 t_command	*commands;
 
 	tokens = NULL;	
 	if (check_quotes(line))
@@ -67,10 +116,12 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		//combine_tokens(tokens);
 		//check_pipes(tokens);
 		expander(tokens, my_env, or_home);
-		// commands = merge_tokens(tokens);
+		commands = merge_tokens(tokens);
 		//printf("error code: %i\n", g_error_code);
 		print_tokens(tokens);
+		print_cmds(commands);
 		destroy_tokens(tokens);
+		destroy_cmds(commands);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");
