@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/06 13:23:53 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/06 14:57:09 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ typedef struct s_command
 {
 	char				**arguments;
 	char				*command;
-	int					fd[3];
-	int					redirection;
+	// int					fd[3];
+	// int					redirection;
 	struct s_command	*next;
 }	t_command;
 
@@ -129,7 +129,7 @@ void	tokenize(char *line, t_token **token_lst);
 
 //utils
 t_envepval	*create_env_node(char *key, char *value);
-void		print_list(t_token *token_lst);
+void		print_tokens(t_token *token_lst);
 void		tokenize_pipe(t_token **token_lst, int *i);
 void		tokenize_redir_in(t_token **token_lst, int *i);
 void		tokenize_redir_out(t_token **token_lst, int *i);
@@ -144,9 +144,9 @@ char		*find_expandable(t_envepval	*env, char	*key);
 
 //list utils
 t_token		*lst_token_new(char *str, t_type type);
-void		lstadd_back(t_token **lst, t_token *new);
+void		lst_token_back(t_token **lst, t_token *new);
 void		destroy_tokens(t_token	*tokens);
-
+void		push_token(t_token **lst, t_token *new);
 
 //env
 void	set_env(t_envepval	**my_env, char **env);

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/06 13:23:27 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:32:28 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		expander(tokens, my_env, or_home);
 		// commands = merge_tokens(tokens);
 		//printf("error code: %i\n", g_error_code);
-		print_list(tokens);
+		print_tokens(tokens);
 		destroy_tokens(tokens);
 	}	
 	else

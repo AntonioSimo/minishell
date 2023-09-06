@@ -2,7 +2,7 @@
 
 void	tokenize_space(t_token **token_lst, char *line, int *i)
 {
-	lstadd_back(token_lst, lst_token_new(" ", SEPERATOR));
+	push_token(token_lst, lst_token_new(" ", SEPERATOR));
 	while (ft_isspace(line[*i]))
 		*i += 1;
 }
@@ -32,7 +32,7 @@ void	tokenize_word(t_token **token_lst, char *line, int *position)
 		i++;
 	word = ft_substr(line, *position, i);
 	*position += i;
-	lstadd_back(token_lst, lst_token_new(word, DEFAULT));
+	push_token(token_lst, lst_token_new(word, DEFAULT));
 }
 
 void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
@@ -42,7 +42,7 @@ void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
 
 	quotes_len = strlen_quoted(line, *pos, quotes);
 	quotted_sentence = ptr_check(ft_substr(line, *pos + 1, quotes_len));
-	lstadd_back(token_lst, lst_token_new(quotted_sentence, quotes));
+	push_token(token_lst, lst_token_new(quotted_sentence, quotes));
 	*pos += quotes_len + 2;
 }
 
