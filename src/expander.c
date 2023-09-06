@@ -6,11 +6,18 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/08/16 20:09:22 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:27:19 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	char_to_expand(char c)
+{
+	if (ft_isalpha(c) || c == '_')
+		return (1);
+	return (0);
+}
 
 char	*find_expandable(t_envepval	*env, char	*key)
 {
@@ -60,7 +67,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 		{
 			i++;
 			j = i;
-			while (tokens->command[i] && ft_isalpha(tokens->command[i]))
+			while (tokens->command[i] && char_to_expand(tokens->command[i]))
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);

@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-static t_token	*lstlast(t_token *lst)
+static t_token	*lst_token_last(t_token *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -9,7 +9,7 @@ static t_token	*lstlast(t_token *lst)
 	return (lst);
 }
 
-t_token	*lstnew(char *str, t_type type)
+t_token	*lst_token_new(char *str, t_type type)
 {
 	t_token	*new_node;
 
@@ -29,7 +29,7 @@ void	lstadd_back(t_token **lst, t_token *new)
 		*lst = new;
 		return ;
 	}
-	lst_node = lstlast(*lst);
+	lst_node = lst_token_last(*lst);
 	lst_node->next = new;
 }
 

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/08/16 20:07:55 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:23:27 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,11 @@
 
 extern int g_error_code;
 
-void	skip_quotes(char *line, int *i, t_type *quotes)
-{
-	int	quotted_len;
+// t_command	*merge_tokens(t_token	*tokens)
+// {
+// 	t_command	*commands;
 
-	quotted_len = strlen_quoted(line, *i, *quotes);
-	ft_printf("quoted len: %i \n", quotted_len);
-	*i += quotted_len + 2;
-	*quotes = DEFAULT;
-}
+// }
 
 void	scanner(char *line)
 {
@@ -60,7 +56,8 @@ void	scanner(char *line)
 
 void	lexer(char *line, t_envepval *my_env, char *or_home)
 {
-	t_token	*tokens;
+	t_token		*tokens;
+	// t_command	*commands;
 
 	tokens = NULL;	
 	if (check_quotes(line))
@@ -70,7 +67,7 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		//combine_tokens(tokens);
 		//check_pipes(tokens);
 		expander(tokens, my_env, or_home);
-		merge_tokens
+		// commands = merge_tokens(tokens);
 		//printf("error code: %i\n", g_error_code);
 		print_list(tokens);
 		destroy_tokens(tokens);

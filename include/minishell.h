@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/08/16 20:08:29 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:23:53 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ typedef struct s_command
 	char				*command;
 	int					fd[3];
 	int					redirection;
-	void				*content;
 	struct s_command	*next;
 }	t_command;
 
@@ -107,11 +106,12 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-// lexer
-int	ft_isspace(int c);
-int	strlen_quoted(char *line, int position, t_type quotes_type);
+
+//quotes
 t_type	quotes_type(char *line, int pos);
-bool check_quotes(char *line);
+void	skip_quotes(char *line, int *i, t_type *quotes);
+int		strlen_quoted(char *line, int position, t_type quotes_type);
+bool	check_quotes(char *line);
 
 //error
 void	perror_exit(char *str);
@@ -125,26 +125,27 @@ void	lexer(char *line, t_envepval *my_env, char *or_home);
 t_token	*create_token(char *string, t_type type);
 void	tokenize_space(t_token **token_lst, char *line, int *i);
 void	tokenize_symbols(t_token **token_lst, char *line, int *i);
-void tokenize(char *line, t_token **token_lst);
-//utils
-void	print_list(t_token *token_lst);
-int		find_equal(char *line);
-t_envepval	*create_env_node(char *key, char *value);
-void	tokenize_pipe(t_token **token_lst, int *i);
-void	tokenize_redir_in(t_token **token_lst, int *i);
-void	tokenize_redir_out(t_token **token_lst, int *i);
-void	tokenize_redir_outapp(t_token **token_lst, int *i);
-void	tokenize_heredoc(t_token **token_lst, int *i);
+void	tokenize(char *line, t_token **token_lst);
 
+//utils
+t_envepval	*create_env_node(char *key, char *value);
+void		print_list(t_token *token_lst);
+void		tokenize_pipe(t_token **token_lst, int *i);
+void		tokenize_redir_in(t_token **token_lst, int *i);
+void		tokenize_redir_out(t_token **token_lst, int *i);
+void		tokenize_redir_outapp(t_token **token_lst, int *i);
+void		tokenize_heredoc(t_token **token_lst, int *i);
+int			ft_isspace(int c);
+int			find_equal(char *line);
 
 //expander
-void	expander(t_token *tokens, t_envepval *my_env, char *or_home);
-char	*find_expandable(t_envepval	*env, char	*key);
+void		expander(t_token *tokens, t_envepval *my_env, char *or_home);
+char		*find_expandable(t_envepval	*env, char	*key);
 
 //list utils
-void	lstadd_back(t_token **lst, t_token *new);
-t_token	*lstnew(char *str, t_type type);
-void	destroy_tokens(t_token	*tokens);
+t_token		*lst_token_new(char *str, t_type type);
+void		lstadd_back(t_token **lst, t_token *new);
+void		destroy_tokens(t_token	*tokens);
 
 
 //env

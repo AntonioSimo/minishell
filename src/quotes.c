@@ -60,3 +60,13 @@ bool check_quotes(char *line)
 	}
 	return (d_quotes && s_quotes);
 }
+
+void	skip_quotes(char *line, int *i, t_type *quotes)
+{
+	int	quotted_len;
+
+	quotted_len = strlen_quoted(line, *i, *quotes);
+	ft_printf("quoted len: %i \n", quotted_len);
+	*i += quotted_len + 2;
+	*quotes = DEFAULT;
+}
