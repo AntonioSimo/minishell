@@ -53,7 +53,6 @@ int	is_word(t_type type)
 		}
 		else if (is_divider(tokens->type))
 		{
-			//printf("one time\n");
 			push_cmd(&commands, lst_cmd_new(args));
 			ft_free(args);
 			args = NULL;
@@ -113,7 +112,6 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 	{
 		//scanner(line);
 		tokenize(line, &tokens);
-		//combine_tokens(tokens);
 		//check_pipes(tokens);
 		expander(tokens, my_env, or_home);
 		commands = merge_tokens(tokens);
