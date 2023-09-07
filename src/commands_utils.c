@@ -52,7 +52,7 @@ void	print_cmds(t_command *cmd_lst)
     i = 0;
 	while (cmd_lst)
     {
-        printf("cmd: %s\nargs: ", cmd_lst->command);
+        printf("cmd: %s		args: ", cmd_lst->command);
         while (cmd_lst->arguments[i])
         {
             printf("%s ", cmd_lst->arguments[i]);

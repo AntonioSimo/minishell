@@ -26,6 +26,7 @@ void	loop(t_envepval *my_env)
 		if (!line)
 			break ;
 		add_history(line);
+		printf("str: %li\n", ft_strlen(line));
 		lexer(line, my_env, or_home);
 		ft_free(line);
 	}
