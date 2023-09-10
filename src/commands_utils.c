@@ -55,7 +55,7 @@ void	print_cmds(t_command *cmd_lst)
         printf("cmd: %s		args: ", cmd_lst->command);
         while (cmd_lst->arguments[i])
         {
-            printf("%s ", cmd_lst->arguments[i]);
+            printf(">>%s<<", cmd_lst->arguments[i]);
             i++;
         }
         i = 0;

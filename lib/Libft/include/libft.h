@@ -26,12 +26,11 @@ be used while writing large C programs.*/
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# ifdef __APPLE__				
-#  include <xlocale.h>
-#  define HEIGHT 1350
-# elif defined(__linux__)	
-#  include <X11/Xlocale.h>
-# endif
+// # ifdef __APPLE__				
+# include <locale.h>
+// # elif defined(__linux__)	
+// #  include <X11/Xlocale.h>
+// # endif
 //# include <X11/Xlocale.h>  // in Mac change to <xlocale.h>
 # include "get_next_line.h"
 # include "ft_printf.h"

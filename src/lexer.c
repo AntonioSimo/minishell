@@ -61,7 +61,6 @@ int	is_word(t_type type)
 	}
 	if (args)
 	{
-		//printf("args here lol: %s \n",args);
 		push_cmd(&commands, lst_cmd_new(args));
 		ft_free(args);
 	}
@@ -91,7 +90,6 @@ void	scanner(char *line)
 			{
 				if (ft_strchr("|<>", line[i]))
 				{
-					//check_redirections(line, &i);
 					ft_printf("i: %i\n", i);
 					i++;
 				}
