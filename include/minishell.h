@@ -80,7 +80,7 @@ typedef struct s_command
 {
 	char				**arguments;
 	char				*command;
-	// int					fd[3];
+	int					fd[2];
 	// int					redirection;
 	struct s_command	*next;
 }	t_command;
@@ -121,6 +121,10 @@ void	*ptr_check(void *ptr);
 void	parse(char *line);
 void	lexer(char *line, t_envepval *my_env, char *or_home);
 
+//executions
+void	run_commands(t_command *cmds, t_envepval *env);
+void    redir_out(t_command *cmd, int *fd);
+
 //tokenization
 t_token	*create_token(char *string, t_type type);
 void	tokenize_space(t_token **token_lst, char *line, int *i);
@@ -136,7 +140,11 @@ void		tokenize_redir_out(t_token **token_lst, int *i);
 void		tokenize_redir_outapp(t_token **token_lst, int *i);
 void		tokenize_heredoc(t_token **token_lst, int *i);
 int			ft_isspace(int c);
+char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
+
+//parser
+void	parse_redirections(t_command *commands);
 
 //expander
 void		expander(t_token *tokens, t_envepval *my_env, char *or_home);

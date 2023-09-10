@@ -32,3 +32,34 @@ int	find_equal(char *line)
 	}
 	return (-1);
 }
+
+char	*find_path(char *cmd, char *envp)
+{
+	char	**paths;
+	char	*path;
+	int		i;
+	char	*part_path;
+
+	
+	paths = ft_split(envp, ':');
+	i = 0;
+	while (paths[i])
+	{
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, cmd);
+		free(part_path);
+		// printf("checking path %s\n", path);
+		if (access(path, F_OK) == 0)
+		{
+			// printf("return %s\n", path);
+			return (path);
+		}
+		free(path);
+		i++;
+	}
+	i = -1;
+	while (paths[++i])
+		free(paths[i]);
+	free(paths);
+	return (0);
+}

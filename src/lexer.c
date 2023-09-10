@@ -103,21 +103,25 @@ void	scanner(char *line)
 void	lexer(char *line, t_envepval *my_env, char *or_home)
 {
 	t_token		*tokens;
-	 t_command	*commands;
-
+	t_command	*commands;
+	
 	tokens = NULL;	
 	if (check_quotes(line))
 	{
+		
 		//scanner(line);
 		tokenize(line, &tokens);
-		//check_pipes(tokens);
+		// check_redirections(tokens);
 		expander(tokens, my_env, or_home);
 		commands = merge_tokens(tokens);
+		parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
 		print_tokens(tokens);
 		print_cmds(commands);
+		// run_commands(commands, my_env);
 		destroy_tokens(tokens);
 		destroy_cmds(commands);
+		rl_on_new_line();
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

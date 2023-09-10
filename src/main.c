@@ -22,6 +22,7 @@ void	loop(t_envepval *my_env)
 	or_home = ptr_check(find_expandable(my_env, "HOME"));
 	while (1)
 	{
+		// rl_on_new_line();
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 			break ;
