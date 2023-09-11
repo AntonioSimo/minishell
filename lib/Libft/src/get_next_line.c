@@ -31,7 +31,7 @@ char	*ft_free_strjoin(char *s1, char *s2)
 	while (s2 && s2[i])
 		str[j++] = s2[i++];
 	str[j] = '\0';
-	free(s1);
+	ft_free(s1);
 	return (str);
 }
 
@@ -119,7 +119,7 @@ char	*ft_read_line(char	*str)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer[OPEN_MAX];
+	static char	*buffer[FOPEN_MAX];
 	char		*line;
 
 	if (BUFFER_SIZE < 1 && read(fd, 0, 0) < 0)

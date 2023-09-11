@@ -6,7 +6,7 @@
 #    By: asimone <asimone@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/12 14:58:37 by asimone       #+#    #+#                  #
-#    Updated: 2023/06/07 15:20:24 by asimone       ########   odam.nl          #
+#    Updated: 2023/07/18 18:03:49 by asimone       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ HEADERFILES := libft.h
 SRC =	src/ft_atoi.c \
 		src/ft_bzero.c \
 		src/ft_calloc.c \
+		src/ft_free.c \
 		src/ft_isalnum.c \
 		src/ft_isalpha.c \
 		src/ft_isascii.c \
@@ -62,10 +63,13 @@ SRC =	src/ft_atoi.c \
 SRC_DIR = src
 OBJ_DIR := obj_files
 OBJ := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC:.c=.o)) #you convert the .c files in .o files
+
 GREEN = \x1b[32;01m
 RED = \x1b[31;01m
 BOLD = \033[1m
+YELLOW = \033[33;1m
 RESET = \x1b[0m
+
 AR = ar
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -82,7 +86,7 @@ $(OBJ_DIR):
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) -Iinclude $(CFLAGS) -c $^ -o $@
-	@printf "$(GREEN) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
+	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 		
 clean:
 	@$(RM) -rf $(OBJ_DIR)

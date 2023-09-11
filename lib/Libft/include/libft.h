@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/12 11:29:16 by asimone       #+#    #+#                 */
-/*   Updated: 2023/03/07 15:36:46 by asimone       ########   odam.nl         */
+/*   Updated: 2023/07/18 18:03:24 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,12 @@ be used while writing large C programs.*/
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <xlocale.h>
+// # ifdef __APPLE__				
+# include <locale.h>
+// # elif defined(__linux__)	
+// #  include <X11/Xlocale.h>
+// # endif
+//# include <X11/Xlocale.h>  // in Mac change to <xlocale.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 
@@ -40,6 +45,7 @@ int		ft_atoi(const char *str);
 void	ft_bzero(void *str, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_isalnum(char c);
+void	ft_free(char *str);
 int		ft_isalpha(int c);
 int		ft_isascii(int c);
 int		ft_isdigit(int c);

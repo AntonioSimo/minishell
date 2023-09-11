@@ -1,4 +1,2 @@
+#include "../include/minishell.h"
 
-
-
-//almost done with this command
