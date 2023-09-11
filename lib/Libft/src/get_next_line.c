@@ -31,7 +31,7 @@ char	*ft_free_strjoin(char *s1, char *s2)
 	while (s2 && s2[i])
 		str[j++] = s2[i++];
 	str[j] = '\0';
-	free(s1);
+	ft_free(s1);
 	return (str);
 }
 

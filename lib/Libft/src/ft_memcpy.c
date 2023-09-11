@@ -28,6 +28,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		return (0);
 	if (dcopy == scopy && n == 0)
 		return (dst);
+	if (n == 0)
+		return (0);
 	while (i < n)
 	{
 		dcopy[i] = scopy[i];
