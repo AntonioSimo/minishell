@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/06 13:32:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/11 16:50:10 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	is_divider(t_type type)
 int	is_word(t_type type)
 {
 	if (type == DEFAULT || type == SINGLE_QUOTED
-		|| type == DOUBLE_QUOTED || type == SEPERATOR)
+		|| type == DOUBLE_QUOTED)
 		return (1);
 	return (0);
 }
@@ -35,7 +35,9 @@ int	is_word(t_type type)
  	t_command	*commands;
 	char		*args;
 	char		*temp;
+	char		**args_array;
 
+	args_array = NULL;
 	commands = NULL;
 	args = NULL;
 	temp = NULL;
@@ -51,8 +53,14 @@ int	is_word(t_type type)
 			temp = NULL;
 
 		}
+		if (tokens->type == SEPERATOR)
+		{
+			printf("command: %s\n", args);
+			args_array = str_join_2d(args_array, args);
+		}
 		else if (is_divider(tokens->type))
 		{
+			printf("command pushed: %s\n", args);
 			push_cmd(&commands, lst_cmd_new(args));
 			ft_free(args);
 			args = NULL;

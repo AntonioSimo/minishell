@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/08/16 20:06:09 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/11 17:01:46 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,21 @@ int	main(int argc, char** argv, char** env)
 
 	g_error_code = 0;
 	my_env = NULL;
+	char **str = NULL;
+	
+	
+	str=str_join_2d(str, "HELLO");
+	int i=0;
+	str = str_join_2d(str, NULL);
+	
+	while(str[i])
+	{
+		printf("%s\n", str[i]);
+		i++;
+	}
+	//printf("%lu\n",strlen(NULL));
 	set_env(&my_env, env);
 	// print_my_env(my_env);
-	loop(my_env);	
+	//loop(my_env);	
 	exit (EXIT_SUCCESS);
 }

@@ -1,5 +1,49 @@
 #include "../include/minishell.h"
 
+char	**str_join_2d(char **args, char *str)
+{
+	int		i;
+	char	**new_args;
+	i = 0;
+	
+	if (args)
+	{
+		while (args[i])
+		{
+			i++;
+		}	
+	}
+	new_args = malloc(sizeof(char *) * (i + 2));
+	i = 0;
+	if (args)
+	{
+		while (args[i])
+		{
+			new_args[i] = ptr_check(ft_strdup(args[i]));
+			i++;
+		}
+	}
+	if (str)
+	{
+		new_args[i] = ft_strdup(str);
+		new_args[i + 1] = NULL;
+	}
+	else
+		new_args[i] = NULL;
+	if (args)
+	{
+		i = 0;
+		while (args[i])
+		{
+			free(args[i]);
+			i++;
+		}
+		free(args);
+	}
+
+	return (new_args);
+}
+
 int	ft_isspace(int c)
 {
 	if ((c >= 9 && c <= 13) || c == ' ')
