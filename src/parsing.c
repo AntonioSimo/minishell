@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-void	parse_redirections(t_command *commands)
-{
+// void	parse_redirections(t_command *commands)
+// {
 	
-}
+// }

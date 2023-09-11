@@ -28,10 +28,19 @@ void	test_cmd(t_command	*cmd, t_envepval *env)
 
 void	execute_pipe(t_command *cmd, t_envepval *env, int *fd)
 {	
-	close(fd[0]);
+    
 	dup2(fd[1], STDOUT_FILENO);
-	
+	close(fd[0]);
+	// printf("at before\n");
 	test_cmd(cmd, env);
+}
+
+void execute_second(t_command *cmd, t_envepval *env, int *fd)
+{
+    dup2(fd[0], STDIN_FILENO);
+    close(fd[1]);
+ printf("at before\n");   
+    test_cmd(cmd, env);
 }
 
 void	run_commands(t_command *cmds, t_envepval *env)
@@ -41,16 +50,22 @@ void	run_commands(t_command *cmds, t_envepval *env)
 
 	if (pipe(fd) == -1)
 			perror_exit("Pipe error\n");
-	while (cmds)
-	{
+	// while (cmds)
+	// {
 		pid = fork();
 		if (pid == -1)
 			perror_exit("Fork error\n");
 		if (pid == 0)	
-		{
-            if
-        }
-		waitpid(pid, NULL, 0);
+            execute_pipe(cmds, env, fd);
+		 waitpid(pid, NULL, 0);
 		cmds = cmds->next;
-	}
+		// pid = fork();
+		// // cmds = cmds->next;
+		// if (pid == -1)
+		// 	perror_exit("Fork error\n");
+		// if (pid == 0)	
+        //     execute_second(cmds->next, env, fd);
+		//waitpid(pid, NULL, 0);
+		redir_out(cmds,fd);
+	// }
 }

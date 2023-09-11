@@ -114,11 +114,11 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		// check_redirections(tokens);
 		expander(tokens, my_env, or_home);
 		commands = merge_tokens(tokens);
-		parse_redirections(commands);
+		// parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
 		print_tokens(tokens);
 		print_cmds(commands);
-		// run_commands(commands, my_env);
+		run_commands(commands, my_env);
 		destroy_tokens(tokens);
 		destroy_cmds(commands);
 		rl_on_new_line();
