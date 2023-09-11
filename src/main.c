@@ -127,17 +127,34 @@ void	ft_free(char *str)
 void	loop(char **env, t_envepval *my_env)
 {
 	char *line;
+	char **args;
+	char *path;
 
 	(void) my_env;
-	(void)env;
+	path = get_path(env);
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
+		args = ft_split(line, ' ');
 		if (!line)
 			break ;
 		add_history(line);
-		ft_free(line);
+			if (!ft_strncmp("ls", *args, 3))
+				execute_ls(env);
+			if (!ft_strncmp("pwd", *args, 4))
+				get_current_working_dir();
+			if (!ft_strncmp("cd", *args, 3))
+				execute_cd(*args);
+			if (!ft_strncmp("echo", *args, 5))
+				execute_echo(args);
+			//if (!ft_strncmp("clear", *args, 6))
+			//{
+			//	clearScreen();
+			//}
+			else if (!ft_strncmp("exit", *args, 5))
+				exit(EXIT_SUCCESS);
 	}
+	ft_free(line);
 }	
 
 int	main(int argc, char** argv, char** env)
@@ -145,15 +162,6 @@ int	main(int argc, char** argv, char** env)
 	(void) argv;
 	(void) argc;
 	t_envepval	*my_env = NULL;
-
-	printf("%s", *env);
-
-	char *path = get_path(env);
-	path++;
-	path++;
-	path++;
-	path++;
-	path++;
 
 	loop(env, my_env);	
 	exit (EXIT_SUCCESS);

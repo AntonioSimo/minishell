@@ -26,7 +26,6 @@ be used while writing large C programs.*/
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <xlocale.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 

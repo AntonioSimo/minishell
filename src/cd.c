@@ -37,7 +37,7 @@ int execute_cd(char *arg)
             } 
 			else 
 			{
-                /* ~name should expand to the home directory of user with login `name` 
+                /* ~name should expand to the home directory of usecr with login `name` 
                    this can be implemented with getpwent() */
                 fprintf(stderr, "syntax not supported: %s\n", arg);
                 return 1;

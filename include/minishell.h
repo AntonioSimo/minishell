@@ -150,4 +150,10 @@ void	destroy_tokens(t_token	*tokens);
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
 
+//exe
+int 	execute_cd(char *arg);
+int		execute_ls(char **environment);
+void    execute_echo(char **args);
+void	get_current_working_dir(void);
+
 #endif
