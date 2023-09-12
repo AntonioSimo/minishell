@@ -96,15 +96,7 @@ char	**push_str_2d(char **args, char *str)
 	else
 		new_args[i] = NULL;
 	if (args)
-	{
-		i = 0;
-		while (args[i])
-		{
-			free(args[i]);
-			i++;
-		}
-		free(args);
-	}
+		args = double_free(args);
 	return (new_args);
 }
 

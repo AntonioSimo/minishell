@@ -53,9 +53,9 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	after = ft_substr(str, end, ft_strlen(str) - end);
 	temp = ft_strjoin(before, expanded);
 	new_line = ft_strjoin(temp, after);
-	ft_free(temp);
-	ft_free(before);
-	ft_free(after);
+	temp = ft_free(temp);
+	before = ft_free(before);
+	after = ft_free(after);
 	return (new_line);
 }
 

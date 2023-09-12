@@ -167,6 +167,6 @@ void	print_my_env(t_envepval *my_env);
 t_command	*lst_cmd_new(char **args);
 void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
-void	destroy_cmds(t_command	*cmd_lst);
+void	*destroy_cmds(t_command	*cmd_lst);
 
 #endif

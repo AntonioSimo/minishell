@@ -29,6 +29,7 @@ t_command	*lst_cmd_new(char **args)
 	new_node->arguments = ptr_check(push_str_2d(args, NULL));
 	new_node->command = ptr_check(ft_strdup(new_node->arguments[0]));
 	new_node->next = NULL;
+	printf("kirw\n");
 	return (new_node);
 }
 
@@ -52,10 +53,10 @@ void	print_cmds(t_command *cmd_lst)
     i = 0;
 	while (cmd_lst)
     {
-        printf("cmd: %s		args: ", cmd_lst->command);
+        printf("'cmd: %s'\n", cmd_lst->command);
         while (cmd_lst->arguments[i])
         {
-            printf(">>%s<<", cmd_lst->arguments[i]);
+            printf("'args: %s'\n", cmd_lst->arguments[i]);
             i++;
         }
         i = 0;
@@ -64,13 +65,13 @@ void	print_cmds(t_command *cmd_lst)
     }
 }
 
-void	destroy_cmds(t_command	*cmd_lst)
+void	*destroy_cmds(t_command	*cmd_lst)
 {
-    int i;
+    int i; //this function needs to be finished to free everything
 
     i = 0;
 	if (!cmd_lst)
-		return ;
+		return (NULL);
 	while (cmd_lst)
 	{
         while (cmd_lst->arguments[i])
@@ -82,5 +83,5 @@ void	destroy_cmds(t_command	*cmd_lst)
 		ft_free(cmd_lst->command);
 		cmd_lst = cmd_lst->next;
 	}
-	cmd_lst = NULL;
+	return (NULL);
 }
