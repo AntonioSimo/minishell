@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/06 14:57:09 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/12 14:55:45 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ void		tokenize_heredoc(t_token **token_lst, int *i);
 int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
+char		**push_str_2d(char **args, char *str);
 
 //parser
 void	parse_redirections(t_command *commands);
