@@ -143,6 +143,8 @@ int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
 char		**push_str_2d(char **args, char *str);
+void		*double_free(char **ptr);
+char		*make_str_from_2d(char **args);
 
 //parser
 void	parse_redirections(t_command *commands);
@@ -162,7 +164,7 @@ void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
 
 //command_utils
-t_command	*lst_cmd_new(char *args);
+t_command	*lst_cmd_new(char **args);
 void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
 void	destroy_cmds(t_command	*cmd_lst);

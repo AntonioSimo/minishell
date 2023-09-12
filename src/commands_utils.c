@@ -21,12 +21,12 @@ static t_command	*lst_cmd_last(t_command *lst)
 	return (lst);
 }
 
-t_command	*lst_cmd_new(char *args)
+t_command	*lst_cmd_new(char **args)
 {
 	t_command	*new_node;
 
 	new_node = ptr_check(malloc(sizeof(t_command)));
-	new_node->arguments = ptr_check(ft_split(args, ' '));
+	new_node->arguments = ptr_check(push_str_2d(args, NULL));
 	new_node->command = ptr_check(ft_strdup(new_node->arguments[0]));
 	new_node->next = NULL;
 	return (new_node);

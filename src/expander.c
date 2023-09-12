@@ -14,7 +14,7 @@
 
 int	char_to_expand(char c)
 {
-	if (ft_isalpha(c) || c == '_')
+	if (ft_isalnum(c) || c == '_')
 		return (1);
 	return (0);
 }
@@ -29,6 +29,17 @@ char	*find_expandable(t_envepval	*env, char	*key)
 		env = env->next;
 	}
 	return (ft_strdup(""));
+}
+
+char	*remove_spaces(char *expanded)
+{
+	char	**temp_arr;
+	char	*new_expanded;
+
+	temp_arr = ptr_check(ft_split(expanded, ' '));
+	expanded = ft_free(expanded);
+	new_expanded = ptr_check(make_str_from_2d(temp_arr));
+	return (new_expanded);
 }
 
 char	*replace_string(char *expanded, char	*str, int start, int end)
@@ -79,6 +90,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 			//{
 				to_expand = ft_substr(tokens->command, j, i - j);	
 				expanded = find_expandable(my_env, to_expand);
+				expanded = remove_spaces(expanded);
 				if (brackets) //to get rid of the {}
 				{
 					j--;

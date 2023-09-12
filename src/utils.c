@@ -107,3 +107,40 @@ char	**push_str_2d(char **args, char *str)
 	}
 	return (new_args);
 }
+
+void	*double_free(char **ptr)
+{
+	int	i;
+
+	i = 0;
+	if (ptr)
+	{
+		while (ptr[i])
+		{
+			free(ptr[i]);
+			i++;
+		}
+		free(ptr);
+	}
+	return (NULL);
+}
+
+char	*make_str_from_2d(char **args)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	if (args)
+	{
+		while (args[i])
+		{
+			str = ft_free_strjoin(str, args[i]);
+			if (args[i + 1])
+				str = ft_free_strjoin(str, " ");
+			i++;
+		}
+	}
+	return (str);
+}
