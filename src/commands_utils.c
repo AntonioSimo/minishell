@@ -29,7 +29,6 @@ t_command	*lst_cmd_new(char **args)
 	new_node->arguments = ptr_check(push_str_2d(args, NULL));
 	new_node->command = ptr_check(ft_strdup(new_node->arguments[0]));
 	new_node->next = NULL;
-	printf("kirw\n");
 	return (new_node);
 }
 

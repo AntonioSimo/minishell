@@ -90,7 +90,7 @@ char	**get_command(char **args)
 		else if (is_divider(tokens->type))
 		{
 			args_arr = get_command(args_arr);
-			
+
 			push_cmd(&commands, lst_cmd_new(args_arr));
 			args = ft_free(args);
 			args_arr = double_free(args_arr);
@@ -104,7 +104,7 @@ char	**get_command(char **args)
 		if (args_arr)
 		{
 			push_cmd(&commands, lst_cmd_new(args_arr));
-			args_arr = double_free(args_arr);
+			// double_free(args_arr);
 		}
 		args = ft_free(args);
 	}
@@ -157,10 +157,10 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		tokenize(line, &tokens);
 		// check_redirections(tokens);
 		expander(tokens, my_env, or_home);
+		print_tokens(tokens);
 		commands = merge_tokens(tokens);
 		// parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
-		print_tokens(tokens);
 	
 		print_cmds(commands);
 		// run_commands(commands, my_env);	

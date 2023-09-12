@@ -110,6 +110,7 @@ void	*double_free(char **ptr)
 		while (ptr[i])
 		{
 			free(ptr[i]);
+			ptr[i] = NULL;
 			i++;
 		}
 		free(ptr);

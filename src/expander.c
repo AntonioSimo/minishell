@@ -31,7 +31,7 @@ char	*find_expandable(t_envepval	*env, char	*key)
 	return (ft_strdup(""));
 }
 
-char	*remove_spaces(char *expanded)
+char	*get_cmd_on_top(char *expanded)
 {
 	char	**temp_arr;
 	char	*new_expanded;
@@ -90,7 +90,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 			//{
 				to_expand = ft_substr(tokens->command, j, i - j);	
 				expanded = find_expandable(my_env, to_expand);
-				expanded = remove_spaces(expanded);
+				expanded = get_cmd_on_top(expanded);
 				if (brackets) //to get rid of the {}
 				{
 					j--;
