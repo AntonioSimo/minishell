@@ -28,7 +28,8 @@ void	loop(t_envepval *my_env)
 			break ;
 		}
 		add_history(line);
-		lexer(line, my_env, or_home);
+		if (ft_strlen(line) > 0)
+			lexer(line, my_env, or_home);
 		ft_free(line);
 		rl_on_new_line();
 	}
