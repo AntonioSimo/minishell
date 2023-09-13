@@ -67,42 +67,40 @@ char	**get_command(char **args)
  t_command	*merge_tokens(t_token	*tokens)
  {
  	t_command	*commands;
-	char		*args;
-	char		*temp;
+	char		*word;
 	char		**args_arr;
 
 	commands = NULL;
 	args_arr = NULL;
-	args = NULL;
-	temp = NULL;
+	word = NULL;
 	while (tokens)
 	{
 		if (is_word(tokens->type))
 		{
-			args = ft_free_strjoin(args, tokens->command);
+			word = ft_free_strjoin(word, tokens->command);
 		}
 		else if (tokens->type == SEPERATOR)
 		{
-			args_arr = push_str_2d(args_arr, args);
-			args = ft_free(args);
+			args_arr = push_str_2d(args_arr, word);
+			word = ft_free(word);
 		}
 		else if (is_divider(tokens->type))
 		{
-			args_arr = push_str_2d(args_arr, args);
+			args_arr = push_str_2d(args_arr, word);
 			args_arr = get_command(args_arr);
 			push_cmd(&commands, lst_cmd_new(args_arr));
-			args = ft_free(args);
+			word = ft_free(word);
 			args_arr = NULL;
 		}
 		tokens = tokens->next;
 	}
-	if (args || args_arr)
+	if (word || args_arr)
 	{
-		args_arr = push_str_2d(args_arr, args);
+		args_arr = push_str_2d(args_arr, word);
 		args_arr = get_command(args_arr);
 		if (args_arr)
 			push_cmd(&commands, lst_cmd_new(args_arr));
-		args = ft_free(args);
+		word = ft_free(word);
 	}
 	return (commands);
  }
@@ -159,10 +157,9 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		//printf("error code: %i\n", g_error_code);
 	
 		print_cmds(commands);
-		run_commands(commands, my_env);	
+		// run_commands(commands, my_env);	
 		destroy_tokens(tokens);
 		commands = destroy_cmds(commands);
-		rl_on_new_line();
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

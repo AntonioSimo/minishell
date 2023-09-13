@@ -22,13 +22,15 @@ void	loop(t_envepval *my_env)
 	or_home = ptr_check(find_expandable(my_env, "HOME"));
 	while (1)
 	{
-		// rl_on_new_line();
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
+		{
 			break ;
+		}
 		add_history(line);
 		lexer(line, my_env, or_home);
 		ft_free(line);
+		rl_on_new_line();
 	}
 }	
 
@@ -54,7 +56,7 @@ int	main(int argc, char** argv, char** env)
 	g_error_code = 0;
 	my_env = NULL;
 	set_env(&my_env, env);
-	print_my_env(my_env);
+	// print_my_env(my_env);
 	loop(my_env);	
 	exit (EXIT_SUCCESS);
 }
