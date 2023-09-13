@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/06 13:27:19 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/13 14:45:59 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,25 +86,22 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 			j = i;
 			while (tokens->command[i] && char_to_expand(tokens->command[i]))
 				i++;
-			//if (i > j)
-			//{
-				to_expand = ft_substr(tokens->command, j, i - j);	
-				expanded = find_expandable(my_env, to_expand);
-				expanded = get_cmd_on_top(expanded);
-				if (brackets) //to get rid of the {}
-				{
-					j--;
-					i++;
-				}
-				new_command = replace_string(expanded, tokens->command, j, i);
-				ft_free(tokens->command);
-				tokens->command = ft_strdup(new_command);
-				ft_free(new_command);
-				ft_free(to_expand);
-				ft_free(expanded);
-				i = 0;
-				brackets = false;
-			//}
+			to_expand = ft_substr(tokens->command, j, i - j);	
+			expanded = find_expandable(my_env, to_expand);
+			expanded = get_cmd_on_top(expanded);
+			if (brackets) //to get rid of the {}
+			{
+				j--;
+				i++;
+			}
+			new_command = replace_string(expanded, tokens->command, j, i);
+			ft_free(tokens->command);
+			tokens->command = ft_strdup(new_command);
+			ft_free(new_command);
+			ft_free(to_expand);
+			ft_free(expanded);
+			i = 0;
+			brackets = false;
 		}
 		else
 		{

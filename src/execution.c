@@ -20,7 +20,6 @@ void	test_cmd(t_command	*cmd, t_envepval *env)
 	path = find_path(cmd->command, find_expandable(env, "PATH"));
 	printf("path: %s\n", path);
 	execve(path, cmd->arguments, NULL);
-		
 	printf("chuj kurw\n");
 	exit(EXIT_FAILURE);
 }
@@ -31,7 +30,6 @@ void	execute_pipe(t_command *cmd, t_envepval *env, int *fd)
     
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
-	// printf("at before\n");
 	test_cmd(cmd, env);
 }
 

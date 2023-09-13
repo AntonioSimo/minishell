@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/06 13:32:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:29:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ char	**get_command(char **args)
 	int 	i;
 
 	i = 0;
+	if (!args)
+		return (NULL);
 	first_row = ptr_check(ft_split(args[0], ' '));
 	new_args = NULL;
 	if (first_row)
@@ -77,10 +79,7 @@ char	**get_command(char **args)
 	{
 		if (is_word(tokens->type))
 		{
-			temp = ft_strjoin(args, tokens->command);
-			args = ft_free(args);
-			args = ft_strdup(temp);
-			temp = ft_free(temp);
+			args = ft_free_strjoin(args, tokens->command);
 		}
 		else if (tokens->type == SEPERATOR)
 		{
@@ -89,23 +88,20 @@ char	**get_command(char **args)
 		}
 		else if (is_divider(tokens->type))
 		{
+			args_arr = push_str_2d(args_arr, args);
 			args_arr = get_command(args_arr);
-
 			push_cmd(&commands, lst_cmd_new(args_arr));
 			args = ft_free(args);
-			args_arr = double_free(args_arr);
+			args_arr = NULL;
 		}
 		tokens = tokens->next;
 	}
-	if (args)
+	if (args || args_arr)
 	{
 		args_arr = push_str_2d(args_arr, args);
 		args_arr = get_command(args_arr);
 		if (args_arr)
-		{
 			push_cmd(&commands, lst_cmd_new(args_arr));
-			// double_free(args_arr);
-		}
 		args = ft_free(args);
 	}
 	return (commands);

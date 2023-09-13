@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/12 14:56:56 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:12:47 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,20 @@ int	main(int argc, char** argv, char** env)
 {
 	(void) argv;
 	(void) argc;
+	(void) env;
 	t_envepval	*my_env;
+	// char **str = NULL;
+	// char *str1 = NULL;
+
+	// str = push_str_2d(str, str1);
+	// str = push_str_2d(str, "Hello");
+	// str = push_str_2d(str, "Hello");
+	// str = push_str_2d(str, "Hello");
+	// str = double_free(str);
+	// str = get_command(str);
+	// str = double_free(str);
+	// if (str[1])
+	// 	printf("chuj\n");
 	
 	g_error_code = 0;
 	my_env = NULL;

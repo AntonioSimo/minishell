@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/12 14:55:45 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:20:30 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,10 @@ int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
 char		**push_str_2d(char **args, char *str);
-void		*double_free(char **ptr);
+void		*double_free(char **ptr, char *str);
 char		*make_str_from_2d(char **args);
-
+char	**get_command(char **args);
+void	print_args(char **args);
 //parser
 void	parse_redirections(t_command *commands);
 

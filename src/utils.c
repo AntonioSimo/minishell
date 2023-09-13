@@ -70,6 +70,8 @@ char	**push_str_2d(char **args, char *str)
 	char	**new_args;
 	
 	i = 0;
+	if (!args && !str)
+		return (NULL);
 	if (args)
 	{
 		while (args[i])
@@ -96,24 +98,41 @@ char	**push_str_2d(char **args, char *str)
 	else
 		new_args[i] = NULL;
 	if (args)
-		args = double_free(args);
+		args = double_free(args, "push_str 2d");
 	return (new_args);
 }
 
-void	*double_free(char **ptr)
+void	print_args(char **args)
+{
+	int i;
+
+	i=0;
+	while (args[i])
+	{
+		printf("%s\n", args[i]);
+		i++;
+	}
+}
+
+void	*double_free(char **ptr, char *str)
 {
 	int	i;
 
+
+	printf("from %s\n", str);
+	// print_args(ptr);
 	i = 0;
 	if (ptr)
 	{
 		while (ptr[i])
 		{
+			// printf("from %s at %i\n", str, i);
 			free(ptr[i]);
 			ptr[i] = NULL;
 			i++;
 		}
 		free(ptr);
+		ptr = NULL;
 	}
 	return (NULL);
 }
