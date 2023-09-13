@@ -98,35 +98,19 @@ char	**push_str_2d(char **args, char *str)
 	else
 		new_args[i] = NULL;
 	if (args)
-		args = double_free(args, "push_str 2d");
+		args = double_free(args);
 	return (new_args);
 }
 
-void	print_args(char **args)
-{
-	int i;
-
-	i=0;
-	while (args[i])
-	{
-		printf("%s\n", args[i]);
-		i++;
-	}
-}
-
-void	*double_free(char **ptr, char *str)
+void	*double_free(char **ptr)
 {
 	int	i;
 
-
-	printf("from %s\n", str);
-	// print_args(ptr);
 	i = 0;
 	if (ptr)
 	{
 		while (ptr[i])
 		{
-			// printf("from %s at %i\n", str, i);
 			free(ptr[i]);
 			ptr[i] = NULL;
 			i++;

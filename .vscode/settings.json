@@ -1,6 +1,32 @@
 {
     "files.associations": {
-        "minishell.h": "c",
-        "libft.h": "c"
+        "array": "c",
+        "atomic": "c",
+        "bit": "c",
+        "*.tcc": "c",
+        "cmath": "c",
+        "compare": "c",
+        "concepts": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "memory_resource": "c",
+        "optional": "c",
+        "string_view": "c",
+        "type_traits": "c",
+        "algorithm": "c",
+        "functional": "c",
+        "random": "c",
+        "limits": "c",
+        "memory": "c",
+        "new": "c",
+        "numeric": "c",
+        "ostream": "c",
+        "ranges": "c",
+        "streambuf": "c",
+        "system_error": "c",
+        "tuple": "c",
+        "utility": "c",
+        "typeinfo": "c",
+        "iosfwd": "c"
     }
 }
