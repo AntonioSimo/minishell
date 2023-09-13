@@ -170,4 +170,7 @@ void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
 void	*destroy_cmds(t_command	*cmd_lst);
 
+//executions
+void	test_cmd(t_command	*cmd, t_envepval *env);
+
 #endif
