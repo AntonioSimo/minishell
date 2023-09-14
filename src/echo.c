@@ -1,23 +1,31 @@
 #include "../include/minishell.h"
 
-//void    execute_echo(char **args)
-//{
-//    bool    echo_flag = false;
-//    int     i = 0;
+/*
+It needs to be fixed.
+*/
 
-//    if (!args[1])
-//        ft_putstr_fd("\n", STDOUT_FILENO);
-//    else
-//    {
-//        while (args[i++])
-//        {
-//            //if (!ft_strncmp("-n", args[1], 3))
-//            if (echo_flag == )
-//            {
-//                ft_putstr_fd(args[i], STDOUT_FILENO);
-//                //i++;
-//            }
-//        }
+int echo_command(int argc, char **argv)
+{
+    int     i;
+    bool    echo_flag;
 
-//    }
-//}
+    i = 1;
+    echo_flag = true;
+    if (argc > 1)
+    {
+        while (argv[i] && ft_strncmp(argv[i], "-n", ft_strlen(argv[2])) == 0)
+        {
+            echo_flag = false;
+            i++;
+        }
+        while (argv[i])
+        {
+            ft_putstr_fd(argv[i], 1);
+            ft_putchar_fd(' ', 1);
+            i++;
+        }
+    }
+    if (echo_flag == true)
+        ft_putchar_fd('\n', 1);
+    return (0);
+}

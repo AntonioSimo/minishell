@@ -40,18 +40,19 @@ int	main(int argc, char** argv, char** env)
 
 	g_error_code = 0;
 	my_env = NULL;
-	char **str = NULL;
+	//char **str = NULL;
 	
 	
-	str=str_join_2d(str, "HELLO");
-	int i=0;
-	str = str_join_2d(str, NULL);
+	//str=str_join_2d(str, "HELLO");
+	//int i=0;
+//	str = str_join_2d(str, NULL);
 	
-	while(str[i])
-	{
-		printf("%s\n", str[i]);
-		i++;
-	}
+//	while(str[i])
+//	{
+//		printf("%s\n", str[i]);
+//		i++;
+//	}
+	echo_command(argc, argv);
 	//printf("%lu\n",strlen(NULL));
 	set_env(&my_env, env);
 	// print_my_env(my_env);

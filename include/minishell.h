@@ -167,4 +167,7 @@ void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
 void	destroy_cmds(t_command	*cmd_lst);
 
+
+int echo_command(int argc, char **args);
+void	get_current_working_dir(void);
 #endif
