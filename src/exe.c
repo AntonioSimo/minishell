@@ -9,7 +9,10 @@ int ft_isbuiltin(char *command)
     return (0);
 }
 
-int exe_builtin(char **args)
+void    exe_builtin(int argc, char **args)
 {
-    
+    if (ft_strncmp(args[0], "echo", 4) == 0)
+        echo_command(argc, args);
+    if (ft_strncmp(args[0], "pwd", 3) == 0)
+        get_current_working_dir();
 }

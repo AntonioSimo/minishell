@@ -168,6 +168,10 @@ void	print_cmds(t_command *cmd_lst);
 void	destroy_cmds(t_command	*cmd_lst);
 
 
+
+//exe
 int echo_command(int argc, char **args);
 void	get_current_working_dir(void);
+int ft_isbuiltin(char *command);
+void    exe_builtin(int argc, char **args);
 #endif

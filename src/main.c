@@ -52,10 +52,10 @@ int	main(int argc, char** argv, char** env)
 //		printf("%s\n", str[i]);
 //		i++;
 //	}
-	echo_command(argc, argv);
+	//echo_command(argc, argv);
 	//printf("%lu\n",strlen(NULL));
 	set_env(&my_env, env);
 	// print_my_env(my_env);
-	//loop(my_env);	
+	loop(my_env);	
 	exit (EXIT_SUCCESS);
 }
