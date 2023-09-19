@@ -170,7 +170,7 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
-t_env  *copy_env(t_envepval *env);
+t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 
 //command_utils
