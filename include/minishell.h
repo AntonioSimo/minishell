@@ -174,4 +174,7 @@ int echo_command(int argc, char **args);
 void	get_current_working_dir(void);
 int ft_isbuiltin(char *command);
 void    exe_builtin(int argc, char **args);
+int ft_exit(int argc, char **argv);
+bool    ft_isnumber(char *str);
+int ft_envlen(char *env);
 #endif

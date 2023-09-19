@@ -27,6 +27,7 @@ void	loop(t_envepval *my_env)
 		if (!line)
 			break ;
 		add_history(line);
+		print_my_env(my_env);
 		lexer(line, my_env, or_home);
 		ft_free(line);
 	}
@@ -56,6 +57,6 @@ int	main(int argc, char** argv, char** env)
 	//printf("%lu\n",strlen(NULL));
 	set_env(&my_env, env);
 	// print_my_env(my_env);
-	loop(my_env);	
+	loop(my_env);
 	exit (EXIT_SUCCESS);
 }
