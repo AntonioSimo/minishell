@@ -3,13 +3,13 @@
 void    redir_out(t_command *cmd, int *fd)
 {   
     int		fileout;
-	char	*msg;
+	// char	*msg;
 
 	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0777);
     // dup2(fd[0], STDIN_FILENO);
 	dup2(fileout, STDOUT_FILENO);
 	// printf("%s", msg);
-	read(fd[0], msg, O_NONBLOCK);
+	// read(fd[0], msg, O_NONBLOCK);
 	close(fd[1]);
 	// run_cat(env);
     exit(EXIT_SUCCESS);

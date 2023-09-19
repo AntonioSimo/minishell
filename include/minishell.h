@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/13 17:04:54 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:35:49 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_env
+{
+    struct s_envepval	*env;
+    char				**env_copy;
+}	t_env;
+
+
 
 //quotes
 t_type	quotes_type(char *line, int pos);
@@ -163,6 +170,8 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
+t_env  *copy_env(t_envepval *env);
+void   print_copy_env(t_env *env);
 
 //command_utils
 t_command	*lst_cmd_new(char **args);

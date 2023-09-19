@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/13 17:05:10 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:42:58 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	main(int argc, char** argv, char** env)
 	(void) argc;
 	(void) env;
 	t_envepval	*my_env;
+	t_env   *env_main;
 	// char **str = NULL;
 	// char *str1 = NULL;
 
@@ -57,6 +58,8 @@ int	main(int argc, char** argv, char** env)
 	g_error_code = 0;
 	my_env = NULL;
 	set_env(&my_env, env);
+	env_main = copy_env(my_env);
+	print_copy_env(env_main);
 	// print_my_env(my_env);
 	loop(my_env);	
 	exit (EXIT_SUCCESS);
