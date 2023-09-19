@@ -7,7 +7,7 @@ void    redir_out(t_command *cmd, int *fd)
 
 	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0777);
     // dup2(fd[0], STDIN_FILENO);
-	dup2(fileout, STDOUT_FILENO);
+	dup2(fileout, fd[0]);
 	// printf("%s", msg);
 	// read(fd[0], msg, O_NONBLOCK);
 	close(fd[1]);
@@ -63,13 +63,13 @@ void	run_commands(t_command *cmds, t_envepval *env)
             // test_cmd(cmds, env);
 		 waitpid(pid, NULL, 0);
 		cmds = cmds->next;
-		pid = fork();
-		// // cmds = cmds->next;
-		// if (pid == -1)
-		// 	perror_exit("Fork error\n");
-		if (pid == 0)	
-			redir_out(cmds,fd);
-        //     execute_second(cmds->next, env, fd);
+		// pid = fork();
+		// // // cmds = cmds->next;
+		// // if (pid == -1)
+		// // 	perror_exit("Fork error\n");
+		// if (pid == 0)	
+		redir_out(cmds,fd);
+        // //     execute_second(cmds->next, env, fd);
 		waitpid(pid, NULL, 0);
 	// }
 }

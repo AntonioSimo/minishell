@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/13 16:59:47 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:58:17 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		//printf("error code: %i\n", g_error_code);
 	
 		print_cmds(commands);
-		// run_commands(commands, my_env);	
+		run_commands(commands, my_env);	
 		destroy_tokens(tokens);
 		commands = destroy_cmds(commands);
 	}	
