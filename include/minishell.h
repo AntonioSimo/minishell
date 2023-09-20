@@ -106,6 +106,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_env
+{
+    struct s_envepval	*env;
+    char				**env_copy;
+}	t_env;
+
+
 
 //quotes
 t_type	quotes_type(char *line, int pos);
