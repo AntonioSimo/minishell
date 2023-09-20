@@ -5,7 +5,7 @@ void    redir_out(t_command *cmd, int *fd)
     int		fileout;
 	// char	*msg;
 
-	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     // dup2(fd[0], STDIN_FILENO);
 	dup2(fileout, fd[0]);
 	// printf("%s", msg);
