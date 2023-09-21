@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/21 16:28:13 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:55:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int	g_error_code;
 
-void	loop(t_envepval *my_env)
+void	loop(t_env *my_env)
 {
 	char *line;
 	char *or_home;
 
-	or_home = ptr_check(find_expandable(my_env, "HOME"));
+	or_home = ptr_check(find_expandable(my_env->env, "HOME"));
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
-			printf("CTRL D is pressed!\n");
+			printf("exit\n");
 			break ;
 		}
 		add_history(line);
@@ -49,6 +49,6 @@ int	main(int argc, char** argv, char** env)
 	signal(SIGQUIT, SIG_IGN);
 	// print_copy_env(env_main);
 	// print_my_env(my_env);
-	loop(env_main->env);	
+	loop(env_main);	
 	exit (EXIT_SUCCESS);
 }

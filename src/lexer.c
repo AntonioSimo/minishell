@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/19 15:58:17 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 22:11:23 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,42 @@ char	**get_command(char **args)
 	return (new_args);
 }
 
- t_command	*merge_tokens(t_token	*tokens)
- {
+void	handle_redirections(t_redir **redir, t_token *tokens)
+{
+		t_type	redir_type;
+		char	*file;
+
+		redir_type = tokens->type;
+		while (tokens)
+		{
+			if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
+				|| tokens->type == SINGLE_QUOTED)
+				{
+					file = ptr_check(ft_strdup(tokens->command));
+					push_redir(redir, lst_redir_new(file, redir_type));
+					break ;
+				}
+			*tokens = *(tokens)->next;
+		}
+}
+
+t_command	*merge_tokens(t_token	*tokens)
+{
  	t_command	*commands;
 	char		*word;
 	char		**args_arr;
+	t_redir		*redir;
 
 	commands = NULL;
 	args_arr = NULL;
+	redir = NULL;
 	word = NULL;
 	while (tokens)
 	{
-		if (is_word(tokens->type))
+		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
+			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
+				handle_redirections(&redir, tokens);
+		else if (is_word(tokens->type))
 		{
 			word = ft_free_strjoin(word, tokens->command);
 		}
@@ -84,14 +108,16 @@ char	**get_command(char **args)
 			args_arr = push_str_2d(args_arr, word);
 			word = ft_free(word);
 		}
-		else if (is_divider(tokens->type))
+		else if (tokens->type == PIPE)
 		{
 			args_arr = push_str_2d(args_arr, word);
 			args_arr = get_command(args_arr);
-			push_cmd(&commands, lst_cmd_new(args_arr));
+			push_cmd(&commands, lst_cmd_new(args_arr, redir));
+			redir = NULL;
 			word = ft_free(word);
 			args_arr = NULL;
 		}
+		
 		tokens = tokens->next;
 	}
 	if (word || args_arr)
@@ -99,8 +125,9 @@ char	**get_command(char **args)
 		args_arr = push_str_2d(args_arr, word);
 		args_arr = get_command(args_arr);
 		if (args_arr)
-			push_cmd(&commands, lst_cmd_new(args_arr));
+			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 		word = ft_free(word);
+		redir = NULL;
 	}
 	return (commands);
  }
@@ -138,7 +165,7 @@ void	scanner(char *line)
 	}
 }
 
-void	lexer(char *line, t_envepval *my_env, char *or_home)
+void	lexer(char *line, t_env *my_env, char *or_home)
 {
 	t_token		*tokens;
 	t_command	*commands;
@@ -150,14 +177,14 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		//scanner(line);
 		tokenize(line, &tokens);
 		// check_redirections(tokens);
-		expander(tokens, my_env, or_home);
+		expander(tokens, my_env->env, or_home);
 		print_tokens(tokens);
 		commands = merge_tokens(tokens);
 		// parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
 	
 		print_cmds(commands);
-		run_commands(commands, my_env);	
+		// run_commands(commands, my_env);	
 		destroy_tokens(tokens);
 		commands = destroy_cmds(commands);
 	}	

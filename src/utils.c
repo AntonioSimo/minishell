@@ -70,6 +70,8 @@ char	**push_str_2d(char **args, char *str)
 	char	**new_args;
 	
 	i = 0;
+	if (!str)
+		return (args);
 	if (!args && !str)
 		return (NULL);
 	if (args)
