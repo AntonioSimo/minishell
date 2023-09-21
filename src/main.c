@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/19 15:42:58 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:28:13 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	loop(t_envepval *my_env)
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
+			printf("CTRL D is pressed!\n");
 			break ;
 		}
 		add_history(line);
@@ -43,8 +44,9 @@ int	main(int argc, char** argv, char** env)
 	t_env   *env_main;
 	
 	g_error_code = 0;
-	
 	env_main = copy_env(env);
+	signal(SIGINT, signal_int_handler);
+	signal(SIGQUIT, SIG_IGN);
 	// print_copy_env(env_main);
 	// print_my_env(my_env);
 	loop(env_main->env);	

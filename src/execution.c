@@ -26,6 +26,8 @@ void	test_cmd(t_command	*cmd, t_envepval *env)
 	path = find_path(cmd->command, find_expandable(env, "PATH"));
 	execve(path, cmd->arguments, NULL);
 	printf("%s: command not found\n", cmd->command);
+	g_error_code = 127;
+	exit(1);
 }
 
 

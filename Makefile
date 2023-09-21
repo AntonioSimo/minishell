@@ -6,7 +6,7 @@
 #    By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:29:32 by asimone           #+#    #+#              #
-#    Updated: 2023/07/18 14:43:55 by pskrucha         ###   ########.fr        #
+#    Updated: 2023/09/21 16:27:14 by pskrucha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SOURCES := $(SRC_DIR)/*.c
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror 
+CFLAGS := -Wall -Wextra -Werror -g3 -fsanitize=address
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  
