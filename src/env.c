@@ -110,3 +110,17 @@ t_env  *copy_env(char **env)
        new_env->env_copy[i] = NULL;
        return (new_env);
  }
+
+void   print_copy_env(t_env *env)
+{
+       printf("my struct: \n");
+       print_my_env(env->env);
+       printf("after----\n");
+       printf("my copy:\n\n");
+       int i = 0;
+       while (env->env_copy[i])
+       {
+               printf("%s\n", env->env_copy[i]);
+               i++;
+       }
+ }

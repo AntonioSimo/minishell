@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/11 16:50:10 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:58:17 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,47 +30,77 @@ int	is_word(t_type type)
 	return (0);
 }
 
+char	**get_command(char **args)
+{
+	char	**new_args;
+	char	**first_row;
+	int 	i;
+
+	i = 0;
+	if (!args)
+		return (NULL);
+	first_row = ptr_check(ft_split(args[0], ' '));
+	new_args = NULL;
+	if (first_row)
+	{
+		while (first_row[i])
+		{
+			new_args = push_str_2d(new_args, first_row[i]);
+			i++;
+		}
+		i = 1;
+	}
+	while (args[i])
+	{
+		new_args = push_str_2d(new_args, args[i]);
+		i++;
+	}
+	while (i >= 0)
+	{
+		free(args[i]);
+		i--;
+	}
+	free(args);
+	return (new_args);
+}
+
  t_command	*merge_tokens(t_token	*tokens)
  {
  	t_command	*commands;
-	char		*args;
-	char		*temp;
-	char		**args_array;
+	char		*word;
+	char		**args_arr;
 
-	args_array = NULL;
 	commands = NULL;
-	args = NULL;
-	temp = NULL;
+	args_arr = NULL;
+	word = NULL;
 	while (tokens)
 	{
 		if (is_word(tokens->type))
 		{
-			temp = ft_strjoin(args, tokens->command);
-			ft_free(args);
-			args = NULL;
-			args = ft_strdup(temp);
-			ft_free(temp);
-			temp = NULL;
-
+			word = ft_free_strjoin(word, tokens->command);
 		}
-		if (tokens->type == SEPERATOR)
+		else if (tokens->type == SEPERATOR)
 		{
-			printf("command: %s\n", args);
-			args_array = str_join_2d(args_array, args);
+			args_arr = push_str_2d(args_arr, word);
+			word = ft_free(word);
 		}
 		else if (is_divider(tokens->type))
 		{
-			printf("command pushed: %s\n", args);
-			push_cmd(&commands, lst_cmd_new(args));
-			ft_free(args);
-			args = NULL;
+			args_arr = push_str_2d(args_arr, word);
+			args_arr = get_command(args_arr);
+			push_cmd(&commands, lst_cmd_new(args_arr));
+			word = ft_free(word);
+			args_arr = NULL;
 		}
 		tokens = tokens->next;
 	}
-	if (args)
+	if (word || args_arr)
 	{
-		push_cmd(&commands, lst_cmd_new(args));
-		ft_free(args);
+		args_arr = push_str_2d(args_arr, word);
+		args_arr = get_command(args_arr);
+		if (args_arr)
+			push_cmd(&commands, lst_cmd_new(args_arr));
+		word = ft_free(word);
 	}
 	return (commands);
  }
@@ -121,15 +151,15 @@ void	lexer(char *line, t_envepval *my_env, char *or_home)
 		tokenize(line, &tokens);
 		// check_redirections(tokens);
 		expander(tokens, my_env, or_home);
+		print_tokens(tokens);
 		commands = merge_tokens(tokens);
 		// parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
-		print_tokens(tokens);
+	
 		print_cmds(commands);
-		run_commands(commands, my_env);
+		run_commands(commands, my_env);	
 		destroy_tokens(tokens);
-		destroy_cmds(commands);
-		rl_on_new_line();
+		commands = destroy_cmds(commands);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

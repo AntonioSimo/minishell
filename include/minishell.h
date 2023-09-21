@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/11 16:53:18 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:21:01 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_command
 	char				**arguments;
 	char				*command;
 	int					fd[2];
+	// bool				builtin;
 	// int					redirection;
 	struct s_command	*next;
 }	t_command;
@@ -149,8 +150,10 @@ void		tokenize_heredoc(t_token **token_lst, int *i);
 int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
-char		**str_join_2d(char **args, char *str);
-
+char		**push_str_2d(char **args, char *str);
+void		*double_free(char **ptr);
+char		*make_str_from_2d(char **args);
+char		**get_command(char **args);
 //parser
 void	parse_redirections(t_command *commands);
 
@@ -167,21 +170,20 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
+t_env  *copy_env(char **env);
+void   print_copy_env(t_env *env);
 
 //command_utils
-t_command	*lst_cmd_new(char *args);
+t_command	*lst_cmd_new(char **args);
 void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
-void	destroy_cmds(t_command	*cmd_lst);
+void	*destroy_cmds(t_command	*cmd_lst);
 
+//executions
+void	test_cmd(t_command	*cmd, t_envepval *env);
 
+//signals
+void    signal_int_handler(int sig);
+void	signal_quit_handler(int sig);
 
-//exe
-int echo_command(int argc, char **args);
-void	get_current_working_dir(void);
-int ft_isbuiltin(char *command);
-void    exe_builtin(int argc, char **args);
-int ft_exit(int argc, char **argv);
-bool    ft_isnumber(char *str);
-int ft_envlen(char *env);
 #endif
