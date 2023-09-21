@@ -1,5 +1,7 @@
 #include "../include/minishell.h"
 
+extern int g_error_code;
+
 void    redir_out(t_command *cmd, int *fd)
 {   
     int		fileout;
@@ -23,8 +25,7 @@ void	test_cmd(t_command	*cmd, t_envepval *env)
 	
 	path = find_path(cmd->command, find_expandable(env, "PATH"));
 	execve(path, cmd->arguments, NULL);
-	printf("chuj kurw\n");
-	exit(EXIT_FAILURE);
+	printf("%s: command not found\n", cmd->command);
 }
 
 
@@ -55,23 +56,39 @@ void execute_second(t_command *cmd, t_envepval *env, int *fd)
 	// printf("%s\n", buffer);
 }
 
+void	redir_in(t_command *cmd, t_envepval *env, int *fd)
+{
+	int	file;
+
+	file = open(cmd->command, O_RDONLY);
+	close(fd[1]);
+	dup2(file, STDIN_FILENO);
+	test_cmd(cmd->next, env);
+}
+
 void	run_commands(t_command *cmds, t_envepval *env)
 {
-	int		fd[2];
+	// int		fd[2];
 	pid_t	pid1;
-	pid_t	pid2;
+	// pid_t	pid2;
 	//function so far is trying to replicate right redir
 	// printf("here\n");
-	if (pipe(fd) == -1)
-			perror_exit("Pipe error\n");
+	// if (pipe(fd) == -1)
+	// 		perror_exit("Pipe error\n");
 	// while (cmds)
 	// {
 		pid1 = fork();
 		if (pid1 == -1)
 			perror_exit("Fork error\n");
 		if (pid1 == 0)	
-			execute_pipe(cmds, env, fd);
-            // test_cmd(cmds, env);
+		{
+
+			// redir_in(cmds, env, fd);
+			// execute_pipe(cmds, env, fd);
+		    test_cmd(cmds, env);
+			g_error_code = 127;
+			exit(127);
+		}
 		//  waitpid(pid1, NULL, 0);
 		// cmds = cmds->next;
 		// pid = fork();
@@ -81,12 +98,12 @@ void	run_commands(t_command *cmds, t_envepval *env)
 		// if (pid == 0)	
 		// redir_out(cmds,fd);
 
-		pid2 = fork();
-		if (pid2 == 0)
-        	execute_second(cmds->next, env, fd);
-		close(fd[0]);
-		close(fd[1]);
+		// pid2 = fork();
+		// if (pid2 == 0)
+        // 	execute_second(cmds->next, env, fd);
+		// close(fd[0]);
+		// close(fd[1]);
 		waitpid(pid1, NULL, 0);
-		waitpid(pid2, NULL, 0);
+		// waitpid(pid2, NULL, 0);
 	// }
 }

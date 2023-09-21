@@ -27,6 +27,7 @@
         "tuple": "c",
         "utility": "c",
         "typeinfo": "c",
-        "iosfwd": "c"
+        "iosfwd": "c",
+        "minishell.h": "c"
     }
 }
