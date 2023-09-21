@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/19 15:35:49 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:21:01 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,5 +181,9 @@ void	*destroy_cmds(t_command	*cmd_lst);
 
 //executions
 void	test_cmd(t_command	*cmd, t_envepval *env);
+
+//signals
+void    signal_int_handler(int sig);
+void	signal_quit_handler(int sig);
 
 #endif

@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern int g_error_code;
+
 int	char_to_expand(char c)
 {
 	if (ft_isalnum(c) || c == '_')
@@ -155,11 +157,33 @@ void	double_dollar(t_token *tokens)
 	free(pid);
 }
 
+void	error_code_expansion(t_token *token)
+{
+	char	*new_command;
+	char	*error_code;
+	int		i;
+
+	i = 0;
+	error_code = ptr_check(ft_itoa(g_error_code));
+	while (ft_strnstr(token->command, "$?", ft_strlen(token->command)))
+	{
+		i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
+		new_command = replace_string(error_code, token->command, i + 1, i + 2);
+		free(token->command);
+		token->command = ptr_check(ft_strdup(new_command));
+		free(new_command);
+	}
+	free(error_code);
+}
+
 void	expander(t_token *tokens, t_envepval *my_env, char *or_home)
 {
 	
 	while (tokens)
 	{
+		if ((tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED)
+			&& ft_strnstr(tokens->command, "$?", ft_strlen(tokens->command)))
+			error_code_expansion(tokens);
 		if ((tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED)
 			&& ft_strchr(tokens->command, '$'))
 			dollar_expansion(tokens, my_env);
