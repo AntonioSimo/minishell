@@ -25,7 +25,7 @@ void	loop(t_envepval *my_env)
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
-			printf("CTRL D is pressed!\n");
+			printf("exit\n");
 			break ;
 		}
 		add_history(line);

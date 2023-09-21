@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/libft.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -31,13 +31,18 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (ptr);
 }
 
+// void	f()
+// {
+// 	atexit(system);
+// }
+
 // int	main(void)
 // {
-//	char a [50] = "Ciao sono Antonio.";
-//	char *b;
-//	int start = 10;
-//	size_t len = 50;
-//	b = ft_substr(a, start, len);
-//	printf("%s", b);
-// 	//system("leaks a.out");
+// 	char a[50] = "Ciao sono Antonio.";
+// 	char *b;
+// 	int start = 0;
+// 	size_t len = 5;
+// 	b = ft_substr(a, start, len);
+// 	printf("%s", b);
+// 	system("leaks a.out");
 // }
