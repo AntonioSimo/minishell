@@ -25,11 +25,3 @@ void    signal_int_handler(int sig)
 		rl_redisplay();
 	}
 }
-
-void	signal_quit_handler(int sig)
-{
-	if (sig == SIGQUIT)
-	{
-		return ;
-	}
-}

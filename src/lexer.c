@@ -165,6 +165,15 @@ void	scanner(char *line)
 	}
 }
 
+// void	check_redirections(t_token *tokens)
+// {
+// 	while (tokens)
+// 	{
+// 		if (tokens->type == )
+// 	}
+	
+// }
+
 void	lexer(char *line, t_env *my_env, char *or_home)
 {
 	t_token		*tokens;
@@ -176,8 +185,8 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		
 		//scanner(line);
 		tokenize(line, &tokens);
-		// check_redirections(tokens);
 		expander(tokens, my_env->env, or_home);
+		// check_redirections(tokens);
 		print_tokens(tokens);
 		commands = merge_tokens(tokens);
 		// parse_redirections(commands);

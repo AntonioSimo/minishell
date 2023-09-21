@@ -197,6 +197,5 @@ void	test_cmd(t_command	*cmd, t_env *env);
 
 //signals
 void    signal_int_handler(int sig);
-void	signal_quit_handler(int sig);
 
 #endif

@@ -88,9 +88,7 @@ int redir_size(t_redir	*redir)
 void	print_cmds(t_command *cmd_lst)
 {
     int i;
-	t_redir *node;
-	
-	node = cmd_lst->redirections;
+
     i = 0;
 	while (cmd_lst)
     {
@@ -123,7 +121,8 @@ void	*destroy_cmds(t_command	*cmd_lst)
             i++;
         }
         i = 0;
-		ft_free((cmd_lst)->command);
+		destroy_redir(cmd_lst->redirections);
+		free((cmd_lst)->command);
 		cmd_lst = node;
 	}
 	return (NULL);
