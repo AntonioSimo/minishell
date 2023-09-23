@@ -167,9 +167,9 @@ char		**get_command(char **args);
 void	parse_redirections(t_command *commands);
 
 //expander
-void		expander(t_token *tokens, t_envepval *my_env, char *or_home);
+void		expander(t_token **tokens, t_envepval *my_env, char *or_home);
 char		*find_expandable(t_envepval	*env, char	*key);
-void	connect_nodes(t_token *new_nodes, t_token **tokens, int pos, t_token **head);
+void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
 
 //list utils

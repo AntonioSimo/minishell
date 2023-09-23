@@ -71,9 +71,9 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (pid1 == -1)
 			perror_exit("Fork error\n");
 		if (pid1 == 0)	
+            test_cmd(cmds, env);
 
-			redir_out(cmds, env);
-            // test_cmd(cmds, env);
+			// redir_out(cmds, env);
 			// execute_pipe(cmds, env, fd);
 		//  waitpid(pid1, NULL, 0);
 		// cmds = cmds->next;
