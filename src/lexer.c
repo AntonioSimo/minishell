@@ -188,17 +188,18 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		tokenize(line, &tokens);
 		expander(&tokens, my_env->env, or_home);
 		
+		// printf("im out\n");
 		// check_redirections(tokens);
 		print_tokens(tokens);
+		// printf("error code: %i\n", g_error_code);
 		commands = merge_tokens(tokens);
 		
 		// parse_redirections(commands);
-		//printf("error code: %i\n", g_error_code);
-	
+
 		print_cmds(commands);
 		if (commands)
 		{
-			printf("hihi\n");
+			// printf("hihi\n");
 			run_commands(commands, my_env);	
 		}
 		destroy_tokens(tokens);
