@@ -33,17 +33,38 @@ char	*find_expandable(t_envepval	*env, char	*key)
 	return (ft_strdup(""));
 }
 
-char	*get_cmd_on_top(char *expanded)
+void	print_expanded_nodes(t_token *nodes)
+{
+	while (nodes)
+	{
+		printf("%s\n", nodes->command);
+		nodes = nodes->next;
+	}
+}
+
+t_token	*create_new_nodes(char *expanded)
 {
 	char	**temp_arr;
-	char	*new_expanded;
+	t_token	*new_nodes;
+	int		i;
+	char	*token;
 
+	i = 0;
+	new_nodes = NULL;
 	if (ft_strlen(expanded) == 0)
-		return (expanded);
+		return (NULL);
 	temp_arr = ptr_check(ft_split(expanded, ' '));
 	expanded = ft_free(expanded);
-	new_expanded = ptr_check(make_str_from_2d(temp_arr));
-	return (new_expanded);
+	while (temp_arr[i])
+	{
+		token = ptr_check(ft_strdup(temp_arr[i]));
+		push_token(&new_nodes, lst_token_new(token, DEFAULT));
+		free(token);
+		i++;
+	}
+	temp_arr = double_free(temp_arr);
+	print_expanded_nodes(new_nodes);
+	return (new_nodes);
 }
 
 char	*replace_string(char *expanded, char	*str, int start, int end)
@@ -63,19 +84,78 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	return (new_line);
 }
 
+t_token	*create_nodes(char *expanded, char	*str, int start, int end)
+{
+	char	*before;
+	char	*after;
+	t_token	*temp_node;
+
+	temp_node = NULL;
+	before = ft_substr(str, 0, start - 1);
+	after = ft_substr(str, end, ft_strlen(str) - end);
+	if (ft_strlen(before))
+		push_token(&temp_node, lst_token_new(before, DEFAULT));
+	if (ft_strlen(expanded))
+		push_token(&temp_node, lst_token_new(expanded, DEFAULT));
+	if (ft_strlen(after))
+		push_token(&temp_node, lst_token_new(after, DEFAULT));
+	free(before);
+	free(after);
+	return (temp_node);
+}
+
+void	free_node(t_token *token)
+{
+	free(token->command);
+	free(token);
+}
+
+void	connect_nodes(t_token *new_nodes, t_token **tokens, int pos, t_token **head)
+{
+	int i = 0;
+	t_token	*or_head;
+	t_token	*next_head;
+	t_token	*prev_to_append;
+	// t_token	*to_free;
+	(void)tokens;
+	or_head = *head;
+	while (i<pos)
+	{
+		*head = (*(head))->next;
+		if (i<pos - 1)
+			prev_to_append = *head;
+		i++;
+	}
+	printf("head:%s\n", (*head)->command);
+	i = 0;
+	// to_free = (*head);
+	// free(to_free->command);
+	// free(to_free);
+	next_head = (*head)->next;
+	// printf("to free: %s\n", next_head->command);
+	// if ((*head)->next->next)
+	// {
+		// next_head = (*head)->next->next;
+	// }
+	prev_to_append->next = new_nodes;
+	while (new_nodes->next)
+		new_nodes = new_nodes->next;
+	new_nodes->next = next_head;
+	*head = or_head;
+}
+
 static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 {
-	char	*new_command;
+	// char	*new_command;
 	char	*to_expand;
 	char	*expanded;
 	int 	i;
 	int		j;
 	bool	brackets;
+	t_token	*expanded_nodes;
 
 	j = 0;
 	i = 0;
-	(void)my_env;
-	
 	while(i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[i] == '$' && !tokens->command[i + 1]) //to leave $ at the last position $USER$
@@ -96,18 +176,22 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env)
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
-			expanded = get_cmd_on_top(expanded);
+			// expanded_nodes = create_new_nodes(expanded);
 			if (brackets) //to get rid of the {}
 			{
 				j--;
 				i++;
 			}
-			new_command = replace_string(expanded, tokens->command, j, i);
-			ft_free(tokens->command);
-			tokens->command = ft_strdup(new_command);
-			ft_free(new_command);
+			printf("%s\n", expanded);
+			expanded_nodes = create_nodes(expanded, tokens->command, j, i);
+			print_expanded_nodes(expanded_nodes);
+			// printf("new command: %s\n", new_command);
+			// ft_free(tokens->command);
+			// tokens->command = ft_strdup(new_command);
+			connect_nodes(expanded_nodes, &tokens, 0, &tokens);
+			// ft_free(new_command);
 			ft_free(to_expand);
-			ft_free(expanded);
+			// ft_free(expanded);
 			i = 0;
 			brackets = false;
 		}
