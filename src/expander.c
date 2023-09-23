@@ -52,7 +52,10 @@ t_token	*create_new_nodes(char *expanded)
 	i = 0;
 	new_nodes = NULL;
 	if (ft_strlen(expanded) == 0)
-		return (NULL);
+	{
+		push_token(&new_nodes, lst_token_new(" ", SEPERATOR));
+		return (new_nodes);
+	}
 	temp_arr = ptr_check(ft_split(expanded, ' '));
 	// expanded = ft_free(expanded);
 	while (temp_arr[i])
@@ -110,11 +113,12 @@ t_token	*create_nodes(char *expanded, char	*str, int start, int end)
 	temp_node = NULL;
 	before = ft_substr(str, 0, start - 1);
 	after = ft_substr(str, end, ft_strlen(str) - end);
-	if (ft_strlen(before))
+	if (ft_strlen(before) > 0)
 		push_token(&temp_node, lst_token_new(before, DEFAULT));
-	if (ft_strlen(expanded))
+	if (ft_strlen(expanded) > 0)
 	{
 		expanded_nodes = create_new_nodes(expanded);
+		print_tokens(expanded_nodes);
 		i = token_lst_size(expanded_nodes);
 		while (i)
 		{
@@ -125,10 +129,12 @@ t_token	*create_nodes(char *expanded, char	*str, int start, int end)
 			i--;
 		}
 	}
-	if (ft_strlen(after))
+	if (ft_strlen(after) > 0)
 		push_token(&temp_node, lst_token_new(after, DEFAULT));
 	free(before);
 	free(after);
+	if (!temp_node)
+		return (lst_token_new(" ", SEPERATOR));
 	return (temp_node);
 }
 
@@ -206,7 +212,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 				j--;
 				i++;
 			}
-			// printf("new command: %s\n", expanded);
+			// printf("expanded size:%lu", ft_strlen(expanded));
 			expanded_nodes = create_nodes(expanded, tokens->command, j, i);
 			// print_expanded_nodes(expanded_nodes);
 			// ft_free(tokens->command);

@@ -111,7 +111,6 @@ t_command	*merge_tokens(t_token	*tokens)
 		else if (tokens->type == PIPE)
 		{
 			args_arr = push_str_2d(args_arr, word);
-			// args_arr = get_command(args_arr);
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 			redir = NULL;
 			word = ft_free(word);
@@ -123,7 +122,6 @@ t_command	*merge_tokens(t_token	*tokens)
 	if (word || args_arr)
 	{
 		args_arr = push_str_2d(args_arr, word);
-		// args_arr = get_command(args_arr);
 		if (args_arr)
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 		word = ft_free(word);
@@ -193,11 +191,16 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		// check_redirections(tokens);
 		print_tokens(tokens);
 		commands = merge_tokens(tokens);
+		
 		// parse_redirections(commands);
 		//printf("error code: %i\n", g_error_code);
 	
 		print_cmds(commands);
-		run_commands(commands, my_env);	
+		if (commands)
+		{
+			printf("hihi\n");
+			run_commands(commands, my_env);	
+		}
 		destroy_tokens(tokens);
 		// commands = destroy_cmds(commands);
 	}	
