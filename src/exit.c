@@ -14,17 +14,17 @@ bool    ft_isnumber(char *str)
     return (true);
 }
 
-int ft_exit(int argc, char **argv)
+int ft_exit(char **args)
 {
     int exit_code;
 
-    exit_code = ft_atoi(argv[1]);
-    if (argc > 2)
+    exit_code = ft_atoi(args[1]);
+    if (ft_arraysize(args) > 2)
     {
         ft_putstr_fd("exit: too many arguments\n", 2);
         return (1);
     }
-    if (!ft_isnumber(argv[1]))
+    if (!ft_isnumber(args[1]))
     {
         ft_putstr_fd("exit: numeric argument required\n", 2);
         return (1);

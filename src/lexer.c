@@ -111,7 +111,6 @@ t_command	*merge_tokens(t_token	*tokens)
 		else if (tokens->type == PIPE)
 		{
 			args_arr = push_str_2d(args_arr, word);
-			args_arr = get_command(args_arr);
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 			redir = NULL;
 			word = ft_free(word);
@@ -123,7 +122,6 @@ t_command	*merge_tokens(t_token	*tokens)
 	if (word || args_arr)
 	{
 		args_arr = push_str_2d(args_arr, word);
-		args_arr = get_command(args_arr);
 		if (args_arr)
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 		word = ft_free(word);
@@ -178,24 +176,34 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 {
 	t_token		*tokens;
 	t_command	*commands;
+	// (void)my_env;
+	// (void)or_home;
 	
 	tokens = NULL;	
+	// commands = NULL;
 	if (check_quotes(line))
 	{
 		
 		//scanner(line);
 		tokenize(line, &tokens);
-		expander(tokens, my_env->env, or_home);
+		expander(&tokens, my_env->env, or_home);
+		
+		// printf("im out\n");
 		// check_redirections(tokens);
-		print_tokens(tokens);
+		//print_tokens(tokens);
+		// printf("error code: %i\n", g_error_code);
 		commands = merge_tokens(tokens);
+		
 		// parse_redirections(commands);
-		//printf("error code: %i\n", g_error_code);
-	
-		print_cmds(commands);
-		// run_commands(commands, my_env);	
+
+		//print_cmds(commands);
+		if (commands)
+		{
+			// printf("hihi\n");
+			run_commands(commands, my_env);	
+		}
 		destroy_tokens(tokens);
-		commands = destroy_cmds(commands);
+		// commands = destroy_cmds(commands);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

@@ -1,29 +1,34 @@
 #include "../include/minishell.h"
 
-/*
-It needs to be fixed.
-*/
+int ft_arraysize(char **args)
+{
+    int i;
 
-int echo_command(int argc, char **argv)
+    i = 0;
+    while (args[i])
+        i++;
+    return (i);
+}
+
+int echo_command(char **args)
 {
     int     i;
     bool    is_nl;
     
-    argv++;
-
     i = 1;
     is_nl = false;
-    if (argc > 1)
+    if (ft_arraysize(args) > 1)
     {
-        if (argv[1] && ft_strncmp(argv[1], "-n", 2) == 0)
+        if (args && ft_strncmp(args[i], "-n", 2) == 0)
         {
             i++;
             is_nl = true;
         }
-        while (argv[i])
+        while (args[i])
         {
-            ft_putstr_fd(argv[i], 1);
-            ft_putchar_fd(' ', 1);
+            ft_putstr_fd(args[i], 1);
+            if (i < ft_arraysize(args) - 1)
+                ft_putchar_fd(' ', 1);
             i++;
         }
     }

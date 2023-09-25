@@ -70,6 +70,8 @@ char	**push_str_2d(char **args, char *str)
 	char	**new_args;
 	
 	i = 0;
+	if (!str)
+		return (args);
 	if (!args && !str)
 		return (NULL);
 	if (args)
@@ -112,11 +114,9 @@ void	*double_free(char **ptr)
 		while (ptr[i])
 		{
 			free(ptr[i]);
-			ptr[i] = NULL;
 			i++;
 		}
 		free(ptr);
-		ptr = NULL;
 	}
 	return (NULL);
 }

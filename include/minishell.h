@@ -167,8 +167,10 @@ char		**get_command(char **args);
 void	parse_redirections(t_command *commands);
 
 //expander
-void		expander(t_token *tokens, t_envepval *my_env, char *or_home);
+void		expander(t_token **tokens, t_envepval *my_env, char *or_home);
 char		*find_expandable(t_envepval	*env, char	*key);
+void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
+t_token	*create_nodes(char *expanded, char	*str, int start, int end);
 
 //list utils
 t_token		*lst_token_new(char *str, t_type type);
@@ -193,9 +195,18 @@ t_redir	*lst_redir_new(char	*file, t_type type);
 void	*destroy_redir(t_redir *redir);
 
 //executions
-void	test_cmd(t_command	*cmd, t_env *env);
+void	find_cmd(t_command	*cmd, t_env *env);
 
 //signals
 void    signal_int_handler(int sig);
+
+
+int 	echo_command(char **args);
+void    exe_builtin(char **args, char *cmd, t_env *env);
+int 	ft_isbuiltin(char *command);
+int 	ft_arraysize(char **args);
+void	get_current_working_dir(void);
+bool    ft_isnumber(char *str);
+int ft_exit(char **args);
 
 #endif
