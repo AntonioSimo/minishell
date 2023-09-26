@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 15:15:07 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 15:16:39 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	loop(t_env *my_env)
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
-			printf("exit\n");
+			printf("exit\n"); //after pressing ctrl c exit prints extra new line, to check
 			break ;
 		}
 		add_history(line);
