@@ -19,7 +19,12 @@ int echo_command(char **args)
     is_nl = false;
     if (ft_arraysize(args) > 1)
     {
-        if (args && ft_strncmp(args[i], "-n", 2) == 0)
+        if (args && ft_strcmp(args[i], "-n") == 0)
+        {
+            i++;
+            is_nl = true;
+        }
+        else if (args && ft_strncmp(args[i], "-n", 2) == 0)
         {
             i++;
             is_nl = true;

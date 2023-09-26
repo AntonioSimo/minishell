@@ -208,5 +208,6 @@ int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
 int ft_exit(char **args);
+int	ft_strcmp(char *s1, char *s2);
 
 #endif
