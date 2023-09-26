@@ -14,7 +14,6 @@ int	strlen_quoted(char *line, int position, t_type quotes_type)
 			return (length);
 		length++;
 	}
-	ft_printf("error quotted\n");
 	return (0);
 }
 

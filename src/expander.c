@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/13 14:45:59 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:34:19 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ t_token	*create_new_nodes(char *expanded)
 		return (new_nodes);
 	}
 	temp_arr = ptr_check(ft_split(expanded, ' '));
-	// expanded = ft_free(expanded);
 	while (temp_arr[i])
 	{
 		token = ptr_check(ft_strdup(temp_arr[i]));
@@ -119,7 +118,6 @@ t_token	*create_nodes(char *expanded, char	*str, int start, int end)
 	if (ft_strlen(expanded) > 0)
 	{
 		expanded_nodes = create_new_nodes(expanded);
-		// print_tokens(expanded_nodes);
 		i = token_lst_size(expanded_nodes);
 		while (i)
 		{
@@ -175,9 +173,6 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 
 static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
 {
-	// (void)tokens;
-	// (void)my_env;
-	// (void)head;
 	char	*to_expand;
 	char	*expanded;
 	int 	i;
@@ -207,26 +202,14 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
-			// expanded_nodes = create_new_nodes(expanded);
 			if (brackets) //to get rid of the {}
 			{
 				j--;
 				i++;
 			}
-			// printf("expanded size:%lu", ft_strlen(expanded));
 			expanded_nodes = create_nodes(expanded, tokens->command, j, i);
-			// printf("here\n");
-			// print_expanded_nodes(expanded_nodes);
-			// printf("here\n");
-			// ft_free(tokens->command);
-			// tokens->command = ft_strdup(new_command);
 			connect_nodes(expanded_nodes, pos, head);
-			printf("segf\n");
-			// ft_free(new_command);
 			ft_free(to_expand);
-			// ft_free(expanded);
-			// i = 0;
-			// brackets = false;
 			break ;
 		}
 		else
