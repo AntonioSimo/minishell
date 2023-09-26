@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 18:30:51 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:04:09 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,39 +30,39 @@ int	is_word(t_type type)
 	return (0);
 }
 
-char	**get_command(char **args)
-{
-	char	**new_args;
-	char	**first_row;
-	int 	i;
+// char	**get_command(char **args)
+// {
+// 	char	**new_args;
+// 	char	**first_row;
+// 	int 	i;
 
-	i = 0;
-	if (!args)
-		return (NULL);
-	first_row = ptr_check(ft_split(args[0], ' '));
-	new_args = NULL;
-	if (first_row)
-	{
-		while (first_row[i])
-		{
-			new_args = push_str_2d(new_args, first_row[i]);
-			i++;
-		}
-		i = 1;
-	}
-	while (args[i])
-	{
-		new_args = push_str_2d(new_args, args[i]);
-		i++;
-	}
-	while (i >= 0)
-	{
-		free(args[i]);
-		i--;
-	}
-	free(args);
-	return (new_args);
-}
+// 	i = 0;
+// 	if (!args)
+// 		return (NULL);
+// 	first_row = ptr_check(ft_split(args[0], ' '));
+// 	new_args = NULL;
+// 	if (first_row)
+// 	{
+// 		while (first_row[i])
+// 		{
+// 			new_args = push_str_2d(new_args, first_row[i]);
+// 			i++;
+// 		}
+// 		i = 1;
+// 	}
+// 	while (args[i])
+// 	{
+// 		new_args = push_str_2d(new_args, args[i]);
+// 		i++;
+// 	}
+// 	while (i >= 0)
+// 	{
+// 		free(args[i]);
+// 		i--;
+// 	}
+// 	free(args);
+// 	return (new_args);
+// }
 
 void	handle_redirections(t_redir **redir, t_token *tokens)
 {
