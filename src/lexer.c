@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 16:42:43 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:30:51 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	check_pipes(t_token *tokens)
 {
 	bool	flag;
 
-	flag = false;
+	flag = true;
 	while (tokens)
 	{
 		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
@@ -216,17 +216,13 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		// printf("im out\n");
 		if (!check_pipes(tokens))
 		{
-			
 			print_tokens(tokens);
 			commands = merge_tokens(tokens);
 			print_cmds(commands);
 			(void)commands;
+			// if (commands)
+			// 	run_commands(commands, my_env);
 			destroy_tokens(tokens);
-		// if (commands)
-		// {
-		// 	// printf("hihi\n");
-		// 	run_commands(commands, my_env);	
-		// }
 		}
 	}	
 	else
