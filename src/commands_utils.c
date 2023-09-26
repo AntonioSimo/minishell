@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 13:19:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 16:43:02 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:17:38 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,6 @@ void	print_redirections(t_redir	*redir)
 	{
 		printf("type = %-12s | str = '%s'\n", \
 		type_str[redir->type], redir->file);
-		// printf("redir: ");
-		// if (redir->type == REDIR_INPUT)
-		// 	printf("redir in");
-		// if (redir->type == REDIR_OUTPUT)
-		// 	printf("redir out");
-		// if (redir->type == REDIR_OUTPUT_APPEND)
-		// 	printf("redir out append");
-		// if (redir->type == HEREDOC)
-		// 	printf("redir heredoc");
-		// printf("	file: %s\n", redir->file);
 		redir = redir->next;
 	}
 }
@@ -110,7 +100,6 @@ void	print_cmds(t_command *cmd_lst)
 			}
 		}
         i = 0;
-		// printf("redir size: %i\n", redir_size(cmd_lst->redirections));
 		print_redirections(cmd_lst->redirections);
         cmd_lst = cmd_lst->next;
     }
