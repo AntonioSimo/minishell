@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 13:19:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/21 22:12:48 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 16:43:02 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,16 @@ t_command	*lst_cmd_new(char **args, t_redir *redir)
 	t_command	*new_node;
 
 	new_node = ptr_check(malloc(sizeof(t_command)));
-	new_node->arguments = ptr_check(push_str_2d(args, NULL));
-	new_node->command = ptr_check(ft_strdup(new_node->arguments[0]));
+	if (args)
+	{
+		new_node->arguments = push_str_2d(args, NULL);
+		new_node->command = ptr_check(ft_strdup(new_node->arguments[0]));
+	}
+	else
+	{
+		new_node->arguments = push_str_2d(args, "");
+		new_node->command = ft_strdup("");
+	}
 	new_node->redirections = redir;
 	new_node->next = NULL;
 	return (new_node);
@@ -93,11 +101,14 @@ void	print_cmds(t_command *cmd_lst)
 	while (cmd_lst)
     {
         printf("'cmd: %s'\n", cmd_lst->command);
-        while (cmd_lst->arguments[i])
-        {
-            printf("'args: %s'\n", cmd_lst->arguments[i]);
-            i++;
-        }
+		if (cmd_lst->arguments)
+		{
+			while (cmd_lst->arguments[i])
+			{
+				printf("'args: %s'\n", cmd_lst->arguments[i]);
+				i++;
+			}
+		}
         i = 0;
 		// printf("redir size: %i\n", redir_size(cmd_lst->redirections));
 		print_redirections(cmd_lst->redirections);

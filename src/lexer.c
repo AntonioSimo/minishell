@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/21 22:11:23 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/26 16:42:43 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ t_command	*merge_tokens(t_token	*tokens)
 		
 		tokens = tokens->next;
 	}
-	if (word || args_arr)
+	if (word || args_arr || redir)
 	{
 		args_arr = push_str_2d(args_arr, word);
-		if (args_arr)
+		if (args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 		word = ft_free(word);
 		redir = NULL;
@@ -130,47 +130,72 @@ t_command	*merge_tokens(t_token	*tokens)
 	return (commands);
  }
 
-void	scanner(char *line)
-{
-	int i;
-	t_type	quotes;
-
-	i = 0;
-	while (line[i])
-	{
-		quotes = quotes_type(line, i);
-		if (quotes == SINGLE_QUOTED || quotes == DOUBLE_QUOTED)
-			skip_quotes(line, &i, &quotes);
-		if (quotes == DEFAULT)
-		{
-			if (ft_isspace(line[i]))
-			{
-				while (ft_isspace(line[i]))
-					i += 1;
-			}
-			else
-			
-			{
-				if (ft_strchr("|<>", line[i]))
-				{
-					ft_printf("i: %i\n", i);
-					i++;
-				}
-				else
-					i++;
-			}
-		}
-	}
-}
-
-// void	check_redirections(t_token *tokens)
+// void	scanner(char *line)
 // {
-// 	while (tokens)
+// 	int i;
+// 	t_type	quotes;
+
+// 	i = 0;
+// 	while (line[i])
 // 	{
-// 		if (tokens->type == )
+// 		quotes = quotes_type(line, i);
+// 		if (quotes == SINGLE_QUOTED || quotes == DOUBLE_QUOTED)
+// 			skip_quotes(line, &i, &quotes);
+// 		if (quotes == DEFAULT)
+// 		{
+// 			if (ft_isspace(line[i]))
+// 			{
+// 				while (ft_isspace(line[i]))
+// 					i += 1;
+// 			}
+// 			else
+			
+// 			{
+// 				if (ft_strchr("|<>", line[i]))
+// 				{
+// 					ft_printf("i: %i\n", i);
+// 					i++;
+// 				}
+// 				else
+// 					i++;
+// 			}
+// 		}
 // 	}
-	
 // }
+
+int	check_pipes(t_token *tokens)
+{
+	bool	flag;
+
+	flag = false;
+	while (tokens)
+	{
+		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
+			|| tokens->type == SINGLE_QUOTED || tokens->type == REDIR_INPUT
+			|| tokens->type == REDIR_OUTPUT || tokens->type == REDIR_OUTPUT_APPEND
+			|| tokens->type == HEREDOC)
+			{
+				flag = false;
+			}
+		if (flag && tokens->type == PIPE)
+		{
+			printf("Incorrect pipes\n");
+			return (1);
+		}
+		if (tokens->type == PIPE)
+		{
+			flag = true;
+		}
+		tokens = tokens->next;
+	}
+	if (flag)
+	{
+		printf("Incorrect pipes\n");
+		return (1);
+	}
+	return (0);
+	
+}
 
 void	lexer(char *line, t_env *my_env, char *or_home)
 {
@@ -189,21 +214,20 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		expander(&tokens, my_env->env, or_home);
 		
 		// printf("im out\n");
-		// check_redirections(tokens);
-		print_tokens(tokens);
-		// printf("error code: %i\n", g_error_code);
-		commands = merge_tokens(tokens);
-		
-		// parse_redirections(commands);
-
-		print_cmds(commands);
-		if (commands)
+		if (!check_pipes(tokens))
 		{
-			// printf("hihi\n");
-			run_commands(commands, my_env);	
+			
+			print_tokens(tokens);
+			commands = merge_tokens(tokens);
+			print_cmds(commands);
+			(void)commands;
+			destroy_tokens(tokens);
+		// if (commands)
+		// {
+		// 	// printf("hihi\n");
+		// 	run_commands(commands, my_env);	
+		// }
 		}
-		destroy_tokens(tokens);
-		// commands = destroy_cmds(commands);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

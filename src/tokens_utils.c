@@ -55,6 +55,7 @@ void	print_tokens(t_token *token_lst)
 		type_str[token->type], token->command);
 		token_lst = token_lst->next;
 	}
+	printf("\n");
 }
 
 void	destroy_tokens(t_token	*tokens)
