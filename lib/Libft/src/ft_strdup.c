@@ -38,7 +38,7 @@ char	*ft_strdup(const char *s1)
 //     char *ptr;
 
 //     printf("The string in s1 is %s\n", s1);
-//     ptr = ft_strdup(NULL);
+//     ptr = ft_strdup(s1);
 //     printf("The duplicated string is %s", ptr);
 //     free(ptr);
 //     return (0);

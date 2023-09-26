@@ -44,5 +44,5 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 // 	size_t len = 5;
 // 	b = ft_substr(a, start, len);
 // 	printf("%s", b);
-// 	system("leaks a.out");
+// 	// system("leaks a.out");
 // }

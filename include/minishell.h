@@ -209,5 +209,9 @@ void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
 int ft_exit(char **args);
 int	ft_strcmp(char *s1, char *s2);
+int ft_export(t_env *env, char **args);
+t_envepval *set_newvariable(char *args);
+
+void	envlst_add(t_envepval **lst, t_envepval *new);
 
 #endif

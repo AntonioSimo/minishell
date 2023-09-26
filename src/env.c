@@ -9,7 +9,7 @@ static t_envepval	*lstenv(t_envepval *lst)
 	return (lst);
 }
 
-static void	envlst_add(t_envepval **lst, t_envepval *new)
+void	envlst_add(t_envepval **lst, t_envepval *new)
 {
 	t_envepval	*lst_node;
 
