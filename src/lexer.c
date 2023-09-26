@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/06 13:32:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 22:11:23 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,44 +25,107 @@ int	is_divider(t_type type)
 int	is_word(t_type type)
 {
 	if (type == DEFAULT || type == SINGLE_QUOTED
-		|| type == DOUBLE_QUOTED || type == SEPERATOR)
+		|| type == DOUBLE_QUOTED)
 		return (1);
 	return (0);
 }
 
- t_command	*merge_tokens(t_token	*tokens)
- {
+char	**get_command(char **args)
+{
+	char	**new_args;
+	char	**first_row;
+	int 	i;
+
+	i = 0;
+	if (!args)
+		return (NULL);
+	first_row = ptr_check(ft_split(args[0], ' '));
+	new_args = NULL;
+	if (first_row)
+	{
+		while (first_row[i])
+		{
+			new_args = push_str_2d(new_args, first_row[i]);
+			i++;
+		}
+		i = 1;
+	}
+	while (args[i])
+	{
+		new_args = push_str_2d(new_args, args[i]);
+		i++;
+	}
+	while (i >= 0)
+	{
+		free(args[i]);
+		i--;
+	}
+	free(args);
+	return (new_args);
+}
+
+void	handle_redirections(t_redir **redir, t_token *tokens)
+{
+		t_type	redir_type;
+		char	*file;
+
+		redir_type = tokens->type;
+		while (tokens)
+		{
+			if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
+				|| tokens->type == SINGLE_QUOTED)
+				{
+					file = ptr_check(ft_strdup(tokens->command));
+					push_redir(redir, lst_redir_new(file, redir_type));
+					break ;
+				}
+			*tokens = *(tokens)->next;
+		}
+}
+
+t_command	*merge_tokens(t_token	*tokens)
+{
  	t_command	*commands;
-	char		*args;
-	char		*temp;
+	char		*word;
+	char		**args_arr;
+	t_redir		*redir;
 
 	commands = NULL;
-	args = NULL;
-	temp = NULL;
+	args_arr = NULL;
+	redir = NULL;
+	word = NULL;
 	while (tokens)
 	{
-		if (is_word(tokens->type))
+		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
+			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
+				handle_redirections(&redir, tokens);
+		else if (is_word(tokens->type))
 		{
-			temp = ft_strjoin(args, tokens->command);
-			ft_free(args);
-			args = NULL;
-			args = ft_strdup(temp);
-			ft_free(temp);
-			temp = NULL;
-
+			word = ft_free_strjoin(word, tokens->command);
 		}
-		else if (is_divider(tokens->type))
+		else if (tokens->type == SEPERATOR)
 		{
-			push_cmd(&commands, lst_cmd_new(args));
-			ft_free(args);
-			args = NULL;
+			args_arr = push_str_2d(args_arr, word);
+			word = ft_free(word);
 		}
+		else if (tokens->type == PIPE)
+		{
+			args_arr = push_str_2d(args_arr, word);
+			push_cmd(&commands, lst_cmd_new(args_arr, redir));
+			redir = NULL;
+			word = ft_free(word);
+			args_arr = NULL;
+		}
+		
 		tokens = tokens->next;
 	}
-	if (args)
+	if (word || args_arr)
 	{
-		push_cmd(&commands, lst_cmd_new(args));
-		ft_free(args);
+		args_arr = push_str_2d(args_arr, word);
+		if (args_arr)
+			push_cmd(&commands, lst_cmd_new(args_arr, redir));
+		word = ft_free(word);
+		redir = NULL;
 	}
 	return (commands);
  }
@@ -100,28 +163,47 @@ void	scanner(char *line)
 	}
 }
 
-void	lexer(char *line, t_envepval *my_env, char *or_home)
+// void	check_redirections(t_token *tokens)
+// {
+// 	while (tokens)
+// 	{
+// 		if (tokens->type == )
+// 	}
+	
+// }
+
+void	lexer(char *line, t_env *my_env, char *or_home)
 {
 	t_token		*tokens;
 	t_command	*commands;
+	// (void)my_env;
+	// (void)or_home;
 	
 	tokens = NULL;	
+	// commands = NULL;
 	if (check_quotes(line))
 	{
 		
 		//scanner(line);
 		tokenize(line, &tokens);
+		expander(&tokens, my_env->env, or_home);
+		
+		// printf("im out\n");
 		// check_redirections(tokens);
-		expander(tokens, my_env, or_home);
-		commands = merge_tokens(tokens);
-		// parse_redirections(commands);
-		//printf("error code: %i\n", g_error_code);
 		print_tokens(tokens);
+		// printf("error code: %i\n", g_error_code);
+		commands = merge_tokens(tokens);
+		
+		// parse_redirections(commands);
+
 		print_cmds(commands);
-		run_commands(commands, my_env);
+		if (commands)
+		{
+			// printf("hihi\n");
+			run_commands(commands, my_env);	
+		}
 		destroy_tokens(tokens);
-		destroy_cmds(commands);
-		rl_on_new_line();
+		// commands = destroy_cmds(commands);
 	}	
 	else
 		ft_printf("Unclosed quotes.\n");

@@ -12,11 +12,9 @@
 
 #include "../include/libft.h"
 
-void	ft_free(char *str)
+void	*ft_free(char *str)
 {
 	if (str)
-	{
 		free(str);
-		str = NULL;
-	}
+	return (NULL);
 }

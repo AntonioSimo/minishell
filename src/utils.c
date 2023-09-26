@@ -63,3 +63,80 @@ char	*find_path(char *cmd, char *envp)
 	free(paths);
 	return (0);
 }
+
+char	**push_str_2d(char **args, char *str)
+{
+	int	i;
+	char	**new_args;
+	
+	i = 0;
+	if (!str)
+		return (args);
+	if (!args && !str)
+		return (NULL);
+	if (args)
+	{
+		while (args[i])
+			i++;
+	}
+	if (str)
+		new_args = malloc(sizeof(char *) * (i + 2));
+	else
+		new_args = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	if (args)
+	{
+		while (args[i])
+		{
+			new_args[i] = ptr_check(ft_strdup(args[i]));
+			i++;
+		}
+	}
+	if (str)
+	{
+		new_args[i] = ptr_check(ft_strdup(str));
+		new_args[i + 1] = NULL;
+	}
+	else
+		new_args[i] = NULL;
+	if (args)
+		args = double_free(args);
+	return (new_args);
+}
+
+void	*double_free(char **ptr)
+{
+	int	i;
+
+	i = 0;
+	if (ptr)
+	{
+		while (ptr[i])
+		{
+			free(ptr[i]);
+			i++;
+		}
+		free(ptr);
+	}
+	return (NULL);
+}
+
+char	*make_str_from_2d(char **args)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	if (args)
+	{
+		while (args[i])
+		{
+			str = ft_free_strjoin(str, args[i]);
+			if (args[i + 1])
+				str = ft_free_strjoin(str, " ");
+			i++;
+		}
+	}
+	return (str);
+}

@@ -59,12 +59,15 @@ void	print_tokens(t_token *token_lst)
 
 void	destroy_tokens(t_token	*tokens)
 {
+	t_token *temp;
 	if (!tokens)
 		return ;
 	while (tokens)
 	{
-		ft_free(tokens->command);
-		tokens = tokens->next;
+		temp = tokens->next;
+		free(tokens->command);
+		free(tokens);
+		tokens = temp;;
 	}
 	tokens = NULL;
 }
