@@ -22,12 +22,13 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	
 	char	*path;
 	
-	if (cmd && ft_isbuiltin(cmd->command))
-	  	exe_builtin(cmd->arguments, cmd->command, env);
-	else if(cmd)
+	// if (cmd && ft_isbuiltin(cmd->command))
+	//   	exe_builtin(cmd->arguments, cmd->command, env);
+	path = find_path(cmd->command, find_expandable(env->env, "PATH"));
+	if (path)
 	{
-		path = find_path(cmd->command, find_expandable(env->env, "PATH"));
 		execve(path, cmd->arguments, env->env_copy);
+		printf("%s: command error\n", cmd->command);
 	}
 	else
 		printf("%s: command not found\n", cmd->command);
@@ -69,15 +70,23 @@ void	run_commands(t_command *cmds, t_env *env)
 	// pid_t	pid2;
 	//function so far is trying to replicate right redir
 	// printf("here\n");
-	if (pipe(fd) == -1)
-			perror_exit("Pipe error\n");
-	// while (cmds)
-	// {
-		pid1 = fork();
-		if (pid1 == -1)
-			perror_exit("Fork error\n");
-		if (pid1 == 0)	
-            find_cmd(cmds, env);
+	while (cmds)
+	{
+		if (ft_isbuiltin(cmds->command))
+		{
+			exe_builtin(cmds->arguments, cmds->command, env);
+			cmds = cmds->next;
+		}
+		else 
+		{
+			if (pipe(fd) == -1)
+				return (perror_exit("Pipe error\n"));
+			pid1 = fork();
+			if (pid1 == -1)
+				return (perror_exit("Fork error\n"));
+			if (pid1 == 0)	
+				find_cmd(cmds, env);
+			cmds = cmds->next;
 
 			// redir_out(cmds, env);
 			// execute_pipe(cmds, env, fd);
@@ -92,9 +101,10 @@ void	run_commands(t_command *cmds, t_env *env)
 		// pid2 = fork();
 		// if (pid2 == 0)
         // 	execute_second(cmds->next, env, fd);
-		close(fd[0]);
-		close(fd[1]);
-		waitpid(pid1, NULL, 0);
+			close(fd[0]);
+			close(fd[1]);
+			waitpid(pid1, NULL, 0);
+		}
 		// waitpid(pid2, NULL, 0);
-	// }
+	}
 }

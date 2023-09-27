@@ -32,17 +32,17 @@ char	*ft_strchr(const char *str, int c)
 	return (NULL);
 }
 
-int	main(void)
-{
-	char	str[50] = "Codam. It is coding. school.";
-	int		c;
-	char	*ptr;
+// int	main(void)
+// {
+// 	char	str[50] = "Codam. It is coding. school.";
+// 	int		c;
+// 	char	*ptr;
 
-	c = 'i';
-	printf("mine %s\n", ft_strchr(str, c));
-	printf("not mine %s\n", strchr(str, c));
-	//char *ptr = strchr(str, c);
-	// printf("mine: %s", ptr);
-	//printf("not mine: %s", ptr);
-	return (0);
-}
+// 	c = 'i';
+// 	printf("mine %s\n", ft_strchr(str, c));
+// 	printf("not mine %s\n", strchr(str, c));
+// 	//char *ptr = strchr(str, c);
+// 	// printf("mine: %s", ptr);
+// 	//printf("not mine: %s", ptr);
+// 	return (0);
+// }
