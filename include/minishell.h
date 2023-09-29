@@ -18,7 +18,7 @@
 # define YELLOW "\033[33;1m"
 # define BOLD "\033[1m"
 # define RESET  "\x1b[0m"
-# define BUFFER_SIZE 1024
+# define PATH_MAXSIZE 1024
 
 # include "../lib/Libft/include/libft.h"
 
@@ -218,5 +218,9 @@ void	ft_nodedel(t_envepval *env);
 t_envepval *set_newvariable(char *args);
 
 void	envlst_add(t_envepval **lst, t_envepval *new);
+char    *get_cwd();
+char    *get_pwd(t_env  *env);
+void    update_pwd(t_env *env, char *pwd);
+void ft_cd(t_env *env, char **args);
 
 #endif

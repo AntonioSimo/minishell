@@ -1,54 +1,65 @@
 #include "../include/minishell.h"
 
-#define MAX_PATH 0
-
-char lastdir[MAX_PATH];  // initialized to zero
-
-int execute_cd(char *arg) 
+char    *get_cwd()
 {
-    char curdir[MAX_PATH];
-    char path[MAX_PATH];
+    char    *cwd;
 
-    if (getcwd(curdir, sizeof curdir)) 
-	{
-        /* current directory might be unreachable: not an error */
-        *curdir = '\0';
+    cwd = malloc(PATH_MAXSIZE);
+    if (!cwd)
+        return (NULL);
+    if (getcwd(cwd, PATH_MAXSIZE))
+        return (cwd);
+    else 
+    {
+        perror("getcwd() error");
+        exit (EXIT_FAILURE);
     }
-    if (arg == NULL) 
-        arg = getenv("HOME");
-    if (!strcmp(arg, "-")) 
-	{
-        if (*lastdir == '\0') 
-		{
-            fprintf(stderr, "no previous directory\n");
-            return 1;
+}
+
+char    *get_pwd(t_env  *env)
+{
+    t_envepval  *variable;
+
+    variable = env->env;
+    while (variable != NULL)
+    {
+        if (ft_strcmp(variable->key, "OLDPWD") == 0)
+            return (variable->val);
+        variable = variable->next;
+    }
+    return (NULL);
+}
+
+void    update_pwd(t_env *env, char *pwd)
+{
+    t_envepval  *variable;
+
+    variable = env->env;
+    while (variable != NULL)
+    {
+        if (ft_strcmp(variable->key, "OLDPWD") == 0)
+        {
+            free(variable->val);
+            variable->val = ft_strdup(pwd);
+            return ;
         }
-        arg = lastdir;
-    } 
-	else 
-	{
-        /* this should be done on all words during the parse phase */
-        if (*arg == '~') 
-		{
-            if (arg[1] == '/' || arg[1] == '\0') 
-			{
-                snprintf(path, sizeof path, "%s%s", getenv("HOME"), arg + 1);
-                arg = path;
-            } 
-			else 
-			{
-                /* ~name should expand to the home directory of usecr with login `name` 
-                   this can be implemented with getpwent() */
-                fprintf(stderr, "syntax not supported: %s\n", arg);
-                return 1;
-            }
-        }
+        variable = variable->next;
     }
-    if (chdir(arg)) 
-	{
-        fprintf(stderr, "chdir: %s: %s\n", strerror(errno), path);
-        return 1;
-    }
-    strcpy(lastdir, curdir);
-    return 0;
+}
+
+void    ft_cd(t_env *env, char **args)
+{
+    char    *pwd;
+    char    *nwd;
+
+    pwd = get_cwd();
+    if (args[1] == NULL)
+        nwd = getenv("HOME");
+    else
+        nwd = args[1];
+    if (chdir(nwd) != 0)
+        perror("chdir() error");
+    else
+        update_pwd(env, pwd);
+    free(pwd);
 }
