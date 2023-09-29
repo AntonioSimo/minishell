@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-void	ft_test(unsigned int i, char *c)
-{
-	*c = *c + 4;
-	i++;
-}
+//void	ft_test(unsigned int i, char *c)
+//{
+//	*c = *c + 4;
+//	i++;
+//}
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {

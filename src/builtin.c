@@ -12,6 +12,8 @@ int ft_isbuiltin(char *command)
         return (1);
     if (ft_strcmp(command, "env") == 0)
         return (1);
+    if (ft_strcmp(command, "unset") == 0)
+        return (1);
     return (0);
 }
 
@@ -27,4 +29,6 @@ void    exe_builtin(char **args, char *command, t_env *env)
         ft_export(env, args);
     if (ft_strcmp(command, "env") == 0)
         print_my_env(env->env);
+    if (ft_strcmp(command, "unset") == 0)
+        ft_unset(env, args);
 }

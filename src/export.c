@@ -42,7 +42,7 @@ t_envepval *set_newvariable(char *args)
     return (variable);
 }
 
-int ft_export(t_env *env, char **args)
+void ft_export(t_env *env, char **args)
 {
     t_envepval	*new_variable;
     int i;
@@ -57,15 +57,12 @@ int ft_export(t_env *env, char **args)
             new_variable = set_newvariable(args[i]);
             if (new_variable != NULL)
             {
-               
                 add_env_variable((env->env), new_variable);
                 //print_my_env(env->env);
             }
-                //here update the env with the variable;
         }
     i++;
     }
-    return (0);
 }    
 
 // int main()

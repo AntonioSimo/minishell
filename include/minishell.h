@@ -202,15 +202,19 @@ void	find_cmd(t_command	*cmd, t_env *env);
 void    signal_int_handler(int sig);
 
 
-int 	echo_command(char **args);
+void 	echo_command(char **args);
 void    exe_builtin(char **args, char *cmd, t_env *env);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
-int ft_exit(char **args);
-int	ft_strcmp(char *s1, char *s2);
-int ft_export(t_env *env, char **args);
+int 	ft_exit(char **args);
+int		ft_strcmp(char *s1, char *s2);
+void 	ft_export(t_env *env, char **args);
+void	ft_unset(t_env *env, char **args);
+void	*ft_ptrdel(void *ptr);
+void	ft_nodedel(t_envepval *env);
+
 t_envepval *set_newvariable(char *args);
 
 void	envlst_add(t_envepval **lst, t_envepval *new);

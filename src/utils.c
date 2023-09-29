@@ -17,8 +17,6 @@ t_token	*create_token(char *string, t_type type)
 	return (token);
 }
 
-
-
 int	find_equal(char *line)
 {
 	int	i;
@@ -102,6 +100,16 @@ char	**push_str_2d(char **args, char *str)
 	if (args)
 		args = double_free(args);
 	return (new_args);
+}
+
+void	*ft_ptrdel(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+	return (NULL);
 }
 
 void	*double_free(char **ptr)

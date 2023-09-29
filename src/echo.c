@@ -10,7 +10,7 @@ int ft_arraysize(char **args)
     return (i);
 }
 
-int echo_command(char **args)
+void echo_command(char **args)
 {
     int     i;
     bool    is_nl;
@@ -39,5 +39,4 @@ int echo_command(char **args)
     }
     if (is_nl == false)
         ft_putchar_fd('\n', 1);
-    return (0);
 }
