@@ -14,13 +14,13 @@ void echo_command(char **args)
 {
     int     i;
     int     j;
-    int     x;
+    // int     x;
     bool    is_nl;
     bool    if_print;
     
     i = 0;
     j = 1;
-    x = 1;
+    // x = 1;
     is_nl = true;
     // printf("args size: %i\n", ft_arraysize(args));
     if (ft_arraysize(args) > 1)
@@ -29,7 +29,7 @@ void echo_command(char **args)
         while (args[j])
         {
             if_print = true;
-            if (args[j][i] == '-')
+            if (args[j][i] == '-' && is_nl)
             {
                 // while(args[j][i] == '-')
                 i++;
