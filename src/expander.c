@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/01 17:54:59 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/01 18:06:11 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,10 +246,10 @@ static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
 
 void	double_dollar(t_token *tokens, t_token **head, int pos)
 {
-	// char	*new_command;
+	//here check wat to free in this function
 	char	*pid;
 	size_t		i;
-	t_token	*new_nodes;
+	t_token	*new_node;
 
 	i = 0;
 	pid = ft_itoa((int)getpid());
@@ -260,33 +260,39 @@ void	double_dollar(t_token *tokens, t_token **head, int pos)
 		{
 			
 			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr(tokens->command, "$$", ft_strlen(tokens->command)));
-			new_nodes = create_nodes(pid, tokens->command, i + 1, i + 2);
-			connect_nodes(new_nodes, pos, head);
+			new_node = create_nodes(pid, tokens->command, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
 			break ;
 		}
 		i++;
-		// free(tokens->command);
-		// tokens->command = ptr_check(ft_strdup(new_command));
-		// free(new_command);
 	}
 	free(pid);
 }
 
-void	error_code_expansion(t_token *token)
+void	error_code_expansion(t_token *token, t_token **head, int pos)
 {
-	char	*new_command;
+	// char	*new_command;
 	char	*error_code;
-	int		i;
+	size_t	i;
+	t_token	*new_node;
 
 	i = 0;
 	error_code = ptr_check(ft_itoa(g_error_code));
-	while (ft_strnstr(token->command, "$?", ft_strlen(token->command)))
+	while (i < ft_strlen(token->command))
 	{
-		i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
-		new_command = replace_string(error_code, token->command, i + 1, i + 2);
-		free(token->command);
-		token->command = ptr_check(ft_strdup(new_command));
-		free(new_command);
+		if (token->command[i + 1] && token->command[i] == '$'
+			&& token->command[i + 1] == '?')
+		{
+			i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
+			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;	
+		}
+		i++;
+		// new_command = replace_string(error_code, token->command, i + 1, i + 2);
+		// free(token->command);
+		// token->command = ptr_check(ft_strdup(new_command));
+		// free(new_command);
 	}
 	free(error_code);
 }
@@ -304,24 +310,27 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 	{
 		check = true;
 		move_ptr = true;
-		if (check && ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
+		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
-			error_code_expansion(*tokens);
+			{
+				error_code_expansion(*tokens, &head, i);
+				i = 0;
+				*tokens = head;
+				move_ptr = false;
+				check = false;
+			}
 		if (check && ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$$", ft_strlen((*tokens)->command)))
 			{
-				printf("here\n");
 				double_dollar(*tokens, &head, i);
 				i = 0;
 				*tokens = head;
 				move_ptr = false;
 				check = false;
-				printf("here out\n");
 			}
 		if (check && ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strchr((*tokens)->command, '$') && ft_strlen((*tokens)->command) != 1)
 			{
-				printf("enter with string: %s\n", (*tokens)->command);
 				if (!dollar_expansion(*tokens, my_env, &head, i))
 				{
 					i = 0;
