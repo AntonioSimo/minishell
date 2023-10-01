@@ -86,7 +86,7 @@ void	run_commands(t_command *cmds, t_env *env)
 				return (perror_exit("Fork error\n"));
 			if (pid1 == 0)	
 				find_cmd(cmds, env);
-			cmds = cmds->next;
+			// cmds = cmds->next;
 
 			// redir_out(cmds, env);
 			// execute_pipe(cmds, env, fd);

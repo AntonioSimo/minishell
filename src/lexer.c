@@ -219,9 +219,10 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 			print_tokens(tokens);
 			commands = merge_tokens(tokens);
 			print_cmds(commands);
-			(void)commands;
-			// if (commands)
-			// 	run_commands(commands, my_env);
+			// (void)commands;
+			printf("\n\noutput:\n");
+			if (commands)
+				run_commands(commands, my_env);
 			destroy_tokens(tokens);
 		}
 	}	
