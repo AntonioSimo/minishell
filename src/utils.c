@@ -17,8 +17,6 @@ t_token	*create_token(char *string, t_type type)
 	return (token);
 }
 
-
-
 int	find_equal(char *line)
 {
 	int	i;
@@ -104,6 +102,16 @@ char	**push_str_2d(char **args, char *str)
 	return (new_args);
 }
 
+void	*ft_ptrdel(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+	return (NULL);
+}
+
 void	*double_free(char **ptr)
 {
 	int	i;
@@ -139,4 +147,15 @@ char	*make_str_from_2d(char **args)
 		}
 	}
 	return (str);
+}
+
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		++i;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

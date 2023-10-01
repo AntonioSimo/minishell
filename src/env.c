@@ -9,7 +9,7 @@ static t_envepval	*lstenv(t_envepval *lst)
 	return (lst);
 }
 
-static void	envlst_add(t_envepval **lst, t_envepval *new)
+void	envlst_add(t_envepval **lst, t_envepval *new)
 {
 	t_envepval	*lst_node;
 
@@ -40,6 +40,7 @@ void	print_my_env(t_envepval *my_env)
 		ft_printf("%s=%s\n", my_env->key, my_env->val);
 		my_env = my_env->next;
 	}
+
 }
 
 void	set_env(t_envepval	**my_env, char **env)
@@ -84,9 +85,8 @@ size_t env_len(t_envepval *env)
     return (i);
 }
 
-t_env  *copy_env(char **env)
+void  copy_env(char **env, t_env *main_env)
 {
-       t_env   *new_env;
        t_envepval       *env_lst;
        size_t  size;
        int i;
@@ -95,21 +95,47 @@ t_env  *copy_env(char **env)
        i = 0;
 	   env_lst = NULL;
        set_env(&env_lst, env);
-       new_env = ptr_check(malloc(sizeof(t_env)));
-       new_env->env = env_lst;
+       main_env->env = env_lst;
        size = env_len(env_lst);
-       new_env->env_copy = malloc(sizeof(char *) * (size + 1));
+       main_env->env_copy = malloc(sizeof(char *) * (size + 1));
        while(env_lst)
        {
                key = ptr_check(ft_strjoin(env_lst->key, "="));
-               new_env->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
+               main_env->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
                free(key);
                env_lst = env_lst->next;
                i++;
        }
-       new_env->env_copy[i] = NULL;
-       return (new_env);
+       main_env->env_copy[i] = NULL;
+       return ;
  }
+
+// t_env  copy_env(char **env)
+// {
+//        t_env   *new_env;
+//        t_envepval       *env_lst;
+//        size_t  size;
+//        int i;
+//        char    *key;
+
+//        i = 0;
+// 	   env_lst = NULL;
+//        set_env(&env_lst, env);
+//        new_env = ptr_check(malloc(sizeof(t_env)));
+//        new_env->env = env_lst;
+//        size = env_len(env_lst);
+//        new_env->env_copy = malloc(sizeof(char *) * (size + 1));
+//        while(env_lst)
+//        {
+//                key = ptr_check(ft_strjoin(env_lst->key, "="));
+//                new_env->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
+//                free(key);
+//                env_lst = env_lst->next;
+//                i++;
+//        }
+//        new_env->env_copy[i] = NULL;
+//        return (new_env);
+//  }
 
 void   print_copy_env(t_env *env)
 {

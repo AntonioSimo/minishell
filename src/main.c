@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 15:16:39 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:55:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	loop(t_env *my_env)
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
-			printf("exit\n"); //after pressing ctrl c exit prints extra new line, to check
+			printf("exit\n");
 			break ;
 		}
 		add_history(line);
@@ -34,18 +34,32 @@ void	loop(t_env *my_env)
 		ft_free(line);
 		rl_on_new_line();
 	}
-}
+}	
 
 int	main(int argc, char** argv, char** env)
 {
 	(void) argv;
 	(void) argc;
-	t_env   *env_main;
-
+	t_env   env_main;
+	
 	g_error_code = 0;
-	env_main = copy_env(env);
+	copy_env(env, &env_main);
 	signal(SIGINT, signal_int_handler);
 	signal(SIGQUIT, SIG_IGN);
-	loop(env_main);	
+	loop(&env_main);	
 	exit (EXIT_SUCCESS);
 }
+
+// int	main(int argc, char** argv, char** env)
+// {
+// 	(void) argv;
+// 	(void) argc;
+// 	t_env   *env_main;
+	
+// 	g_error_code = 0;
+// 	env_main = copy_env(env);
+// 	signal(SIGINT, signal_int_handler);
+// 	signal(SIGQUIT, SIG_IGN);
+// 	loop(env_main);	
+// 	exit (EXIT_SUCCESS);
+// }
