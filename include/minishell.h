@@ -164,7 +164,8 @@ void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
 char		**get_command(char **args);
 //parser
-void	parse_redirections(t_command *commands);
+t_command	*merge_tokens(t_token	*tokens);
+// void	parse_redirections(t_command *commands);
 
 //expander
 void		expander(t_token **tokens, t_envepval *my_env, char *or_home);
