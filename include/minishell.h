@@ -18,7 +18,7 @@
 # define YELLOW "\033[33;1m"
 # define BOLD "\033[1m"
 # define RESET  "\x1b[0m"
-# define BUFFER_SIZE 1024
+# define PATH_MAXSIZE 1024
 
 # include "../lib/Libft/include/libft.h"
 
@@ -181,7 +181,8 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
-t_env  *copy_env(char **env);
+void  copy_env(char **env, t_env *main_env);
+// t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 
 //command_utils
@@ -195,9 +196,31 @@ t_redir	*lst_redir_new(char	*file, t_type type);
 void	*destroy_redir(t_redir *redir);
 
 //executions
-void	test_cmd(t_command	*cmd, t_env *env);
+void	find_cmd(t_command	*cmd, t_env *env);
 
 //signals
 void    signal_int_handler(int sig);
+
+
+void 	echo_command(char **args);
+void    exe_builtin(char **args, char *cmd, t_env *env);
+int 	ft_isbuiltin(char *command);
+int 	ft_arraysize(char **args);
+void	get_current_working_dir(void);
+bool    ft_isnumber(char *str);
+int 	ft_exit(char **args);
+int		ft_strcmp(char *s1, char *s2);
+void 	ft_export(t_env *env, char **args);
+void	ft_unset(t_env *env, char **args);
+void	*ft_ptrdel(void *ptr);
+void	ft_nodedel(t_envepval *env);
+
+t_envepval *set_newvariable(char *args);
+
+void	envlst_add(t_envepval **lst, t_envepval *new);
+char    *get_cwd();
+char    *get_pwd(t_env  *env);
+void    update_pwd(t_env *env, char *pwd);
+void ft_cd(t_env *env, char **args);
 
 #endif
