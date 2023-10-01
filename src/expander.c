@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 18:34:19 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/01 13:58:01 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 		*head = or_head;
 }
 
-static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
+static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
 {
 	char	*to_expand;
 	char	*expanded;
@@ -185,7 +185,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 	while(i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[i] == '$' && !tokens->command[i + 1]) //to leave $ at the last position $USER$
-			break ;
+			return (1);
 		if (tokens->command[i] == '$' && tokens->command[i + 1] //to skip $$ 
 			&& tokens->command[i + 1] == '$')
 				i += 2;
@@ -219,6 +219,7 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 				i++;
 		}
 	}
+	return (0);
 }
 
 static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
@@ -292,16 +293,19 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
 			error_code_expansion(*tokens);
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
-			&& ft_strchr((*tokens)->command, '$'))
-			{
-				dollar_expansion(*tokens, my_env, &head, i);
-				i = 0;
-				*tokens = head;
-				move_ptr = false;
-			}
-		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$$", ft_strlen((*tokens)->command)))
 			double_dollar(*tokens);
+		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
+			&& ft_strchr((*tokens)->command, '$') && ft_strlen((*tokens)->command) != 1)
+			{
+				printf("enter with string: %s\n", (*tokens)->command);
+				if (!dollar_expansion(*tokens, my_env, &head, i))
+				{
+					i = 0;
+					*tokens = head;
+					move_ptr = false;
+				}
+			}
 		if ((*tokens)->type == DEFAULT && (*tokens)->command[0] == '~')
 			tilde_expansion((*tokens), my_env, or_home);
 		if (move_ptr)
