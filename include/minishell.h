@@ -80,6 +80,10 @@ typedef enum e_character_category
 typedef struct s_redir
 {
 	char			*file;
+	int				*fileout;
+	int				*filein;
+	int				stdin_cpy;
+	int				stdout_cpy;
 	t_type			type;
 	struct s_redir	*next;
 }	t_redir;
