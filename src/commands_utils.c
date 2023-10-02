@@ -135,6 +135,10 @@ t_redir	*lst_redir_new(char	*file, t_type type)
 	redir = ptr_check(malloc(sizeof(t_redir)));
 	redir->file = ptr_check(ft_strdup(file));
 	redir->type = type;
+	redir->stdin_cpy = 0;
+	redir->stdout_cpy = 1;
+	redir->filein = NULL;
+	redir->fileout = NULL;
 	redir->next = NULL;
 	return (redir);
 }

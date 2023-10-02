@@ -1,20 +1,20 @@
 #include "../include/minishell.h"
 
-void    redir_out(t_command *cmd, t_env *env)
-{   
-    int		fileout;
-	// char	*msg;
+// void    redir_out(t_command *cmd, t_env *env)
+// {   
+//     int		fileout;
+// 	// char	*msg;
 
-	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    // dup2(fd[0], STDIN_FILENO);
-	dup2(fileout, STDOUT_FILENO);
-	// printf("%s", msg);
-	// read(fd[0], msg, O_NONBLOCK);
-	find_cmd(cmd->next, env);
-	// close(fd[1]);
-	// run_cat(env);
-    exit(EXIT_SUCCESS);
-}
+// 	fileout = open(cmd->command, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//     // dup2(fd[0], STDIN_FILENO);
+// 	dup2(fileout, STDOUT_FILENO);
+// 	// printf("%s", msg);
+// 	// read(fd[0], msg, O_NONBLOCK);
+// 	// find_cmd(cmd->next, env);
+// 	// close(fd[1]);
+// 	// run_cat(env);
+//     // exit(EXIT_SUCCESS);
+// }
 
 
 void	find_cmd(t_command	*cmd, t_env *env)
@@ -63,48 +63,170 @@ void execute_second(t_command *cmd, t_env *env, int *fd)
 	// printf("%s\n", buffer);
 }
 
-void	run_commands(t_command *cmds, t_env *env)
+int	count_cmds(t_command *cmds)
 {
-	int		fd[2];
-	pid_t	pid1;
-	// pid_t	pid2;
-	//function so far is trying to replicate right redir
-	// printf("here\n");
+	int	i;
+
+	i = 0;
 	while (cmds)
 	{
-		if (ft_isbuiltin(cmds->command))
-		{
-			exe_builtin(cmds->arguments, cmds->command, env);
-			cmds = cmds->next;
-		}
-		else 
-		{
-			if (pipe(fd) == -1)
-				return (perror_exit("Pipe error\n"));
-			pid1 = fork();
-			if (pid1 == -1)
-				return (perror_exit("Fork error\n"));
-			if (pid1 == 0)	
-				find_cmd(cmds, env);
-			cmds = cmds->next;
-
-			// redir_out(cmds, env);
-			// execute_pipe(cmds, env, fd);
-		//  waitpid(pid1, NULL, 0);
-		// cmds = cmds->next;
-		// pid = fork();
-		// // // cmds = cmds->next;
-		// // if (pid == -1)
-		// // 	perror_exit("Fork error\n");
-		// if (pid == 0)	
-
-		// pid2 = fork();
-		// if (pid2 == 0)
-        // 	execute_second(cmds->next, env, fd);
-			close(fd[0]);
-			close(fd[1]);
-			waitpid(pid1, NULL, 0);
-		}
-		// waitpid(pid2, NULL, 0);
+		cmds = cmds->next;
+		i++;
 	}
+	return (i);
+}
+
+int	count_redir_out(t_redir *redir)
+{
+	int	i;
+
+	i = 0;
+	while (redir)
+	{
+		if (redir->type == REDIR_OUTPUT)
+			i++;
+		redir = redir->next;
+	}
+	return (i);
+}
+
+int	count_redir_in(t_redir *redir)
+{
+	int	i;
+
+	i = 0;
+	while (redir)
+	{
+		if (redir->type == REDIR_INPUT)
+			i++;
+		redir = redir->next;
+	}
+	return (i);
+}
+int	count_redir(t_redir *redir)
+{
+	int	i;
+
+	i = 0;
+	while (redir)
+	{
+		i++;
+		redir = redir->next;
+	}
+	return (i);
+}
+
+void	run_redirections(t_redir *redir)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	j = 0;
+	i = 0;
+	redir->stdin_cpy = dup(STDIN_FILENO);
+	redir->stdout_cpy = dup(STDOUT_FILENO);
+	redir->fileout = ptr_check(malloc(sizeof(int) * count_redir_out(redir)));
+	redir->filein = ptr_check(malloc(sizeof(int) * count_redir_in(redir)));
+
+	// printf("redir: %i\n", count_redir(redir));
+	// sleep(5);
+	while (i < count_redir(redir))
+	{
+		if (redir->type == REDIR_OUTPUT)
+		{
+			redir->fileout[j] = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (redir->fileout[j] == -1)
+				perror_exit("FD error\n");
+			dup2(redir->fileout[j], STDOUT_FILENO);
+			j++;
+		}
+		if (redir->type == REDIR_INPUT)
+		{
+			redir->filein[k] = open(redir->file, O_RDONLY);
+			if (redir->filein[k] == -1)
+				perror_exit("FD error\n");
+			dup2(redir->filein[k], STDIN_FILENO);
+			k++;
+		}
+		i++;
+	}
+}
+
+void	close_redir(t_redir *redir)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 0;
+	j = 0;
+	k = 0;
+
+	dup2(redir->stdout_cpy, STDOUT_FILENO);
+	dup2(redir->stdin_cpy, STDIN_FILENO);
+
+	while (i <count_redir(redir))
+	{
+		if (redir->type == REDIR_OUTPUT)
+		{
+			close(redir->fileout[j]);
+			j++;
+		}
+		if (redir->type == REDIR_INPUT)
+		{
+			close(redir->filein[j]);
+			k++;
+		}
+		i++;
+	}
+}
+
+void	run_commands(t_command *cmds, t_env *env)
+{
+	int			fd[2];
+	int			i;
+	pid_t		*pid;
+	t_command	*head;
+
+	i = 0;
+	head = cmds;
+	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
+	{	
+			if (cmds->redirections)
+				run_redirections(cmds->redirections);
+			exe_builtin(cmds->arguments, cmds->command, env);
+			if (cmds->redirections)
+				close_redir(cmds->redirections);
+			return ;
+	}
+	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds))); //allocate array for every process
+	while (cmds)
+	{
+		if (pipe(fd) == -1)
+			return (perror_exit("Pipe error\n"));
+		pid[i] = fork();
+		if (pid[i] == -1)
+			return (perror_exit("Fork error\n"));
+		if (pid[i] == 0)
+		{
+
+			if (cmds->redirections)
+				run_redirections(cmds->redirections);
+			find_cmd(cmds, env);
+		}
+		cmds = cmds->next;	
+	}
+	cmds = head;
+		close(fd[0]);
+		close(fd[1]);
+	i = 0;
+	while (i < count_cmds(cmds))
+	{
+		waitpid(pid[i], NULL, 0);
+		i++;
+	}
+	
+		// waitpid(pid2, NULL, 0);
+
 }
