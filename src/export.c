@@ -9,21 +9,50 @@ t_envepval	*lstenv(t_envepval *lst)
 	return (lst);
 }
 
-void    add_env_variable(t_envepval *lst, t_envepval *new)
+bool    ft_isvariable(char *args)
+{
+	if (!*args || ft_isdigit(*args) || *args == '=' || \
+	(*args == '$' && !*(args + 1)) || *args == ' ')
+		return (false);
+	while (*args && *args != '=')
+	{
+		if (*args == ' ' || *args == '+')
+			return (false);
+		args++;
+	}
+	return (true);
+}
+
+void    add_env_variable(t_envepval **lst, t_envepval *new)
 {
 	t_envepval	*lst_node;
 
-    lst_node = lst;
-
-    // if (lst_node->key = ftrcmp(OK))
-    //     previous->next = lst->next;
-    //     free current
+    lst_node = *lst;
 	if (lst_node == NULL)
 	{
-		lst_node = new;
+		*lst = new;
 		return ;
 	}
-	lst_node = lstenv(lst);
+    while (lst_node->next != NULL)
+    {       
+        if (ft_strcmp(lst_node->key, new->key) == 0)
+        {
+            free(lst_node->val);
+            lst_node->val = new->val;
+            free(new->key);
+            free(new);
+            return ;
+        }
+        lst_node = lst_node->next;
+    }
+    if (ft_strcmp(lst_node->key, new->key) == 0)
+    {
+        free(lst_node->val);
+        lst_node->val = new->val;
+        free(new->key);
+        free(new);
+        return ;
+    }
 	lst_node->next = new;
 }
 
@@ -52,23 +81,17 @@ void ft_export(t_env *env, char **args)
         print_my_env(env->env);
     while (args[i] != NULL)
     {
-        if (ft_strchr(args[i], '=') != NULL)
+        if (ft_isvariable(args[i]) == true)
         {
             new_variable = set_newvariable(args[i]);
             if (new_variable != NULL)
-            {
-                add_env_variable((env->env), new_variable);
-                //print_my_env(env->env);
-            }
+                add_env_variable(&(env->env), new_variable);
+        }
+        else
+        {
+            perror("Export error");
+            return ;
         }
     i++;
     }
 }    
-
-// int main()
-// {
-//     char    variabile[50] = "Ciao_Sono_Francesco Ciao_sono_Antonio";
-//     char    *variabile_new_env;
-//     variabile_new_env = set_newvariable(variabile);
-//     printf("%s\n", variabile_new_env);
-// }

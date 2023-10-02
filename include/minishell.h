@@ -222,5 +222,6 @@ char    *get_cwd();
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void ft_cd(t_env *env, char **args);
+bool    ft_isvariable(char *args);
 
 #endif
