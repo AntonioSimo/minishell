@@ -77,15 +77,20 @@ typedef enum e_character_category
 * @param rederection 
 */
 
+typedef struct s_redir_lst
+{
+	char				*file;
+	t_type				type;
+	struct	s_redir_lst	*next;
+}	t_redir_lst;
+
 typedef struct s_redir
 {
-	char			*file;
-	int				*fileout;
-	int				*filein;
-	int				stdin_cpy;
-	int				stdout_cpy;
-	t_type			type;
-	struct s_redir	*next;
+	int					*fileout;
+	int					*filein;
+	int					stdin_cpy;
+	int					stdout_cpy;
+	struct s_redir_lst	*lst;
 }	t_redir;
 
 typedef struct s_command
@@ -94,8 +99,6 @@ typedef struct s_command
 	char				*command;
 	int					fd[2];
 	t_redir				*redirections;
-	// bool				builtin;
-	// int					redirection;
 	struct s_command	*next;
 }	t_command;
 
@@ -186,7 +189,7 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
-void  copy_env(char **env, t_env *main_env);
+void  copy_env(char **env, t_env **main_env);
 // t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 
@@ -195,10 +198,11 @@ t_command	*lst_cmd_new(char **args, t_redir *redir);
 void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
 void	*destroy_cmds(t_command	*cmd_lst);
-void	push_redir(t_redir **redir_lst, t_redir *redir);
-t_redir	*redir_lst_last(t_redir *redir);
-t_redir	*lst_redir_new(char	*file, t_type type);
-void	*destroy_redir(t_redir *redir);
+void	push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
+t_redir_lst	*redir_lst_last(t_redir_lst *redir);
+t_redir_lst	*lst_redir_new(char	*file, t_type type);
+void	*destroy_redir(t_redir_lst *redir);
+void	print_redirections(t_redir_lst	*redir);
 
 //executions
 void	find_cmd(t_command	*cmd, t_env *env);

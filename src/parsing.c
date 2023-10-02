@@ -32,7 +32,7 @@ void	handle_redirections(t_redir **redir, t_token *tokens)
 				|| tokens->type == SINGLE_QUOTED)
 				{
 					file = ptr_check(ft_strdup(tokens->command));
-					push_redir(redir, lst_redir_new(file, redir_type));
+					push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
 					break ;
 				}
 			*tokens = *(tokens)->next;
@@ -54,7 +54,14 @@ t_command	*merge_tokens(t_token	*tokens)
 	{
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
-				handle_redirections(&redir, tokens);
+		{
+			if (!redir)
+			{
+				redir = ptr_check(malloc(sizeof(t_redir)));
+				redir->lst = NULL;
+			}
+			handle_redirections(&redir, tokens);
+		}
 		else if (is_word(tokens->type))
 		{
 			word = ft_free_strjoin(word, tokens->command);

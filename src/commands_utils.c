@@ -54,34 +54,7 @@ void	push_cmd(t_command **lst, t_command *new)
 	lst_node->next = new;
 }
 
-void	print_redirections(t_redir	*redir)
-{
-	const char	*type_str[] = {
-	[REDIR_INPUT] = "REDIR_INPUT",
-	[HEREDOC] = "HEREDOC",
-	[REDIR_OUTPUT] = "REDIR_OUTPUT",
-	[REDIR_OUTPUT_APPEND] = "REDIR_OUTPUT_APPEND",
-	};
-	while (redir)
-	{
-		printf("type = %-12s | str = '%s'\n", \
-		type_str[redir->type], redir->file);
-		redir = redir->next;
-	}
-}
 
-int redir_size(t_redir	*redir)
-{
-	int i=0;
-	if (!redir)
-		return(0);
-	while (redir)
-	{
-		i++;
-		redir = redir->next;
-	}
-	return (i);
-}
 
 void	print_cmds(t_command *cmd_lst)
 {
@@ -100,7 +73,10 @@ void	print_cmds(t_command *cmd_lst)
 			}
 		}
         i = 0;
-		print_redirections(cmd_lst->redirections);
+		if (cmd_lst->redirections)
+		{
+			print_redirections(cmd_lst->redirections->lst);
+		}
         cmd_lst = cmd_lst->next;
     }
 }
@@ -121,62 +97,9 @@ void	*destroy_cmds(t_command	*cmd_lst)
             i++;
         }
         i = 0;
-		destroy_redir(cmd_lst->redirections);
+		destroy_redir(cmd_lst->redirections->lst);
 		free((cmd_lst)->command);
 		cmd_lst = node;
-	}
-	return (NULL);
-}
-
-t_redir	*lst_redir_new(char	*file, t_type type)
-{
-	t_redir *redir;
-
-	redir = ptr_check(malloc(sizeof(t_redir)));
-	redir->file = ptr_check(ft_strdup(file));
-	redir->type = type;
-	redir->stdin_cpy = 0;
-	redir->stdout_cpy = 1;
-	redir->filein = NULL;
-	redir->fileout = NULL;
-	redir->next = NULL;
-	return (redir);
-}
-
-t_redir	*redir_lst_last(t_redir *redir)
-{
-	if (!redir)
-		return (NULL);
-	while (redir->next)
-		redir = redir->next;
-	return (redir);
-}
-
-void	push_redir(t_redir **redir_lst, t_redir *redir)
-{
-	t_redir	*redir_node;
-	
-	if (*redir_lst == NULL)
-	{
-		*redir_lst = redir;
-		return ;
-	}
-	redir_node = redir_lst_last(*redir_lst);
-	redir_node->next = redir;
-}
-
-void	*destroy_redir(t_redir *redir)
-{
-	t_redir	*node;
-	
-	if (!redir)
-		return (NULL);
-	while (redir)
-	{
-		node = redir->next;
-		free(redir->file);
-		free(redir);
-		redir = node;
 	}
 	return (NULL);
 }
