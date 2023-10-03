@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/13 14:45:59 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/01 20:01:51 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ t_token	*create_new_nodes(char *expanded)
 		return (new_nodes);
 	}
 	temp_arr = ptr_check(ft_split(expanded, ' '));
-	// expanded = ft_free(expanded);
 	while (temp_arr[i])
 	{
 		token = ptr_check(ft_strdup(temp_arr[i]));
@@ -119,7 +118,6 @@ t_token	*create_nodes(char *expanded, char	*str, int start, int end)
 	if (ft_strlen(expanded) > 0)
 	{
 		expanded_nodes = create_new_nodes(expanded);
-		// print_tokens(expanded_nodes);
 		i = token_lst_size(expanded_nodes);
 		while (i)
 		{
@@ -173,11 +171,8 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 		*head = or_head;
 }
 
-static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
+static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
 {
-	// (void)tokens;
-	// (void)my_env;
-	// (void)head;
 	char	*to_expand;
 	char	*expanded;
 	int 	i;
@@ -185,12 +180,15 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 	bool	brackets;
 	t_token	*expanded_nodes;
 
+
+	// printf("my str:%s\n", tokens->command);
 	j = 0;
 	i = 0;
+	expanded = NULL;
 	while(i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[i] == '$' && !tokens->command[i + 1]) //to leave $ at the last position $USER$
-			break ;
+			return (1);
 		if (tokens->command[i] == '$' && tokens->command[i + 1] //to skip $$ 
 			&& tokens->command[i + 1] == '$')
 				i += 2;
@@ -207,26 +205,14 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 				i++;
 			to_expand = ft_substr(tokens->command, j, i - j);	
 			expanded = find_expandable(my_env, to_expand);
-			// expanded_nodes = create_new_nodes(expanded);
 			if (brackets) //to get rid of the {}
 			{
 				j--;
 				i++;
 			}
-			// printf("expanded size:%lu", ft_strlen(expanded));
 			expanded_nodes = create_nodes(expanded, tokens->command, j, i);
-			// printf("here\n");
-			// print_expanded_nodes(expanded_nodes);
-			// printf("here\n");
-			// ft_free(tokens->command);
-			// tokens->command = ft_strdup(new_command);
 			connect_nodes(expanded_nodes, pos, head);
-			printf("segf\n");
-			// ft_free(new_command);
 			ft_free(to_expand);
-			// ft_free(expanded);
-			// i = 0;
-			// brackets = false;
 			break ;
 		}
 		else
@@ -236,6 +222,9 @@ static void	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head
 				i++;
 		}
 	}
+	if (ft_strlen(expanded) == 0)
+		return (1);
+	return (0);
 }
 
 static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
@@ -256,40 +245,49 @@ static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
 	free(home);
 }
 
-void	double_dollar(t_token *tokens)
+void	double_dollar(t_token *tokens, t_token **head, int pos)
 {
-	char	*new_command;
 	char	*pid;
 	size_t		i;
+	t_token	*new_node;
 
 	i = 0;
 	pid = ft_itoa((int)getpid());
-	while (ft_strnstr(tokens->command, "$$", ft_strlen(tokens->command)))
+	while (i < ft_strlen(tokens->command))
 	{
-		i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr(tokens->command, "$$", ft_strlen(tokens->command)));
-		new_command = replace_string(pid, tokens->command, i + 1, i + 2);
-		free(tokens->command);
-		tokens->command = ptr_check(ft_strdup(new_command));
-		free(new_command);
+		if (ft_strlen(tokens->command + i) > 1 && tokens->command[i] == '$'
+			&& tokens->command[i + 1] == '$')
+		{
+			
+			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr(tokens->command, "$$", ft_strlen(tokens->command)));
+			new_node = create_nodes(pid, tokens->command, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;
+		}
+		i++;
 	}
 	free(pid);
 }
 
-void	error_code_expansion(t_token *token)
+void	error_code_expansion(t_token *token, t_token **head, int pos)
 {
-	char	*new_command;
 	char	*error_code;
-	int		i;
+	size_t	i;
+	t_token	*new_node;
 
 	i = 0;
 	error_code = ptr_check(ft_itoa(g_error_code));
-	while (ft_strnstr(token->command, "$?", ft_strlen(token->command)))
+	while (i < ft_strlen(token->command))
 	{
-		i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
-		new_command = replace_string(error_code, token->command, i + 1, i + 2);
-		free(token->command);
-		token->command = ptr_check(ft_strdup(new_command));
-		free(new_command);
+		if (token->command[i + 1] && token->command[i] == '$'
+			&& token->command[i + 1] == '?')
+		{
+			i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
+			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;	
+		}
+		i++;
 	}
 	free(error_code);
 }
@@ -298,29 +296,69 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 {
 	t_token	*head;
 	int		i;
+	int		old_pos;
+	t_type	prev_type;
 	bool	move_ptr;
 
 	i = 0;
 	head = *tokens;
+	prev_type = SEPERATOR;
 	while (*tokens)
 	{
 		move_ptr = true;
+		if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR
+			&& ((*tokens)->command[0] == '~' && ft_strlen((*tokens)->command) == 1))
+				|| (ft_strlen((*tokens)->command) > 1 && (*tokens)->command[0] == '~'
+					&& (*tokens)->command[1] == '/'))
+		{
+			tilde_expansion((*tokens), my_env, or_home);
+		}
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
-			error_code_expansion(*tokens);
-		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
-			&& ft_strchr((*tokens)->command, '$'))
-			{
-				dollar_expansion(*tokens, my_env, &head, i);
-				i = 0;
-				*tokens = head;
-				move_ptr = false;
-			}
+		{
+			error_code_expansion(*tokens, &head, i);
+			*tokens = head;
+			old_pos = i;
+			while (i--)
+				*tokens = (*tokens)->next;
+			i = old_pos;
+		}
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$$", ft_strlen((*tokens)->command)))
-			double_dollar(*tokens);
-		if ((*tokens)->type == DEFAULT && (*tokens)->command[0] == '~')
-			tilde_expansion((*tokens), my_env, or_home);
+		{
+			double_dollar(*tokens, &head, i);
+			old_pos = i;
+			*tokens = head;
+			while (i--)
+				*tokens = (*tokens)->next;
+			i = old_pos;
+			}
+		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
+			&& ft_strchr((*tokens)->command, '$') && ft_strlen((*tokens)->command) != 1)
+		{
+			if (!dollar_expansion(*tokens, my_env, &head, i))
+			{
+				old_pos = i;
+				*tokens = head;
+				while (i--)
+					*tokens= (*tokens)->next;
+				i = old_pos;
+			}
+			else
+			{
+				move_ptr = false;
+				*tokens = head;
+				old_pos = i;
+				i--;
+				while (i-- >= 0)
+					*tokens = (*tokens)->next;
+				i = old_pos;
+			}
+		}
+		if ((*tokens)->type == SEPERATOR)
+			prev_type = SEPERATOR;
+		else
+			prev_type = DEFAULT;
 		if (move_ptr)
 		{
 			*tokens = (*tokens)->next;

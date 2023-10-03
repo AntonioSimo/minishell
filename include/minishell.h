@@ -106,14 +106,15 @@ typedef struct s_envepval
 {
 	char				*key;
 	char				*val;
+	struct s_export		*export_env;
 	struct s_envepval	*next;
 }				t_envepval;
 
 typedef struct s_export
 {
-	char				*empty_variable;
-	char				*next;
-	struct s_envepval	*env_variables;
+	char				*empty_key;
+	char				*empty_val;
+	struct s_export		*next;
 }				t_export;
 
 typedef struct s_token
@@ -126,7 +127,6 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
-	struct s_export		*export_env;
     char				**env_copy;
 }	t_env;
 

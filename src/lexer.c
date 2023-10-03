@@ -195,8 +195,7 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		commands = merge_tokens(tokens);
 		
 		// parse_redirections(commands);
-	printf("hello\n");
-		print_cmds(commands);
+		//print_cmds(commands);
 		if (commands)
 		{
 			// printf("hihi\n");

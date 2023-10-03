@@ -9,36 +9,42 @@ t_envepval	*lstenv(t_envepval *lst)
 	return (lst);
 }
 
-t_envepval	*create_env_emptynode(char *key, char *value)
+t_export	*create_env_emptynode(char *key, char *val)
 {
-	t_envepval	*node;
+	t_export	*node;
 
+    (void) val;
 	node = ptr_check(malloc(sizeof(t_export)));
-	node->key = ptr_check(ft_strdup(key));
-    node->val = ft_strdup(value);
+	node->empty_key = ptr_check(ft_strdup(key));
+    // node->empty_val = ft_strdup(value);
+    node->empty_val = "\0";
 	node->next = NULL;
+    // printf("%s, %s\n", node->empty_val);
 	return (node);
 }
 
-// void	print_my_export(t_export *env)
-// {
-// 	while (env)
-// 	{
-// 		ft_printf("%s=%s\n", env->env_variables->key, env->env_variables->val);
-//         if (!env->env_variables->val)
-//             ft_printf("%s=")
-// 		env = env->next;
-// 	}
-// }
+void	print_my_export(t_envepval *env)
+{
+   // t_export    *env;
+
+	while (env)
+	{
+		ft_printf("%s=%s\n", env->key, env->val);
+        //ft_printf("%s=%s\n", env->export_env->empty_key, env->export_env->empty_val);
+		env = env->next;
+	}
+    // while (export_env)
+    // {
+    //     ft_printf("%s=%s\n", env->export_env->empty_key, env->export_env->empty_val);
+    //     env->export_env = env->export_env->next;
+    // }
+}
 
 int    ft_isvariable(char *args)
 {
 	if (!*args || ft_isdigit(*args) || *args == '=' ||
 	    (*args == '$' && !*(args + 1)) || *args == ' ')
-        {
-            printf("im here\n");
 		    return (0);
-        }
 	while (*args && *args != '=')
 	{
 		if (*args == ' ' || *args == '+')
@@ -93,14 +99,18 @@ t_envepval *set_newvariable(char *args)
     {
         key = ft_substr(args, 0, (ft_strlen(args)));
         val = "\0";
+        variable= (t_envepval *)create_env_emptynode(key, val);
     }
     else
     {
         val = ft_strchr(args, '=');
         key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
         val++;
+        variable = create_env_node(key, val);
     }
-    variable = create_env_node(key, val);
+    // if (!variable->export_env->empty_val)
+    //     variable->export_env = create_env_emptynode(key, val);
+    // else
     return (variable);
 }
 
@@ -111,7 +121,7 @@ void ft_export(t_env *env, char **args)
 
     i = 1;
     if (!args[i])
-        print_my_env(env->env);
+        print_my_export(env->env);
     while (args[i] != NULL)
     {
         if (ft_isvariable(args[i]) == 1)
