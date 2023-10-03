@@ -26,10 +26,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	//   	exe_builtin(cmd->arguments, cmd->command, env);
 	path = find_path(cmd->command, find_expandable(env->env, "PATH"));
 	if (path)
-	{
 		execve(path, cmd->arguments, env->env_copy);
-		printf("%s: command error\n", cmd->command);
-	}
 	else
 		printf("%s: command not found\n", cmd->command);
 	exit(EXIT_FAILURE);
