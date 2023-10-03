@@ -28,7 +28,7 @@ t_envepval	*create_env_node(char *key, char *value)
 
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
-	node->val = ptr_check(ft_strdup(value));
+        node->val = ptr_check(ft_strdup(value));
 	node->next = NULL;
 	return (node);
 }

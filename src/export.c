@@ -1,6 +1,17 @@
 #include "../include/minishell.h"
 
-t_envepval	*lstenv(t_envepval *lst)
+t_export	*create_export_node(char *key, char *value)
+{
+	t_export	*node;
+
+	node = ptr_check(malloc(sizeof(t_export)));
+	node->key = ptr_check(ft_strdup(key));
+	node->val = ptr_check(ft_strdup(value));
+	node->next = NULL;
+	return (node);
+}
+
+t_export	*lstenv(t_export *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -9,23 +20,23 @@ t_envepval	*lstenv(t_envepval *lst)
 	return (lst);
 }
 
-bool    ft_isvariable(char *args)
+int    ft_isvariable(char *args)
 {
 	if (!*args || ft_isdigit(*args) || *args == '=' || \
 	(*args == '$' && !*(args + 1)) || *args == ' ')
-		return (false);
+		return (0);
 	while (*args && *args != '=')
 	{
 		if (*args == ' ' || *args == '+')
-			return (false);
+			return (0);
 		args++;
 	}
-	return (true);
+	return (1);
 }
 
-void    add_env_variable(t_envepval **lst, t_envepval *new)
+void    add_env_variable(t_export **lst, t_export *new)
 {
-	t_envepval	*lst_node;
+	t_export	*lst_node;
 
     lst_node = *lst;
 	if (lst_node == NULL)
@@ -56,24 +67,26 @@ void    add_env_variable(t_envepval **lst, t_envepval *new)
 	lst_node->next = new;
 }
 
-t_envepval *set_newvariable(char *args)
+t_export *set_newvariable(char *args)
 {
     char          *key;
     char          *val;
-    t_envepval    *variable;
+    t_export    *variable;
 
     if (!args)
         return (NULL);
     val = ft_strchr(args, '=');
     key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
     val++;
+    printf("This is the value:%s\n", val);
+    printf("This is the key:%s\n", key);
     variable = create_env_node(key, val);
     return (variable);
 }
 
 void ft_export(t_env *env, char **args)
 {
-    t_envepval	*new_variable;
+    t_export	*new_variable;
     int i;
 
     i = 1;
@@ -81,7 +94,7 @@ void ft_export(t_env *env, char **args)
         print_my_env(env->env);
     while (args[i] != NULL)
     {
-        if (ft_isvariable(args[i]) == true)
+        if (ft_isvariable(args[i]) == 1)
         {
             new_variable = set_newvariable(args[i]);
             if (new_variable != NULL)
