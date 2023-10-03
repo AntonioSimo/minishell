@@ -30,7 +30,11 @@ void    exe_builtin(char **args, char *command, t_env *env)
     if (ft_strcmp(command, "exit") == 0)
         ft_exit(args);
     if (ft_strcmp(command, "export") == 0)
+    {
+        if (!args[1])
+            print_my_export(env);
         ft_export(env, args);
+    }
     if (ft_strcmp(command, "env") == 0)
         print_my_env(env->env);
     if (ft_strcmp(command, "unset") == 0)

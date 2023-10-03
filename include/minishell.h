@@ -106,14 +106,12 @@ typedef struct s_envepval
 {
 	char				*key;
 	char				*val;
-	struct s_export		*export_env;
 	struct s_envepval	*next;
 }				t_envepval;
 
 typedef struct s_export
 {
 	char				*empty_key;
-	char				*empty_val;
 	struct s_export		*next;
 }				t_export;
 
@@ -127,6 +125,7 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
+	struct s_export		*empty_key;
     char				**env_copy;
 }	t_env;
 
@@ -231,6 +230,6 @@ char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void ft_cd(t_env *env, char **args);
 int    ft_isvariable(char *args);
-void	print_my_export(t_envepval *my_env);
+void	print_my_export(t_env *env);
 
 #endif
