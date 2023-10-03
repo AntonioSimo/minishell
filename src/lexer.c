@@ -190,13 +190,13 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		
 		// printf("im out\n");
 		// check_redirections(tokens);
-		//print_tokens(tokens);
+		// print_tokens(tokens);
 		// printf("error code: %i\n", g_error_code);
 		commands = merge_tokens(tokens);
 		
 		// parse_redirections(commands);
-
-		//print_cmds(commands);
+	printf("hello\n");
+		print_cmds(commands);
 		if (commands)
 		{
 			// printf("hihi\n");

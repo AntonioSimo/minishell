@@ -43,23 +43,11 @@ int	main(int argc, char** argv, char** env)
 	t_env   *env_main;
 	
 	g_error_code = 0;
-	copy_env(env, env_main);
+	env_main = NULL;
+	copy_env(env, &env_main);
 	signal(SIGINT, signal_int_handler);
 	signal(SIGQUIT, SIG_IGN);
-	loop(&env_main);	
+	loop(env_main);	
 	exit (EXIT_SUCCESS);
 }
 
-// int	main(int argc, char** argv, char** env)
-// {
-// 	(void) argv;
-// 	(void) argc;
-// 	t_env   *env_main;
-	
-// 	g_error_code = 0;
-// 	env_main = copy_env(env);
-// 	signal(SIGINT, signal_int_handler);
-// 	signal(SIGQUIT, SIG_IGN);
-// 	loop(env_main);	
-// 	exit (EXIT_SUCCESS);
-// }

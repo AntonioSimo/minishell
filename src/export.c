@@ -1,17 +1,6 @@
 #include "../include/minishell.h"
 
-t_export	*create_export_node(char *key, char *value)
-{
-	t_export	*node;
-
-	node = ptr_check(malloc(sizeof(t_export)));
-	node->key = ptr_check(ft_strdup(key));
-	node->val = ptr_check(ft_strdup(value));
-	node->next = NULL;
-	return (node);
-}
-
-t_export	*lstenv(t_export *lst)
+t_envepval	*lstenv(t_envepval *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -20,11 +9,36 @@ t_export	*lstenv(t_export *lst)
 	return (lst);
 }
 
+t_envepval	*create_env_emptynode(char *key, char *value)
+{
+	t_envepval	*node;
+
+	node = ptr_check(malloc(sizeof(t_export)));
+	node->key = ptr_check(ft_strdup(key));
+    node->val = ft_strdup(value);
+	node->next = NULL;
+	return (node);
+}
+
+// void	print_my_export(t_export *env)
+// {
+// 	while (env)
+// 	{
+// 		ft_printf("%s=%s\n", env->env_variables->key, env->env_variables->val);
+//         if (!env->env_variables->val)
+//             ft_printf("%s=")
+// 		env = env->next;
+// 	}
+// }
+
 int    ft_isvariable(char *args)
 {
-	if (!*args || ft_isdigit(*args) || *args == '=' || \
-	(*args == '$' && !*(args + 1)) || *args == ' ')
-		return (0);
+	if (!*args || ft_isdigit(*args) || *args == '=' ||
+	    (*args == '$' && !*(args + 1)) || *args == ' ')
+        {
+            printf("im here\n");
+		    return (0);
+        }
 	while (*args && *args != '=')
 	{
 		if (*args == ' ' || *args == '+')
@@ -34,9 +48,9 @@ int    ft_isvariable(char *args)
 	return (1);
 }
 
-void    add_env_variable(t_export **lst, t_export *new)
+void    add_env_variable(t_envepval **lst, t_envepval *new)
 {
-	t_export	*lst_node;
+	t_envepval	*lst_node;
 
     lst_node = *lst;
 	if (lst_node == NULL)
@@ -67,26 +81,32 @@ void    add_env_variable(t_export **lst, t_export *new)
 	lst_node->next = new;
 }
 
-t_export *set_newvariable(char *args)
+t_envepval *set_newvariable(char *args)
 {
     char          *key;
     char          *val;
-    t_export    *variable;
+    t_envepval    *variable;
 
     if (!args)
         return (NULL);
-    val = ft_strchr(args, '=');
-    key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
-    val++;
-    printf("This is the value:%s\n", val);
-    printf("This is the key:%s\n", key);
+    if (!ft_strchr(args, '='))
+    {
+        key = ft_substr(args, 0, (ft_strlen(args)));
+        val = "\0";
+    }
+    else
+    {
+        val = ft_strchr(args, '=');
+        key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
+        val++;
+    }
     variable = create_env_node(key, val);
     return (variable);
 }
 
 void ft_export(t_env *env, char **args)
 {
-    t_export	*new_variable;
+    t_envepval	*new_variable;
     int i;
 
     i = 1;
@@ -102,7 +122,7 @@ void ft_export(t_env *env, char **args)
         }
         else
         {
-            perror("Export error");
+            perror("mustash: variable not found");
             return ;
         }
     i++;
