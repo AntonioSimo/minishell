@@ -129,10 +129,9 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 		expander(&tokens, my_env->env, or_home);
 		if (!check_pipes(tokens))
 		{
-			print_tokens(tokens);
+			// print_tokens(tokens);
 			commands = merge_tokens(tokens);
-			print_cmds(commands);
-			printf("\n\noutput:\n");
+			// print_cmds(commands);
 			if (commands)
 				run_commands(commands, my_env);
 			destroy_tokens(tokens);
