@@ -63,7 +63,6 @@ void	run_redirections(t_redir *redir)
 	{
 		if (temp->type == REDIR_OUTPUT)
 		{
-			// printf("here i am\n");
 			redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (redir->fileout[j] == -1)
 				perror_exit("FD error\n");
@@ -114,6 +113,7 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 {
 	int	j;
 	int	cmds_size;
+	(void)cmd;
 
 	cmds_size = count_cmds(head);
 	j = 0;
@@ -122,10 +122,7 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 	if (i == 0)
 	{
 		close(fd[i][0]);
-		if (cmd->redirections)
-			fd[i][1] = dup(cmd->redirections->stdin_cpy);
-		else
-			dup2(fd[i][1], STDOUT_FILENO);
+		dup2(fd[i][1], STDOUT_FILENO);
 		while (j < cmds_size - 1)
 		{
 			if (j != i)
@@ -140,10 +137,7 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 	if (i == cmds_size - 1)
 	{
 		close(fd[i - 1][1]);
-		if (cmd->redirections)
-			fd[i - 1][0] = dup(cmd->redirections->stdin_cpy);
-		else
-			dup2(fd[i - 1][0], STDIN_FILENO);
+		dup2(fd[i - 1][0], STDIN_FILENO);
 		while (j < cmds_size - 1)
 		{
 			if (j != i - 1)
@@ -155,16 +149,8 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 		}
 		return ;
 	}
-	if (cmd->redirections)
-	{
-		fd[i - 1][0] = dup(cmd->redirections->stdin_cpy);
-		fd[i][1] = dup(cmd->redirections->stdout_cpy);
-	}
-	else
-	{
-		dup2(fd[i - 1][0], STDIN_FILENO);
-		dup2(fd[i][1], STDOUT_FILENO);
-	}
+	dup2(fd[i - 1][0], STDIN_FILENO);
+	dup2(fd[i][1], STDOUT_FILENO);
 	while (j < cmds_size - 1)
 	{
 		if (j != i -1)
@@ -213,9 +199,9 @@ void	run_commands(t_command *cmds, t_env *env)
 			return (perror_exit("Fork error\n"));
 		if (pid[i] == 0)
 		{
+			execute_pipe(fd, i, head, cmds);
 			if (cmds->redirections)
 				run_redirections(cmds->redirections);
-			execute_pipe(fd, i, head, cmds);
 			find_cmd(cmds, env);
 		}
 		i++;
@@ -224,10 +210,11 @@ void	run_commands(t_command *cmds, t_env *env)
 	cmds = head;
 	i = 0;
 	while (i < count_cmds(cmds))
-	{	if (i < count_cmds(cmds) - 1)
+	{	
+		if (i < count_cmds(cmds) - 1)
 		{
-			close(fd[i][1]);
 			close(fd[i][0]);
+			close(fd[i][1]);
 		}
 		waitpid(pid[i], NULL, 0);
 		i++;
