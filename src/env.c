@@ -37,7 +37,9 @@ void	print_my_env(t_envepval *my_env)
 {
 	while (my_env)
 	{
-		ft_printf("%s=%s\n", my_env->key, my_env->val);
+		ft_printf("%s", my_env->key);
+                if (my_env->val[0])
+                        ft_printf("=%s", my_env->val);
 		my_env = my_env->next;
 	}
 }
