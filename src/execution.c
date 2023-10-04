@@ -134,7 +134,7 @@ void	close_redir(t_redir *redir)
 
 void	run_commands(t_command *cmds, t_env *env)
 {
-	int			fd[2];
+	int			**fd;
 	int			i;
 	pid_t		*pid;
 	t_command	*head;
@@ -150,10 +150,13 @@ void	run_commands(t_command *cmds, t_env *env)
 	// 			close_redir(cmds->redirections);
 	// 		return ;
 	// }
-	// printf("cmds: %i\n", count_cmds(cmds));
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
-	if (pipe(fd) == -1)
-		return (perror_exit("Pipe error\n"));
+	while (i < count_cmds())
+	{
+		if (pipe(fd) == -1)
+			return (perror_exit("Pipe error\n"));
+
+	}
 	while (cmds)
 	{
 		pid[i] = fork();
