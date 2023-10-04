@@ -24,29 +24,6 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	exit(EXIT_FAILURE);
 }
 
-void	execute_pipe(t_command *cmd, int *fd, int i)
-{	
-	if (count_cmds(cmd) == 1)
-	{
-		return ;
-	}
-	if (i == 0)
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		return ;
-	}
-	if (i == (count_cmds(cmd) - 1))
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		return ;
-	}
-	dup2(fd[0], STDIN_FILENO);
-	dup2(fd[1], STDOUT_FILENO);
-}
-
-
 int	count_redir(t_redir_lst *redir, t_type type)
 {
 	int	in;
@@ -132,6 +109,67 @@ void	close_redir(t_redir *redir)
 	}
 }
 
+void	execute_pipe(int **fd, int i, t_command *cmd)
+{
+	int	j;
+	int	cmds_size;
+
+
+	cmds_size = count_cmds(cmd);
+	j = 0;
+	if (count_cmds(cmd) == 1)
+	{
+		return ;
+
+	}
+	if (i == 0)
+	{
+		// printf("i is:%i\n", i);
+		// 	printf("99\n");
+		close(fd[i][0]);
+		// printf("size: %i\n", cmds_size);
+		dup2(fd[i][1], STDOUT_FILENO);
+		while (j < cmds_size - 1)
+		{
+			if (j != i)
+			{
+				close(fd[j][0]);
+				close(fd[j][1]);
+			}
+			j++;
+		}
+		return ;
+	}
+	if (i == (count_cmds(cmd) - 1))
+	{
+		// printf("here?\n");
+		close(fd[i - 1][1]);
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		while (j < cmds_size - 1)
+		{
+			// if (j != i)
+			if (j != i - 1)
+			{
+				close(fd[j][1]);
+				close(fd[j][0]);
+			}
+			j++;
+		}
+		return ;
+	}
+	dup2(fd[i - 1][0], STDIN_FILENO);
+	dup2(fd[i][1], STDOUT_FILENO);
+	while (j < cmds_size - 1)
+	{
+		if (j != i -1)
+			close(fd[j][0]);
+		if (j != i)
+			close(fd[j][1]);
+		j++;
+	}
+
+}
+
 void	run_commands(t_command *cmds, t_env *env)
 {
 	int			**fd;
@@ -141,22 +179,26 @@ void	run_commands(t_command *cmds, t_env *env)
 
 	i = 0;
 	head = cmds;
-	// if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
-	// {	
-	// 		if (cmds->redirections)
-	// 			run_redirections(cmds->redirections);
-	// 		exe_builtin(cmds->arguments, cmds->command, env);
-	// 		if (cmds->redirections)
-	// 			close_redir(cmds->redirections);
-	// 		return ;
-	// }
-	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
-	while (i < count_cmds())
-	{
-		if (pipe(fd) == -1)
-			return (perror_exit("Pipe error\n"));
-
+	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
+	{	
+			if (cmds->redirections)
+				run_redirections(cmds->redirections);
+			exe_builtin(cmds->arguments, cmds->command, env);
+			if (cmds->redirections)
+				close_redir(cmds->redirections);
+			return ;
 	}
+	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
+	if (count_cmds(cmds) > 1)
+	fd = ptr_check(malloc(sizeof(int *) * count_cmds(cmds) - 1));
+	while (i < count_cmds(cmds) - 1)
+	{
+		fd[i] = ptr_check(ft_calloc(2, sizeof(int)));
+		if (pipe(fd[i]) == -1)
+		return (perror_exit("Pipe error\n"));
+		i++;
+	}
+	i = 0;
 	while (cmds)
 	{
 		pid[i] = fork();
@@ -166,18 +208,20 @@ void	run_commands(t_command *cmds, t_env *env)
 		{
 			if (cmds->redirections)
 				run_redirections(cmds->redirections);
-			execute_pipe(head, fd, i);
+			execute_pipe(fd, i, head);
 			find_cmd(cmds, env);
 		}
 		i++;
 		cmds = cmds->next;	
 	}
 	cmds = head;
-	close(fd[0]);
-	close(fd[1]);
 	i = 0;
 	while (i < count_cmds(cmds))
-	{
+	{	if (i < count_cmds(cmds) - 1)
+		{
+			close(fd[i][1]);
+			close(fd[i][0]);
+		}
 		waitpid(pid[i], NULL, 0);
 		i++;
 	}
