@@ -221,7 +221,10 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (pid[i] == 0)
 		{
 			if (cmds->redirections)
+			{
+				printf("here\n" );
 				run_redirections(cmds->redirections);
+			}
 			execute_pipe(fd, i, head, cmds);
 			find_cmd(cmds, env);
 		}

@@ -28,6 +28,8 @@
         "utility": "c",
         "typeinfo": "c",
         "iosfwd": "c",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "initializer_list": "c",
+        "span": "c"
     }
 }
