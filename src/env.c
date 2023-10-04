@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-static t_envepval	*lstenv(t_envepval *lst)
+t_envepval	*lstenv(t_envepval *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -96,7 +96,7 @@ void  copy_env(char **env, t_env **main_env)
 	   env_lst = NULL;
        set_env(&env_lst, env);
        *main_env = ptr_check(malloc(sizeof(t_env)));
-       (*main_env)->empty_key = NULL;
+       //(*main_env)->empty_key = NULL;
        (*main_env)->env = env_lst;
        size = env_len(env_lst);
        (*main_env)->env_copy = malloc(sizeof(char *) * (size + 1));
