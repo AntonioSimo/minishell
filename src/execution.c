@@ -63,6 +63,7 @@ void	run_redirections(t_redir *redir)
 	{
 		if (temp->type == REDIR_OUTPUT)
 		{
+			// printf("here i am\n");
 			redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (redir->fileout[j] == -1)
 				perror_exit("FD error\n");
@@ -109,26 +110,27 @@ void	close_redir(t_redir *redir)
 	}
 }
 
-void	execute_pipe(int **fd, int i, t_command *cmd)
+void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 {
 	int	j;
 	int	cmds_size;
 
 
-	cmds_size = count_cmds(cmd);
+	cmds_size = count_cmds(head);
 	j = 0;
-	if (count_cmds(cmd) == 1)
+	if (cmds_size == 1)
 	{
 		return ;
 
 	}
 	if (i == 0)
 	{
-		// printf("i is:%i\n", i);
-		// 	printf("99\n");
+		
 		close(fd[i][0]);
-		// printf("size: %i\n", cmds_size);
-		dup2(fd[i][1], STDOUT_FILENO);
+		if (cmd->redirections)
+			fd[i][1] = dup(cmd->redirections->stdin_cpy);
+		else
+			dup2(fd[i][1], STDOUT_FILENO);
 		while (j < cmds_size - 1)
 		{
 			if (j != i)
@@ -140,11 +142,13 @@ void	execute_pipe(int **fd, int i, t_command *cmd)
 		}
 		return ;
 	}
-	if (i == (count_cmds(cmd) - 1))
+	if (i == cmds_size - 1)
 	{
-		// printf("here?\n");
 		close(fd[i - 1][1]);
-		dup2(fd[i - 1][0], STDIN_FILENO);
+		if (cmd->redirections)
+			fd[i - 1][0] = dup(cmd->redirections->stdin_cpy);
+		else
+			dup2(fd[i - 1][0], STDIN_FILENO);
 		while (j < cmds_size - 1)
 		{
 			// if (j != i)
@@ -157,8 +161,18 @@ void	execute_pipe(int **fd, int i, t_command *cmd)
 		}
 		return ;
 	}
-	dup2(fd[i - 1][0], STDIN_FILENO);
-	dup2(fd[i][1], STDOUT_FILENO);
+	if (cmd->redirections)
+	{
+		fd[i - 1][0] = dup(cmd->redirections->stdin_cpy);
+		fd[i][1] = dup(cmd->redirections->stdout_cpy);
+		// dup2(fd[i - 1][0], STDIN_FILENO);
+		// dup2(fd[i][1], STDOUT_FILENO);
+	}
+	else
+	{
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		dup2(fd[i][1], STDOUT_FILENO);
+	}
 	while (j < cmds_size - 1)
 	{
 		if (j != i -1)
@@ -208,7 +222,7 @@ void	run_commands(t_command *cmds, t_env *env)
 		{
 			if (cmds->redirections)
 				run_redirections(cmds->redirections);
-			execute_pipe(fd, i, head);
+			execute_pipe(fd, i, head, cmds);
 			find_cmd(cmds, env);
 		}
 		i++;
