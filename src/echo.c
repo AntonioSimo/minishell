@@ -30,14 +30,21 @@ void    check_nl(char **args, bool *is_nl, int j, bool *if_print)
 	}
 }
 
+void	echo_token(bool *valid, char **args, int j)
+{
+	*valid = false;
+	ft_putstr_fd(args[j], 1);
+	if (j < ft_arraysize(args) - 1)
+		write(1, " ", 1);
+}
+
 void echo_command(char **args)
 {
 	int     j;
 	bool    is_nl;
 	bool    if_print;
-	bool    valid; // this is to check if we need to validate -n, it will be set into not valid when we start printing text
-					//so it means when we will start printing text and will encounter -n, we will not be checking it is a flag
-					// e.g. echo -n o -n needs to print o -n
+	bool    valid; 
+
 	j = 1;
 	valid = true;
 	is_nl = true;
@@ -49,12 +56,7 @@ void echo_command(char **args)
 			if (valid && args[j][0] == '-')
 			   check_nl(args, &is_nl, j, &if_print);
 			if (if_print)
-			{
-				valid = false;
-				ft_putstr_fd(args[j], 1);
-				if (j < ft_arraysize(args) - 1)
-					write(1, " ", 1);
-			}
+				echo_token(&valid, args, j);
 			j++;
 		}
 	}

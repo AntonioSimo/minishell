@@ -33,9 +33,12 @@ int	count_redir(t_redir_lst *redir, t_type type)
 	out = 0;
 	while (redir)
 	{
-		if (type == REDIR_INPUT && redir->type == REDIR_INPUT)
+		if ((type == REDIR_INPUT && redir->type == REDIR_INPUT)
+			|| (type == REDIR_INPUT && redir->type == HEREDOC))
 			in++;
-		if (type == REDIR_OUTPUT && redir->type == REDIR_OUTPUT)
+		if ((type == REDIR_OUTPUT && redir->type == REDIR_OUTPUT) 
+			|| (type == REDIR_OUTPUT
+			&& redir->type == REDIR_OUTPUT_APPEND))
 			out++;
 		redir = redir->next;
 	}
@@ -56,14 +59,17 @@ void	run_redirections(t_redir *redir)
 	k = 0;
 	temp = redir->lst;
 	redir->fileout = ptr_check(malloc(sizeof(int) * count_redir(temp, REDIR_OUTPUT)));
-	redir->filein = ptr_check(malloc(sizeof(int) * count_redir(temp, REDIR_INPUT)));
+	redir->filein = ptr_check((malloc(sizeof(int) * count_redir(temp, REDIR_INPUT))));
 	redir->stdin_cpy = dup(STDIN_FILENO);
 	redir->stdout_cpy = dup(STDOUT_FILENO);
 	while (temp)
 	{
-		if (temp->type == REDIR_OUTPUT)
+		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
-			redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (temp->type == REDIR_OUTPUT)
+				redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (temp->type == REDIR_OUTPUT_APPEND)
+				redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (redir->fileout[j] == -1)
 				perror_exit("FD error\n");
 			dup2(redir->fileout[j], STDOUT_FILENO);

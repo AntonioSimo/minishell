@@ -180,8 +180,6 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 	bool	brackets;
 	t_token	*expanded_nodes;
 
-
-	// printf("my str:%s\n", tokens->command);
 	j = 0;
 	i = 0;
 	expanded = NULL;
@@ -292,6 +290,29 @@ void	error_code_expansion(t_token *token, t_token **head, int pos)
 	free(error_code);
 }
 
+int	if_tilde(t_token **tokens, t_type prev_type)
+{
+	if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR
+		&& ((*tokens)->command[0] == '~' && ft_strlen((*tokens)->command) == 1))
+		|| (ft_strlen((*tokens)->command) > 1 && (*tokens)->command[0] == '~'
+		&& (*tokens)->command[1] == '/'))
+		return (1);
+	return (0);
+}
+
+void	manipulate_head(t_token **tokens, t_token *head, int old_pos, int *i)
+{
+	*tokens = head;
+	old_pos = *i;
+	while (*i-- >= 0)
+	{
+		// printf("git\n");
+		*tokens = (*tokens)->next;
+
+	}
+	*i = old_pos;
+}
+
 void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 {
 	t_token	*head;
@@ -306,13 +327,8 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 	while (*tokens)
 	{
 		move_ptr = true;
-		if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR
-			&& ((*tokens)->command[0] == '~' && ft_strlen((*tokens)->command) == 1))
-				|| (ft_strlen((*tokens)->command) > 1 && (*tokens)->command[0] == '~'
-					&& (*tokens)->command[1] == '/'))
-		{
+		if (if_tilde(tokens, prev_type))
 			tilde_expansion((*tokens), my_env, or_home);
-		}
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
 		{
@@ -338,11 +354,7 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 		{
 			if (!dollar_expansion(*tokens, my_env, &head, i))
 			{
-				old_pos = i;
-				*tokens = head;
-				while (i--)
-					*tokens= (*tokens)->next;
-				i = old_pos;
+				manipulate_head(tokens, head, old_pos, &i);
 			}
 			else
 			{
