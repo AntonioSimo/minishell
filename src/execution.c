@@ -115,17 +115,12 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 	int	j;
 	int	cmds_size;
 
-
 	cmds_size = count_cmds(head);
 	j = 0;
 	if (cmds_size == 1)
-	{
 		return ;
-
-	}
 	if (i == 0)
 	{
-		
 		close(fd[i][0]);
 		if (cmd->redirections)
 			fd[i][1] = dup(cmd->redirections->stdin_cpy);
@@ -151,7 +146,6 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 			dup2(fd[i - 1][0], STDIN_FILENO);
 		while (j < cmds_size - 1)
 		{
-			// if (j != i)
 			if (j != i - 1)
 			{
 				close(fd[j][1]);
@@ -165,8 +159,6 @@ void	execute_pipe(int **fd, int i, t_command *head, t_command *cmd)
 	{
 		fd[i - 1][0] = dup(cmd->redirections->stdin_cpy);
 		fd[i][1] = dup(cmd->redirections->stdout_cpy);
-		// dup2(fd[i - 1][0], STDIN_FILENO);
-		// dup2(fd[i][1], STDOUT_FILENO);
 	}
 	else
 	{
@@ -193,6 +185,7 @@ void	run_commands(t_command *cmds, t_env *env)
 
 	i = 0;
 	head = cmds;
+	fd = NULL;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{	
 			if (cmds->redirections)
@@ -204,12 +197,12 @@ void	run_commands(t_command *cmds, t_env *env)
 	}
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	if (count_cmds(cmds) > 1)
-	fd = ptr_check(malloc(sizeof(int *) * count_cmds(cmds) - 1));
+		fd = ptr_check(malloc(sizeof(int *) * count_cmds(cmds) - 1));
 	while (i < count_cmds(cmds) - 1)
 	{
 		fd[i] = ptr_check(ft_calloc(2, sizeof(int)));
 		if (pipe(fd[i]) == -1)
-		return (perror_exit("Pipe error\n"));
+			return (perror_exit("Pipe error\n"));
 		i++;
 	}
 	i = 0;
@@ -221,10 +214,7 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (pid[i] == 0)
 		{
 			if (cmds->redirections)
-			{
-				printf("here\n" );
 				run_redirections(cmds->redirections);
-			}
 			execute_pipe(fd, i, head, cmds);
 			find_cmd(cmds, env);
 		}
