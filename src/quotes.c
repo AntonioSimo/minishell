@@ -3,7 +3,7 @@
 int	strlen_quoted(char *line, int position, t_type quotes_type)
 {
 	int	length;
-	
+
 	length = 0;
 	position++;
 	while (line[position + length])
@@ -19,9 +19,9 @@ int	strlen_quoted(char *line, int position, t_type quotes_type)
 
 t_type	quotes_type(char *line, int pos)
 {
-	bool d_quotes;
-	bool s_quotes;
-	int	i;
+	bool	d_quotes;
+	bool	s_quotes;
+	int		i;
 
 	i = 0;
 	d_quotes = true;
@@ -42,10 +42,10 @@ t_type	quotes_type(char *line, int pos)
 		return (DEFAULT);
 }
 
-bool check_quotes(char *line)
+bool	check_quotes(char *line)
 {
-	bool d_quotes;
-	bool s_quotes;
+	bool	d_quotes;
+	bool	s_quotes;
 
 	d_quotes = true;
 	s_quotes = true;

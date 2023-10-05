@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/21 22:01:11 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/05 17:40:45 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ typedef struct s_command
 {
 	char				**arguments;
 	char				*command;
-	int					fd[2];
+	// int					fd[2];
 	t_redir				*redirections;
 	struct s_command	*next;
 }	t_command;
@@ -166,10 +166,12 @@ void		tokenize_heredoc(t_token **token_lst, int *i);
 int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
-char		**push_str_2d(char **args, char *str);
 void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
+
+//utils2
+char		**push_str_2d(char **args, char *str);
 //parser
 t_command	*merge_tokens(t_token	*tokens);
 // void	parse_redirections(t_command *commands);
@@ -178,8 +180,8 @@ t_command	*merge_tokens(t_token	*tokens);
 void		expander(t_token **tokens, t_envepval *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
-t_token		*create_nodes(char *expanded, char	*str, int start, int end);
-char		*find_home(t_envepval *env);
+t_token		*create_new_nodes(char *expanded);
+char	*replace_string(char *expanded, char	*str, int start, int end);
 
 //list utils
 t_token		*lst_token_new(char *str, t_type type);
@@ -193,6 +195,17 @@ void	print_my_env(t_envepval *my_env);
 void  copy_env(char **env, t_env **main_env);
 // t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
+
+//tokens_utils2
+int		token_lst_size(t_token	*tokens);
+
+//expander_utils
+t_token	*create_nodes(char *expanded, char	*str, int start, int end);
+
+//tilde
+int		if_tilde(t_token **tokens, t_type prev_type);
+void	tilde_expansion(t_token *tokens, t_envepval *my_env);
+char	*find_home(t_envepval *env);
 
 //command_utils
 t_command	*lst_cmd_new(char **args, t_redir *redir);

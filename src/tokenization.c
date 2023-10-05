@@ -46,9 +46,9 @@ void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
 	*pos += quotes_len + 2;
 }
 
-void tokenize(char *line, t_token **token_lst)
+void	tokenize(char *line, t_token **token_lst)
 {
-	int i;
+	int		i;
 	t_type	quotes;
 
 	i = 0;

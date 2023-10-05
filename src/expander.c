@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/01 20:01:51 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	char	*after;
 	char	*temp;
 	char	*new_line;
-	
+
 	before = ft_substr(str, 0, start - 1);
 	after = ft_substr(str, end, ft_strlen(str) - end);
 	temp = ft_strjoin(before, expanded);
@@ -87,72 +87,17 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	return (new_line);
 }
 
-int	token_lst_size(t_token	*tokens)
-{
-	int		i;
-
-	i = 0;
-	while (tokens)
-	{
-		i++;
-		tokens = tokens->next;
-	}
-	return (i);
-
-}
-
-t_token	*create_nodes(char *expanded, char	*str, int start, int end)
-{
-	char	*before;
-	char	*after;
-	t_token	*temp_node;
-	t_token	*expanded_nodes;
-	int		i = 0;
-	t_token	*temp_expanded;
-
-	temp_node = NULL;
-	before = ft_substr(str, 0, start - 1);
-	after = ft_substr(str, end, ft_strlen(str) - end);
-	if (ft_strlen(before) > 0)
-		push_token(&temp_node, lst_token_new(before, DEFAULT));
-	if (ft_strlen(expanded) > 0)
-	{
-		expanded_nodes = create_new_nodes(expanded);
-		i = token_lst_size(expanded_nodes);
-		while (i)
-		{
-			temp_expanded = expanded_nodes->next;
-			expanded_nodes->next = NULL;
-			push_token(&temp_node, expanded_nodes);
-			expanded_nodes = temp_expanded;
-			i--;
-		}
-	}
-	if (ft_strlen(after) > 0)
-		push_token(&temp_node, lst_token_new(after, DEFAULT));
-	free(before);
-	free(after);
-	if (!temp_node)
-		return (lst_token_new("", DEFAULT));
-	return (temp_node);
-}
-
-void	free_node(t_token *token)
-{
-	free(token->command);
-	free(token);
-}
-
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 {
-	int i = 0;
+	int		i;
 	t_token	*or_head;
 	t_token	*next_head;
 	t_token	*prev_to_append;
 
+	i = 0;
 	or_head = *head;
 	prev_to_append = *head;
-	while (i<pos)
+	while (i < pos)
 	{
 		*head = (*(head))->next;
 		if (i == pos - 2)
@@ -175,7 +120,7 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 {
 	char	*to_expand;
 	char	*expanded;
-	int 	i;
+	int		i;
 	int		j;
 	bool	brackets;
 	t_token	*expanded_nodes;
@@ -183,13 +128,13 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 	j = 0;
 	i = 0;
 	expanded = NULL;
-	while(i < (int)ft_strlen(tokens->command))
+	while (i < (int)ft_strlen(tokens->command))
 	{
-		if (tokens->command[i] == '$' && !tokens->command[i + 1]) //to leave $ at the last position $USER$
+		if (tokens->command[i] == '$' && !tokens->command[i + 1])
 			return (1);
-		if (tokens->command[i] == '$' && tokens->command[i + 1] //to skip $$ 
+		if (tokens->command[i] == '$' && tokens->command[i + 1]
 			&& tokens->command[i + 1] == '$')
-				i += 2;
+			i += 2;
 		if (tokens->command[i] && tokens->command[i] == '$')
 		{
 			i++;
@@ -201,9 +146,9 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 			j = i;
 			while (tokens->command[i] && char_to_expand(tokens->command[i]))
 				i++;
-			to_expand = ft_substr(tokens->command, j, i - j);	
+			to_expand = ft_substr(tokens->command, j, i - j);
 			expanded = find_expandable(my_env, to_expand);
-			if (brackets) //to get rid of the {}
+			if (brackets)
 			{
 				j--;
 				i++;
@@ -225,55 +170,10 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 	return (0);
 }
 
-char	*find_home(t_envepval *env)
-{
-	char	*username;
-	char	*home;
-
-	username = find_expandable(env, "USER");
-	if (ft_strlen(username) > 0)
-	{
-		home = ptr_check(ft_strjoin("/home/", username));
-		free(username);
-		return (home);
-	}
-	free(username);
-	username = find_expandable(env, "LOGNAME");
-	if (ft_strlen(username) > 0)
-	{
-		home = ptr_check(ft_strjoin("/home/", username));
-		free(username);
-		return (home);
-	}
-	free(username);
-	username = find_expandable(env, "USERNAME");
-	home = ptr_check(ft_strjoin("/home/", username));
-	free(username);
-	return (home);
-}
-
-static void tilde_expansion(t_token *tokens, t_envepval *my_env)
-{
-	char	*home;
-	char	*new_command;
-
-	home = find_expandable(my_env, "HOME");
-	if (ft_strlen(home) == 0)
-	{
-		free(home);
-		home = ptr_check(find_home(my_env));
-	}
-	new_command = replace_string(home, tokens->command, 1 , 1);
-	free(tokens->command);
-	tokens->command = ft_strdup(new_command);
-	free(new_command);
-	free(home);
-}
-
 void	double_dollar(t_token *tokens, t_token **head, int pos)
 {
 	char	*pid;
-	size_t		i;
+	size_t	i;
 	t_token	*new_node;
 
 	i = 0;
@@ -283,8 +183,8 @@ void	double_dollar(t_token *tokens, t_token **head, int pos)
 		if (ft_strlen(tokens->command + i) > 1 && tokens->command[i] == '$'
 			&& tokens->command[i + 1] == '$')
 		{
-			
-			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr(tokens->command, "$$", ft_strlen(tokens->command)));
+			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr \
+				(tokens->command, "$$", ft_strlen(tokens->command)));
 			new_node = create_nodes(pid, tokens->command, i + 1, i + 2);
 			connect_nodes(new_node, pos, head);
 			break ;
@@ -307,26 +207,16 @@ void	error_code_expansion(t_token *token, t_token **head, int pos)
 		if (token->command[i + 1] && token->command[i] == '$'
 			&& token->command[i + 1] == '?')
 		{
-			i = ft_strlen(token->command) - ft_strlen(ft_strnstr(token->command, "$?", ft_strlen(token->command)));
+			i = ft_strlen(token->command) - ft_strlen(ft_strnstr \
+				(token->command, "$?", ft_strlen(token->command)));
 			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
 			connect_nodes(new_node, pos, head);
-			break ;	
+			break ;
 		}
 		i++;
 	}
 	free(error_code);
 }
-
-int	if_tilde(t_token **tokens, t_type prev_type)
-{
-	if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR
-		&& ((*tokens)->command[0] == '~' && ft_strlen((*tokens)->command) == 1))
-		|| (ft_strlen((*tokens)->command) > 1 && (*tokens)->command[0] == '~'
-		&& (*tokens)->command[1] == '/'))
-		return (1);
-	return (0);
-}
-
 
 void	expander(t_token **tokens, t_envepval *my_env)
 {
@@ -345,7 +235,8 @@ void	expander(t_token **tokens, t_envepval *my_env)
 		if (if_tilde(tokens, prev_type))
 			tilde_expansion((*tokens), my_env);
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
-			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
+			&& ft_strnstr((*tokens)->command, "$?", \
+			ft_strlen((*tokens)->command)))
 		{
 			error_code_expansion(*tokens, &head, i);
 			*tokens = head;
@@ -355,7 +246,8 @@ void	expander(t_token **tokens, t_envepval *my_env)
 			i = old_pos;
 		}
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
-			&& ft_strnstr((*tokens)->command, "$$", ft_strlen((*tokens)->command)))
+			&& ft_strnstr((*tokens)->command, "$$", \
+			ft_strlen((*tokens)->command)))
 		{
 			double_dollar(*tokens, &head, i);
 			old_pos = i;
@@ -363,9 +255,10 @@ void	expander(t_token **tokens, t_envepval *my_env)
 			while (i--)
 				*tokens = (*tokens)->next;
 			i = old_pos;
-			}
+		}
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
-			&& ft_strchr((*tokens)->command, '$') && ft_strlen((*tokens)->command) != 1)
+			&& ft_strchr((*tokens)->command, '$')
+			&& ft_strlen((*tokens)->command) != 1)
 		{
 			if (!dollar_expansion(*tokens, my_env, &head, i))
 			{

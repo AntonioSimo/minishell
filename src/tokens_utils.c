@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:38:43 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 16:39:02 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static t_token	*last_token(t_token *lst)
@@ -60,7 +72,8 @@ void	print_tokens(t_token *token_lst)
 
 void	destroy_tokens(t_token	*tokens)
 {
-	t_token *temp;
+	t_token	*temp;
+
 	if (!tokens)
 		return ;
 	while (tokens)
@@ -68,7 +81,7 @@ void	destroy_tokens(t_token	*tokens)
 		temp = tokens->next;
 		free(tokens->command);
 		free(tokens);
-		tokens = temp;;
+		tokens = temp;
 	}
 	tokens = NULL;
 }

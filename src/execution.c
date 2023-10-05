@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 17:01:32 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	count_cmds(t_command *cmds)
@@ -12,11 +24,13 @@ int	count_cmds(t_command *cmds)
 	}
 	return (i);
 }
+
 void	find_cmd(t_command	*cmd, t_env *env)
 {
 	char	*path;
 
 	path = find_path(cmd->command, find_expandable(env->env, "PATH"));
+	printf("path: %s\n", path);
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
@@ -36,9 +50,9 @@ int	count_redir(t_redir_lst *redir, t_type type)
 		if ((type == REDIR_INPUT && redir->type == REDIR_INPUT)
 			|| (type == REDIR_INPUT && redir->type == HEREDOC))
 			in++;
-		if ((type == REDIR_OUTPUT && redir->type == REDIR_OUTPUT) 
+		if ((type == REDIR_OUTPUT && redir->type == REDIR_OUTPUT)
 			|| (type == REDIR_OUTPUT
-			&& redir->type == REDIR_OUTPUT_APPEND))
+				&& redir->type == REDIR_OUTPUT_APPEND))
 			out++;
 		redir = redir->next;
 	}
@@ -51,15 +65,17 @@ int	count_redir(t_redir_lst *redir, t_type type)
 
 void	run_redirections(t_redir *redir)
 {
-	int	j;
-	int	k;
+	int			i;
+	int			j;
 	t_redir_lst	*temp;
 
+	i = 0;
 	j = 0;
-	k = 0;
 	temp = redir->lst;
-	redir->fileout = ptr_check(malloc(sizeof(int) * count_redir(temp, REDIR_OUTPUT)));
-	redir->filein = ptr_check((malloc(sizeof(int) * count_redir(temp, REDIR_INPUT))));
+	redir->fileout = ptr_check(malloc(sizeof(int) \
+					* count_redir(temp, REDIR_OUTPUT)));
+	redir->filein = ptr_check((malloc(sizeof(int) \
+					* count_redir(temp, REDIR_INPUT))));
 	redir->stdin_cpy = dup(STDIN_FILENO);
 	redir->stdout_cpy = dup(STDOUT_FILENO);
 	while (temp)
@@ -67,21 +83,23 @@ void	run_redirections(t_redir *redir)
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
 			if (temp->type == REDIR_OUTPUT)
-				redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				redir->fileout[i] = open(temp->file, O_WRONLY \
+				| O_CREAT | O_TRUNC, 0644);
 			if (temp->type == REDIR_OUTPUT_APPEND)
-				redir->fileout[j] = open(temp->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (redir->fileout[j] == -1)
+				redir->fileout[i] = open(temp->file, O_WRONLY \
+				| O_CREAT | O_APPEND, 0644);
+			if (redir->fileout[i] == -1)
 				perror_exit("FD error\n");
-			dup2(redir->fileout[j], STDOUT_FILENO);
-			j++;
+			dup2(redir->fileout[i], STDOUT_FILENO);
+			i++;
 		}
 		else if (temp->type == REDIR_INPUT)
 		{
-			redir->filein[k] = open(temp->file, O_RDONLY);
-			if (redir->filein[k] == -1)
+			redir->filein[j] = open(temp->file, O_RDONLY);
+			if (redir->filein[j] == -1)
 				perror_exit("FD error\n");
-			dup2(redir->filein[k], STDIN_FILENO);
-			k++;
+			dup2(redir->filein[j], STDIN_FILENO);
+			j++;
 		}
 		temp = temp->next;
 	}
@@ -89,8 +107,8 @@ void	run_redirections(t_redir *redir)
 
 void	close_redir(t_redir *redir)
 {
-	int	j;
-	int	k;
+	int			j;
+	int			k;
 	t_redir_lst	*temp;
 
 	temp = redir->lst;
@@ -126,13 +144,13 @@ void	run_commands(t_command *cmds, t_env *env)
 	head = cmds;
 	fd = NULL;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
-	{	
-			if (cmds->redirections)
-				run_redirections(cmds->redirections);
-			exe_builtin(cmds->arguments, cmds->command, env, 0);
-			if (cmds->redirections)
-				close_redir(cmds->redirections);
-			return ;
+	{
+		if (cmds->redirections)
+			run_redirections(cmds->redirections);
+		exe_builtin(cmds->arguments, cmds->command, env, 0);
+		if (cmds->redirections)
+			close_redir(cmds->redirections);
+		return ;
 	}
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	if (count_cmds(cmds) > 1)
@@ -160,12 +178,12 @@ void	run_commands(t_command *cmds, t_env *env)
 			find_cmd(cmds, env);
 		}
 		i++;
-		cmds = cmds->next;	
+		cmds = cmds->next;
 	}
 	cmds = head;
 	i = 0;
 	while (i < count_cmds(cmds))
-	{	
+	{
 		if (i < count_cmds(cmds) - 1)
 		{
 			close(fd[i][0]);

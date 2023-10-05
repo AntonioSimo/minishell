@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 13:19:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/09/26 18:59:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/05 16:15:33 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ void	push_cmd(t_command **lst, t_command *new)
 
 void	print_cmds(t_command *cmd_lst)
 {
-    int i;
+	int	i;
 
-    i = 0;
+	i = 0;
 	while (cmd_lst)
-    {
-        printf("'cmd: %s'\n", cmd_lst->command);
+	{
+		printf("'cmd: %s'\n", cmd_lst->command);
 		if (cmd_lst->arguments)
 		{
 			while (cmd_lst->arguments[i])
@@ -72,31 +72,32 @@ void	print_cmds(t_command *cmd_lst)
 				i++;
 			}
 		}
-        i = 0;
+		i = 0;
 		if (cmd_lst->redirections)
 		{
 			print_redirections(cmd_lst->redirections->lst);
 		}
-        cmd_lst = cmd_lst->next;
-    }
+		cmd_lst = cmd_lst->next;
+	}
 }
 
 void	*destroy_cmds(t_command	*cmd_lst)
 {
-    int i; //this function needs to be finished to free everything
+	int			i;
 	t_command	*node;
-    i = 0;
+
+	i = 0;
 	if (!cmd_lst)
 		return (NULL);
 	while (cmd_lst)
 	{
 		node = (cmd_lst)->next;
-        while ((cmd_lst)->arguments[i])
-        {
-            ft_free((cmd_lst)->arguments[i]);
-            i++;
-        }
-        i = 0;
+		while ((cmd_lst)->arguments[i])
+		{
+			ft_free((cmd_lst)->arguments[i]);
+			i++;
+		}
+		i = 0;
 		destroy_redir(cmd_lst->redirections->lst);
 		free((cmd_lst)->command);
 		cmd_lst = node;
