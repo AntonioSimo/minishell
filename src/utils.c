@@ -159,3 +159,11 @@ int	ft_strcmp(char *s1, char *s2)
 		++i;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
+int	is_word(t_type type)
+{
+	if (type == DEFAULT || type == SINGLE_QUOTED
+		|| type == DOUBLE_QUOTED)
+		return (1);
+	return (0);
+}
