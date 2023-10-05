@@ -12,14 +12,6 @@
 
 #include "../include/minishell.h"
 
-int	is_word(t_type type)
-{
-	if (type == DEFAULT || type == SINGLE_QUOTED
-		|| type == DOUBLE_QUOTED)
-		return (1);
-	return (0);
-}
-
 void	handle_redirections(t_redir **redir, t_token *tokens)
 {
 		t_type	redir_type;
@@ -79,7 +71,6 @@ t_command	*merge_tokens(t_token	*tokens)
 			word = ft_free(word);
 			args_arr = NULL;
 		}
-		
 		tokens = tokens->next;
 	}
 	if (word || args_arr || redir)
