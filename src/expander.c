@@ -225,7 +225,34 @@ static int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head,
 	return (0);
 }
 
-static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
+char	*find_home(t_envepval *env)
+{
+	char	*username;
+	char	*home;
+
+	username = find_expandable(env, "USER");
+	if (ft_strlen(username) > 0)
+	{
+		home = ptr_check(ft_strjoin("/home/", username));
+		free(username);
+		return (home);
+	}
+	free(username);
+	username = find_expandable(env, "LOGNAME");
+	if (ft_strlen(username) > 0)
+	{
+		home = ptr_check(ft_strjoin("/home/", username));
+		free(username);
+		return (home);
+	}
+	free(username);
+	username = find_expandable(env, "USERNAME");
+	home = ptr_check(ft_strjoin("/home/", username));
+	free(username);
+	return (home);
+}
+
+static void tilde_expansion(t_token *tokens, t_envepval *my_env)
 {
 	char	*home;
 	char	*new_command;
@@ -234,7 +261,7 @@ static void tilde_expansion(t_token *tokens, t_envepval *my_env, char *or_home)
 	if (ft_strlen(home) == 0)
 	{
 		free(home);
-		home = ft_strdup(or_home);
+		home = ptr_check(find_home(my_env));
 	}
 	new_command = replace_string(home, tokens->command, 1 , 1);
 	free(tokens->command);
@@ -300,20 +327,8 @@ int	if_tilde(t_token **tokens, t_type prev_type)
 	return (0);
 }
 
-void	manipulate_head(t_token **tokens, t_token *head, int old_pos, int *i)
-{
-	*tokens = head;
-	old_pos = *i;
-	while (*i-- >= 0)
-	{
-		// printf("git\n");
-		*tokens = (*tokens)->next;
 
-	}
-	*i = old_pos;
-}
-
-void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
+void	expander(t_token **tokens, t_envepval *my_env)
 {
 	t_token	*head;
 	int		i;
@@ -328,7 +343,7 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 	{
 		move_ptr = true;
 		if (if_tilde(tokens, prev_type))
-			tilde_expansion((*tokens), my_env, or_home);
+			tilde_expansion((*tokens), my_env);
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strnstr((*tokens)->command, "$?", ft_strlen((*tokens)->command)))
 		{
@@ -354,7 +369,11 @@ void	expander(t_token **tokens, t_envepval *my_env, char *or_home)
 		{
 			if (!dollar_expansion(*tokens, my_env, &head, i))
 			{
-				manipulate_head(tokens, head, old_pos, &i);
+				*tokens = head;
+				old_pos = i;
+				while (i--)
+					*tokens = (*tokens)->next;
+				i = old_pos;
 			}
 			else
 			{
