@@ -49,7 +49,7 @@ int	check_pipes(t_token *tokens)
 	
 }
 
-void	lexer(char *line, t_env *my_env, char *or_home)
+void	lexer(char *line, t_env *my_env)
 {
 	t_token		*tokens;
 	t_command	*commands;
@@ -58,7 +58,7 @@ void	lexer(char *line, t_env *my_env, char *or_home)
 	if (check_quotes(line))
 	{
 		tokenize(line, &tokens);
-		expander(&tokens, my_env->env, or_home);
+		expander(&tokens, my_env->env);
 		if (!check_pipes(tokens))
 		{
 			// print_tokens(tokens);

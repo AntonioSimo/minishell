@@ -17,9 +17,7 @@ int	g_error_code;
 void	loop(t_env *my_env)
 {
 	char *line;
-	char *or_home;
 
-	or_home = ptr_check(find_expandable(my_env->env, "HOME"));
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
@@ -30,7 +28,7 @@ void	loop(t_env *my_env)
 		}
 		add_history(line);
 		if (ft_strlen(line) > 0)
-			lexer(line, my_env, or_home);
+			lexer(line, my_env);
 		ft_free(line);
 		rl_on_new_line();
 	}
