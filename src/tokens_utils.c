@@ -72,5 +72,3 @@ void	destroy_tokens(t_token	*tokens)
 	}
 	tokens = NULL;
 }
-
-
