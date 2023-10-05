@@ -54,8 +54,16 @@ void    ft_cd(t_env *env, char **args)
 
 
     pwd = get_cwd();
+    nwd = NULL;
     if (args[1] == NULL)
-        nwd = find_home(env->env);
+    {
+        nwd = find_expandable(env->env, "HOME");
+        if (ft_strlen(nwd) == 0)
+        {
+            free(nwd);
+            nwd = find_home(env->env);
+        }
+    }
     else if(!ft_strcmp(args[1], "-"))
         nwd = find_expandable(env->env, "OLDPWD");
     else if(args[1])
@@ -65,5 +73,6 @@ void    ft_cd(t_env *env, char **args)
     else
         update_pwd(env, pwd);
     free(pwd);
-    free(nwd);
+    if (nwd)
+        free(nwd);
 }
