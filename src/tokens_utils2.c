@@ -25,4 +25,12 @@ int	token_lst_size(t_token	*tokens)
 	return (i);
 }
 
+t_token	*create_token(char *string, t_type type)
+{
+	t_token	*token;
 
+	token = ptr_check(malloc(sizeof(t_token)));
+	token->command = ptr_check(ft_strdup(string));
+	token->type = type;
+	return (token);
+}

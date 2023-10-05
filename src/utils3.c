@@ -12,77 +12,65 @@
 
 #include "../include/minishell.h"
 
-int	ft_isspace(int c)
+char	*find_expandable(t_envepval	*env, char	*key)
 {
-	if ((c >= 9 && c <= 13) || c == ' ')
+	while (env)
+	{
+		if (!ft_strncmp(env->key, key, ft_strlen(env->key))
+			&& !ft_strncmp(key, env->key, ft_strlen(key)))
+			return (ft_strdup(env->val));
+		env = env->next;
+	}
+	return (ft_strdup(""));
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		++i;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char	*make_str_from_2d(char **args)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	if (args)
+	{
+		while (args[i])
+		{
+			str = ft_free_strjoin(str, args[i]);
+			if (args[i + 1])
+				str = ft_free_strjoin(str, " ");
+			i++;
+		}
+	}
+	return (str);
+}
+
+int	is_word(t_type type)
+{
+	if (type == DEFAULT || type == SINGLE_QUOTED
+		|| type == DOUBLE_QUOTED)
 		return (1);
 	return (0);
 }
 
-int	find_equal(char *line)
+int	count_cmds(t_command *cmds)
 {
 	int	i;
 
 	i = 0;
-	while (line[i])
+	while (cmds)
 	{
-		if (line[i] == '=')
-			return (i);
+		cmds = cmds->next;
 		i++;
 	}
-	return (-1);
+	return (i);
 }
-
-char	*find_path(char *cmd, char *envp)
-{
-	char	**paths;
-	char	*path;
-	int		i;
-	char	*part_path;
-
-	paths = ft_split(envp, ':');
-	i = 0;
-	while (paths[i])
-	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
-		free(part_path);
-		if (access(path, F_OK) == 0)
-			return (path);
-		free(path);
-		i++;
-	}
-	i = -1;
-	while (paths[++i])
-		free(paths[i]);
-	free(paths);
-	return (0);
-}
-
-void	*ft_ptrdel(void *ptr)
-{
-	if (ptr)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (NULL);
-}
-
-void	*double_free(char **ptr)
-{
-	int	i;
-
-	i = 0;
-	if (ptr)
-	{
-		while (ptr[i])
-		{
-			free(ptr[i]);
-			i++;
-		}
-		free(ptr);
-	}
-	return (NULL);
-}
-

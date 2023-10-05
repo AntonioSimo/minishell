@@ -177,12 +177,19 @@ t_command	*merge_tokens(t_token	*tokens);
 // void	parse_redirections(t_command *commands);
 
 //expander
+int			char_to_expand(char c);
+int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
+
 void		expander(t_token **tokens, t_envepval *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded);
 char	*replace_string(char *expanded, char	*str, int start, int end);
 
+//redirections
+void	run_redirections(t_redir *redir);
+void	close_redir(t_redir *redir);
+int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
 t_token		*lst_token_new(char *str, t_type type);
 // void		lst_token_back(t_token **lst, t_token *new);

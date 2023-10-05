@@ -34,9 +34,7 @@ int	check_pipes(t_token *tokens)
 			|| tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND
 			|| tokens->type == HEREDOC)
-			{
-				flag = false;
-			}
+			flag = false;
 		if (flag && tokens->type == PIPE && printf("Incorrect pipes\n"))
 			return (1);
 		if (tokens->type == PIPE)
@@ -46,15 +44,15 @@ int	check_pipes(t_token *tokens)
 	if (flag && printf("Incorrect pipes\n"))
 		return (1);
 	return (0);
-	
+
 }
 
 void	lexer(char *line, t_env *my_env)
 {
 	t_token		*tokens;
 	t_command	*commands;
-	
-	tokens = NULL;	
+
+	tokens = NULL;
 	if (check_quotes(line))
 	{
 		tokenize(line, &tokens);
@@ -68,7 +66,7 @@ void	lexer(char *line, t_env *my_env)
 				run_commands(commands, my_env);
 			destroy_tokens(tokens);
 		}
-	}	
+	}
 	else
 		ft_printf("Unclosed quotes.\n");
 }

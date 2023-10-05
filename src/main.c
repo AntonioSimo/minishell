@@ -16,7 +16,7 @@ int	g_error_code;
 
 void	loop(t_env *my_env)
 {
-	char *line;
+	char	*line;
 
 	while (1)
 	{
@@ -32,20 +32,19 @@ void	loop(t_env *my_env)
 		ft_free(line);
 		rl_on_new_line();
 	}
-}	
+}
 
-int	main(int argc, char** argv, char** env)
+int	main(int argc, char **argv, char **env)
 {
-	(void) argv;
-	(void) argc;
-	t_env   *env_main;
-	
+	t_env	*env_main;
+
+	(void)argv;
+	(void)argc;
 	g_error_code = 0;
 	env_main = NULL;
 	copy_env(env, &env_main);
 	signal(SIGINT, signal_int_handler);
 	signal(SIGQUIT, SIG_IGN);
-	loop(env_main);	
+	loop(env_main);
 	exit (EXIT_SUCCESS);
 }
-

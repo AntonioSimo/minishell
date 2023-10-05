@@ -16,18 +16,6 @@ void	print_redirections(t_redir_lst	*redir)
 	}
 }
 
-int redir_size(t_redir_lst	*redir)
-{
-	int i=0;
-	if (!redir)
-		return(0);
-	while (redir)
-	{
-		i++;
-		redir = redir->next;
-	}
-	return (i);
-}
 
 t_redir_lst	*lst_redir_new(char	*file, t_type type)
 {
@@ -52,7 +40,7 @@ t_redir_lst	*redir_lst_last(t_redir_lst *redir)
 void	push_redir(t_redir_lst **redir_lst, t_redir_lst *redir)
 {
 	t_redir_lst	*redir_node;
-	
+
 	if ((*redir_lst) == NULL)
 	{
 		(*redir_lst) = redir;
