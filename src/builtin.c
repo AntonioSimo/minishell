@@ -19,20 +19,22 @@ int ft_isbuiltin(char *command)
     return (0);
 }
 
-void    exe_builtin(char **args, char *command, t_env *env)
+void    exe_builtin(char **args, char *command, t_env *env, int if_exit)
 {
     if (ft_strcmp(command, "cd") == 0)
         ft_cd(env, args);
-    if (ft_strcmp(command, "echo") == 0)
+    else if (ft_strcmp(command, "echo") == 0)
         echo_command(args);
-    if (ft_strcmp(command, "pwd") == 0)
+    else if (ft_strcmp(command, "pwd") == 0)
         get_current_working_dir();
-    if (ft_strcmp(command, "exit") == 0)
+    else if (ft_strcmp(command, "exit") == 0)
         ft_exit(args);
-    if (ft_strcmp(command, "export") == 0)
+    else if (ft_strcmp(command, "export") == 0)
         ft_export(env, args);
-    if (ft_strcmp(command, "env") == 0)
+    else if (ft_strcmp(command, "env") == 0)
         print_my_env(env->env);
-    if (ft_strcmp(command, "unset") == 0)
+    else if (ft_strcmp(command, "unset") == 0)
         ft_unset(env, args);
+    if (if_exit)
+        exit(EXIT_SUCCESS);
 }
