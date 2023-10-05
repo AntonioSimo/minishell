@@ -55,12 +55,15 @@ void    ft_cd(t_env *env, char **args)
 
     pwd = get_cwd();
     if (args[1] == NULL)
-        nwd = find_expandable(env->env, "HOME"); //I'd switch that to function we have it's called find_expandable, you can find it in expander.c 
-    else                       // it's already linked to header file. Why? Because this function calls original env 
-        nwd = args[1];          //which is passed to program on the input and we want to be calling our own struct with env
-    if (chdir(nwd) != 0)        //cuz you can set HOME to something else later and getenv will look for old value.
-        perror("chdir() error");//in case when HOME is unset we print message 'mustash: cd: HOME not set'
+        nwd = find_home(env->env);
+    else if(!ft_strcmp(args[1], "-"))
+        nwd = find_expandable(env->env, "OLDPWD");
+    else if(args[1])
+        nwd = ft_strdup(args[1]);
+    if (chdir(nwd) != 0)
+        perror("chdir() error");
     else
         update_pwd(env, pwd);
     free(pwd);
+    free(nwd);
 }
