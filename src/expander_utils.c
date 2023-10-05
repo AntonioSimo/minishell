@@ -50,8 +50,8 @@ t_token	*create_nodes(char *expanded, char	*str, int start, int end)
 		push_token(&temp_node, lst_token_new(after, DEFAULT));
 	free(before);
 	free(after);
-	if (!temp_node)
-		return (lst_token_new("", DEFAULT));
+	// if (!temp_node)
+	// 	return (lst_token_new("", DEFAULT));
 	return (temp_node);
 }
 

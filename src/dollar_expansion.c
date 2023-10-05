@@ -47,6 +47,8 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int po
 		}
 	}
 	if (ft_strlen(expanded) == 0)
+	{
 		return (1);
+	}
 	return (0);
 }

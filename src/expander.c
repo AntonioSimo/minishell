@@ -59,7 +59,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	return (new_line);
 }
 
-void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
+static int	empty_node(int pos, t_token **head)
 {
 	int		i;
 	t_token	*or_head;
@@ -76,7 +76,34 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 			prev_to_append = *head;
 		i++;
 	}
+	next_head = (*head)->next;
+	prev_to_append->next = next_head;
+	if (pos == 0)
+		*head = or_head->next;
+	else
+		*head = or_head;
+	return (1);
+}
+
+void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
+{
+	int		i;
+	t_token	*or_head;
+	t_token	*next_head;
+	t_token	*prev_to_append;
+
 	i = 0;
+	or_head = *head;
+	prev_to_append = *head;
+	if (!new_nodes && empty_node(pos, head))
+		return ;
+	while (i < pos)
+	{
+		*head = (*(head))->next;
+		if (i == pos - 2)
+			prev_to_append = *head;
+		i++;
+	}
 	next_head = (*head)->next;
 	prev_to_append->next = new_nodes;
 	while (new_nodes->next)
@@ -168,8 +195,8 @@ void	expander(t_token **tokens, t_envepval *my_env)
 			ft_strlen((*tokens)->command)))
 		{
 			double_dollar(*tokens, &head, i);
-			old_pos = i;
 			*tokens = head;
+			old_pos = i;
 			while (i--)
 				*tokens = (*tokens)->next;
 			i = old_pos;
@@ -197,7 +224,7 @@ void	expander(t_token **tokens, t_envepval *my_env)
 				i = old_pos;
 			}
 		}
-		if ((*tokens)->type == SEPERATOR)
+		if (*tokens && (*tokens)->type == SEPERATOR)
 			prev_type = SEPERATOR;
 		else
 			prev_type = DEFAULT;

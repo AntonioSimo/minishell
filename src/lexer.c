@@ -57,7 +57,7 @@ void	lexer(char *line, t_env *my_env)
 	{
 		tokenize(line, &tokens);
 		expander(&tokens, my_env->env);
-		if (!check_pipes(tokens))
+		if (tokens && !check_pipes(tokens))
 		{
 			print_tokens(tokens);
 			commands = merge_tokens(tokens);
