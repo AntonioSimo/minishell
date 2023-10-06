@@ -34,3 +34,78 @@ t_token	*create_token(char *string, t_type type)
 	token->type = type;
 	return (token);
 }
+
+t_token	*create_nodes(char *expanded, char	*str, int start, int end)
+{
+	char	*before;
+	char	*after;
+	t_token	*temp_node;
+
+	temp_node = NULL;
+	before = ft_substr(str, 0, start - 1);
+	after = ft_substr(str, end, ft_strlen(str) - end);
+	if (ft_strlen(before) > 0)
+		push_token(&temp_node, lst_token_new(before, DEFAULT));
+	if (ft_strlen(expanded) > 0)
+		handle_first_part(expanded, &temp_node);
+	if (ft_strlen(after) > 0)
+		push_token(&temp_node, lst_token_new(after, DEFAULT));
+	free(before);
+	free(after);
+	return (temp_node);
+}
+
+static int	empty_node(int pos, t_token **head)
+{
+	int		i;
+	t_token	*or_head;
+	t_token	*next_head;
+	t_token	*prev_to_append;
+
+	i = 0;
+	or_head = *head;
+	prev_to_append = *head;
+	while (i < pos)
+	{
+		*head = (*(head))->next;
+		if (i == pos - 2)
+			prev_to_append = *head;
+		i++;
+	}
+	next_head = (*head)->next;
+	prev_to_append->next = next_head;
+	if (pos == 0)
+		*head = or_head->next;
+	else
+		*head = or_head;
+	return (1);
+}
+
+void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
+{
+	int		i;
+	t_token	*or_head;
+	t_token	*next_head;
+	t_token	*prev_to_append;
+
+	i = 0;
+	or_head = *head;
+	prev_to_append = *head;
+	if (!new_nodes && empty_node(pos, head))
+		return ;
+	while (i++ < pos)
+	{
+		*head = (*(head))->next;
+		if (i == pos - 1)
+			prev_to_append = *head;
+	}
+	next_head = (*head)->next;
+	prev_to_append->next = new_nodes;
+	while (new_nodes->next)
+		new_nodes = new_nodes->next;
+	new_nodes->next = next_head;
+	if (pos == 0)
+		*head = or_head->next;
+	else
+		*head = or_head;
+}

@@ -179,12 +179,13 @@ t_command	*merge_tokens(t_token	*tokens);
 //expander
 int			char_to_expand(char c);
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
-
+void	double_dollar(t_token *tokens, t_token **head, int pos);
 void		expander(t_token **tokens, t_envepval *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded);
 char	*replace_string(char *expanded, char	*str, int start, int end);
+void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
 void	run_redirections(t_redir *redir);

@@ -33,30 +33,6 @@ static void	handle_first_part(char *expanded, t_token **temp_node)
 	}
 }
 
-t_token	*create_nodes(char *expanded, char	*str, int start, int end)
-{
-	char	*before;
-	char	*after;
-	t_token	*temp_node;
-
-	temp_node = NULL;
-	before = ft_substr(str, 0, start - 1);
-	after = ft_substr(str, end, ft_strlen(str) - end);
-	if (ft_strlen(before) > 0)
-		push_token(&temp_node, lst_token_new(before, DEFAULT));
-	if (ft_strlen(expanded) > 0)
-	{
-		handle_first_part(expanded, &temp_node);
-	}
-	if (ft_strlen(after) > 0)
-		push_token(&temp_node, lst_token_new(after, DEFAULT));
-	free(before);
-	free(after);
-	// if (!temp_node)
-	// 	return (lst_token_new("", DEFAULT));
-	return (temp_node);
-}
-
 int	char_to_expand(char c)
 {
 	if (ft_isalnum(c) || c == '_')
