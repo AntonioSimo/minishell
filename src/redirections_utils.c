@@ -8,6 +8,7 @@ void	print_redirections(t_redir_lst	*redir)
 	[REDIR_OUTPUT] = "REDIR_OUTPUT",
 	[REDIR_OUTPUT_APPEND] = "REDIR_OUTPUT_APPEND",
 	};
+
 	while (redir)
 	{
 		printf("type = %-12s | str = '%s'\n", \
@@ -19,7 +20,7 @@ void	print_redirections(t_redir_lst	*redir)
 
 t_redir_lst	*lst_redir_new(char	*file, t_type type)
 {
-	t_redir_lst *redir;
+	t_redir_lst	*redir;
 
 	redir = ptr_check(malloc(sizeof(t_redir)));
 	redir->file = ptr_check(ft_strdup(file));

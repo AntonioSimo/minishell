@@ -15,10 +15,8 @@
 int	if_tilde(t_token **tokens, t_type prev_type)
 {
 	if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR \
-		&& ((*tokens)->command[0] == '~' \
-		&& ft_strlen((*tokens)->command) == 1)) \
-		|| (ft_strlen((*tokens)->command) > 1 && (*tokens)->command[0] == '~' \
-		&& (*tokens)->command[1] == '/'))
+		&& !ft_strcmp((*tokens)->command, "~")) \
+		|| !ft_strncmp((*tokens)->command, "~/", 2))
 		return (1);
 	return (0);
 }

@@ -97,12 +97,11 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	prev_to_append = *head;
 	if (!new_nodes && empty_node(pos, head))
 		return ;
-	while (i < pos)
+	while (i++ < pos)
 	{
 		*head = (*(head))->next;
-		if (i == pos - 2)
+		if (i == pos - 1)
 			prev_to_append = *head;
-		i++;
 	}
 	next_head = (*head)->next;
 	prev_to_append->next = new_nodes;
@@ -137,30 +136,6 @@ void	double_dollar(t_token *tokens, t_token **head, int pos)
 		i++;
 	}
 	free(pid);
-}
-
-void	error_code_expansion(t_token *token, t_token **head, int pos)
-{
-	char	*error_code;
-	size_t	i;
-	t_token	*new_node;
-
-	i = 0;
-	error_code = ptr_check(ft_itoa(g_error_code));
-	while (i < ft_strlen(token->command))
-	{
-		if (token->command[i + 1] && token->command[i] == '$'
-			&& token->command[i + 1] == '?')
-		{
-			i = ft_strlen(token->command) - ft_strlen(ft_strnstr \
-				(token->command, "$?", ft_strlen(token->command)));
-			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
-			connect_nodes(new_node, pos, head);
-			break ;
-		}
-		i++;
-	}
-	free(error_code);
 }
 
 void	expander(t_token **tokens, t_envepval *my_env)

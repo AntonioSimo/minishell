@@ -13,6 +13,8 @@
 
 #include "../include/minishell.h"
 
+extern int g_error_code;
+
 static void	handle_first_part(char *expanded, t_token **temp_node)
 {
 	int		i;
@@ -62,4 +64,27 @@ int	char_to_expand(char c)
 	return (0);
 }
 
+void	error_code_expansion(t_token *token, t_token **head, int pos)
+{
+	char	*error_code;
+	size_t	i;
+	t_token	*new_node;
+
+	i = 0;
+	error_code = ptr_check(ft_itoa(g_error_code));
+	while (i < ft_strlen(token->command))
+	{
+		if (token->command[i + 1] && token->command[i] == '$'
+			&& token->command[i + 1] == '?')
+		{
+			i = ft_strlen(token->command) - ft_strlen(ft_strnstr \
+				(token->command, "$?", ft_strlen(token->command)));
+			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;
+		}
+		i++;
+	}
+	free(error_code);
+}
 

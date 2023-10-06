@@ -3,7 +3,7 @@
 void	*destroy_redir(t_redir_lst *redir)
 {
 	t_redir_lst	*node;
-	
+
 	if (!redir)
 		return (NULL);
 	while (redir)

@@ -208,6 +208,7 @@ int		token_lst_size(t_token	*tokens);
 
 //expander_utils
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
+void	error_code_expansion(t_token *token, t_token **head, int pos);
 
 //tilde
 int		if_tilde(t_token **tokens, t_type prev_type);

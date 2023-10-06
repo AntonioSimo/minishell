@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-extern int g_error_code;
+extern int	g_error_code;
 
 int	is_divider(t_type type)
 {
