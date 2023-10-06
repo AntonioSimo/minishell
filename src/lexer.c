@@ -44,7 +44,6 @@ int	check_pipes(t_token *tokens)
 	if (flag && printf("Incorrect pipes\n"))
 		return (1);
 	return (0);
-
 }
 
 void	lexer(char *line, t_env *my_env)
@@ -70,4 +69,3 @@ void	lexer(char *line, t_env *my_env)
 	else
 		ft_printf("Unclosed quotes.\n");
 }
-

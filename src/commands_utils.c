@@ -54,8 +54,6 @@ void	push_cmd(t_command **lst, t_command *new)
 	lst_node->next = new;
 }
 
-
-
 void	print_cmds(t_command *cmd_lst)
 {
 	int	i;

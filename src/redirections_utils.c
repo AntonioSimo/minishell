@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	print_redirections(t_redir_lst	*redir)
@@ -16,7 +28,6 @@ void	print_redirections(t_redir_lst	*redir)
 		redir = redir->next;
 	}
 }
-
 
 t_redir_lst	*lst_redir_new(char	*file, t_type type)
 {
@@ -50,4 +61,3 @@ void	push_redir(t_redir_lst **redir_lst, t_redir_lst *redir)
 	redir_node = redir_lst_last((*redir_lst));
 	redir_node->next = redir;
 }
-

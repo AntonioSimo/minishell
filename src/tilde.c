@@ -32,7 +32,7 @@ void	tilde_expansion(t_token *tokens, t_envepval *my_env)
 		free(home);
 		home = ptr_check(find_home(my_env));
 	}
-	new_command = replace_string(home, tokens->command, 1 , 1);
+	new_command = replace_string(home, tokens->command, 1, 1);
 	free(tokens->command);
 	tokens->command = ft_strdup(new_command);
 	free(new_command);
@@ -65,4 +65,3 @@ char	*find_home(t_envepval *env)
 	free(username);
 	return (home);
 }
-

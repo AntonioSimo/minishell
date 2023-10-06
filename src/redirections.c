@@ -21,7 +21,6 @@ void	close_redir(t_redir *redir)
 	temp = redir->lst;
 	j = 0;
 	k = 0;
-
 	dup2(redir->stdout_cpy, STDOUT_FILENO);
 	dup2(redir->stdin_cpy, STDIN_FILENO);
 	while (temp)
@@ -68,7 +67,6 @@ int	count_redir(t_redir_lst *redir, t_type type)
 static void	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 {
 	static int	i = 0;
-
 
 	if (temp->type == REDIR_OUTPUT)
 		redir->fileout[i] = open(temp->file, O_WRONLY \

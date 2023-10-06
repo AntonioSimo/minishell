@@ -12,36 +12,34 @@
 
 #include "../include/minishell.h"
 
+
 void	handle_redirections(t_redir **redir, t_token *tokens)
 {
 	t_type	redir_type;
 	char	*file;
-	
-	if (is_word(tokens->type) || tokens->type == SEPERATOR \
-		|| tokens->type == PIPE)
-		return ;
+
 	if (!*redir)
-		{
-			*redir = ptr_check(malloc(sizeof(t_redir)));
-			(*redir)->lst = NULL;
-		}
+	{
+		*redir = ptr_check(malloc(sizeof(t_redir)));
+		(*redir)->lst = NULL;
+	}
 	redir_type = tokens->type;
 	while (tokens)
 	{
 		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
 			|| tokens->type == SINGLE_QUOTED)
-			{
-				file = ptr_check(ft_strdup(tokens->command));
-				push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
-				break ;
-			}
-		*tokens = *(tokens)->next;
+		{
+			file = ptr_check(ft_strdup(tokens->command));
+			push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+			break ;
+		}
+		*tokens = *tokens->next;
 	}
 }
 
 t_command	*merge_tokens(t_token	*tokens)
 {
- 	t_command	*commands;
+	t_command	*commands;
 	char		*word;
 	char		**args_arr;
 	t_redir		*redir;
@@ -52,6 +50,9 @@ t_command	*merge_tokens(t_token	*tokens)
 	word = NULL;
 	while (tokens)
 	{
+		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
+            || tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
+        	handle_redirections(&redir, tokens);
 		if (is_word(tokens->type))
 			word = ft_free_strjoin(word, tokens->command);
 		else if (tokens->type == SEPERATOR)
@@ -77,5 +78,4 @@ t_command	*merge_tokens(t_token	*tokens)
 		word = ft_free(word);
 	}
 	return (commands);
- }
- 
+}

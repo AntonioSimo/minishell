@@ -85,4 +85,3 @@ void	*double_free(char **ptr)
 	}
 	return (NULL);
 }
-
