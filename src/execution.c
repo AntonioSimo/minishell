@@ -28,10 +28,10 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 	{
 		execve(path, cmd->arguments, env->env_copy);
-		printf("%s: command error\n", cmd->command);
+		printf(RED"mustash: %s: command error\n"RESET, cmd->command);
 	}
 	else
-		printf("%s: command not found\n", cmd->command);
+		printf(RED"mustash: %s: command not found\n"RESET, cmd->command);
 	exit(EXIT_FAILURE);
 }
 

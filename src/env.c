@@ -33,14 +33,14 @@ t_envepval	*create_env_node(char *key, char *value)
 	return (node);
 }
 
-void	print_my_env(t_envepval *my_env)
+void print_my_env(t_envepval *my_env)
 {
-	while (my_env)
-	{
-		ft_printf("%s=%s\n", my_env->key, my_env->val);
-		my_env = my_env->next;
-	}
-
+    while (my_env)
+    {
+        if (my_env->val[0])
+            printf("%s=%s\n", my_env->key, my_env->val);
+        my_env = my_env->next;
+    }
 }
 
 void	set_env(t_envepval	**my_env, char **env)

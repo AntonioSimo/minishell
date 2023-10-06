@@ -21,12 +21,12 @@ int ft_exit(char **args)
     exit_code = ft_atoi(args[1]);
     if (ft_arraysize(args) > 2)
     {
-        ft_putstr_fd("exit: too many arguments\n", 2);
+        ft_putstr_fd(RED"exit: too many arguments\n"RESET, 2);
         return (1);
     }
     if (!ft_isnumber(args[1]))
     {
-        ft_putstr_fd("exit: numeric argument required\n", 2);
+        ft_putstr_fd(RED"exit: numeric argument required\n" RESET, 2);
         return (1);
     }
     exit(exit_code);

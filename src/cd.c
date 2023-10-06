@@ -11,7 +11,7 @@ char    *get_cwd()
         return (cwd);
     else 
     {
-        perror("getcwd() error");
+        ft_putstr_fd(RED"getcwd() error\n"RESET, 2);
         exit (EXIT_FAILURE);
     }
 }
@@ -59,7 +59,8 @@ void    ft_cd(t_env *env, char **args)
     else                       // it's already linked to header file. Why? Because this function calls original env 
         nwd = args[1];          //which is passed to program on the input and we want to be calling our own struct with env
     if (chdir(nwd) != 0)        //cuz you can set HOME to something else later and getenv will look for old value.
-        perror("chdir() error");//in case when HOME is unset we print message 'mustash: cd: HOME not set'
+                                //in case when HOME is unset we print message 'mustash: cd: HOME not set'
+        printf(RED"mustash: cd: %s: No such file or directory\n"RESET, nwd);
     else
         update_pwd(env, pwd);
     free(pwd);

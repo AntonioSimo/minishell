@@ -16,7 +16,7 @@ void	print_my_export(t_envepval *env)
 {
 	while (env)
 	{
-		ft_printf("%s=%s\n", env->key, env->val);
+		printf("%s=%s\n", env->key, env->val);
 		env = env->next;
 	}
 }
@@ -109,7 +109,7 @@ void ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			perror("mustash: variable not found");
+			ft_putstr_fd(RED "mustash: variable not found\n" RESET, 2);
 			return ;
 		}
 	i++;
