@@ -12,34 +12,28 @@
 
 #include "../include/minishell.h"
 
-
 void	handle_redirections(t_redir **redir, t_token *tokens)
 {
-	t_type	redir_type;
-	char	*file;
+		t_type	redir_type;
+		char	*file;
 
-	if (!*redir)
-	{
-		*redir = ptr_check(malloc(sizeof(t_redir)));
-		(*redir)->lst = NULL;
-	}
-	redir_type = tokens->type;
-	while (tokens)
-	{
-		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
-			|| tokens->type == SINGLE_QUOTED)
+		redir_type = tokens->type;
+		while (tokens)
 		{
-			file = ptr_check(ft_strdup(tokens->command));
-			push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
-			break ;
+			if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
+				|| tokens->type == SINGLE_QUOTED)
+				{
+					file = ptr_check(ft_strdup(tokens->command));
+					push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+					break ;
+				}
+			*tokens = *(tokens)->next;
 		}
-		*tokens = *tokens->next;
-	}
 }
 
 t_command	*merge_tokens(t_token	*tokens)
 {
-	t_command	*commands;
+ 	t_command	*commands;
 	char		*word;
 	char		**args_arr;
 	t_redir		*redir;
@@ -51,10 +45,19 @@ t_command	*merge_tokens(t_token	*tokens)
 	while (tokens)
 	{
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
-            || tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
-        	handle_redirections(&redir, tokens);
-		if (is_word(tokens->type))
+			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
+		{
+			if (!redir)
+			{
+				redir = ptr_check(malloc(sizeof(t_redir)));
+				redir->lst = NULL;
+			}
+			handle_redirections(&redir, tokens);
+		}
+		else if (is_word(tokens->type))
+		{
 			word = ft_free_strjoin(word, tokens->command);
+		}
 		else if (tokens->type == SEPERATOR)
 		{
 			args_arr = push_str_2d(args_arr, word);
@@ -68,6 +71,7 @@ t_command	*merge_tokens(t_token	*tokens)
 			word = ft_free(word);
 			args_arr = NULL;
 		}
+		
 		tokens = tokens->next;
 	}
 	if (word || args_arr || redir)
@@ -76,6 +80,7 @@ t_command	*merge_tokens(t_token	*tokens)
 		if (args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(args_arr, redir));
 		word = ft_free(word);
+		redir = NULL;
 	}
 	return (commands);
-}
+ }
