@@ -17,8 +17,25 @@ int	if_tilde(t_token **tokens, t_type prev_type)
 	if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR \
 		&& !ft_strcmp((*tokens)->command, "~")) \
 		|| !ft_strncmp((*tokens)->command, "~/", 2))
-		return (1);
-	return (0);
+		return (0);
+	return (1);
+}
+
+char	*replace_string(char *expanded, char	*str, int start, int end)
+{
+	char	*before;
+	char	*after;
+	char	*temp;
+	char	*new_line;
+
+	before = ft_substr(str, 0, start - 1);
+	after = ft_substr(str, end, ft_strlen(str) - end);
+	temp = ft_strjoin(before, expanded);
+	new_line = ft_strjoin(temp, after);
+	free(temp);
+	free(before);
+	free(after);
+	return (new_line);
 }
 
 void	tilde_expansion(t_token *tokens, t_envepval *my_env)

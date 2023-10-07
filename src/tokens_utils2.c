@@ -89,3 +89,31 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	else
 		*head = or_head;
 }
+
+t_token	*create_new_nodes(char *expanded)
+{
+	char	**temp_arr;
+	t_token	*new_nodes;
+	int		i;
+	char	*token;
+
+	i = 0;
+	new_nodes = NULL;
+	if (ft_strlen(expanded) == 0)
+	{
+		push_token(&new_nodes, lst_token_new("", DEFAULT));
+		return (new_nodes);
+	}
+	temp_arr = ptr_check(ft_split(expanded, ' '));
+	while (temp_arr[i])
+	{
+		token = ptr_check(ft_strdup(temp_arr[i]));
+		push_token(&new_nodes, lst_token_new(token, DEFAULT));
+		if (temp_arr[i + 1])
+			push_token(&new_nodes, lst_token_new(" ", SEPERATOR));
+		free(token);
+		i++;
+	}
+	temp_arr = double_free(temp_arr);
+	return (new_nodes);
+}
