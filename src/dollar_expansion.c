@@ -12,53 +12,80 @@
 
 #include "../include/minishell.h"
 
-int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos)
+typedef struct s_dollar
 {
 	char	*to_expand;
 	char	*expanded;
 	int		i;
 	int		j;
 	bool	brackets;
+	int		pos;
+}	t_dollar;
+
+t_dollar	*set_var_dollar(int pos)
+{
+	t_dollar	*var;
+
+	var = ptr_check(malloc(sizeof(t_dollar)));
+	var->to_expand = NULL;
+	var->expanded = NULL;
+	var->i = 0;
+	var->j = 0;
+	var->brackets = false;
+	var->pos = pos;
+	return (var);
+}
+
+void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
+					t_envepval *my_env)
+{
 	t_token	*expanded_nodes;
 
-	j = 0;
-	i = 0;
-	expanded = NULL;
-	while (i < (int)ft_strlen(tokens->command))
+	var->i++;
+	if (tokens->command[var->i] == '{')
 	{
-		if (tokens->command[i] == '$' && !tokens->command[i + 1])
+		var->brackets = true;
+		var->i++;
+	}
+	var->j = var->i;
+	while (tokens->command[var->i] && char_to_expand(tokens->command[var->i]))
+		var->i++;
+	var->to_expand = ft_substr(tokens->command, var->j, var->i - var->j);
+	var->expanded = find_expandable(my_env, var->to_expand);
+	if (var->brackets)
+	{
+		var->j--;
+		var->i++;
+	}
+	expanded_nodes = create_nodes(var->expanded, tokens->command, \
+								var->j, var->i);
+	connect_nodes(expanded_nodes, var->pos, head);
+	ft_free(var->to_expand);
+}
+
+int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
+					t_token **head, int pos)
+{
+	t_dollar	*var;
+
+	var = set_var_dollar(pos);
+	while (var->i < (int)ft_strlen(tokens->command))
+	{
+		if (tokens->command[var->i] == '$' && !tokens->command[var->i + 1])
 			return (1);
-		if (tokens->command[i] && tokens->command[i] == '$')
+		if (tokens->command[var->i] && tokens->command[var->i] == '$')
 		{
-			i++;
-			if (tokens->command[i] == '{')
-			{
-				brackets = true;
-				i++;
-			}
-			j = i;
-			while (tokens->command[i] && char_to_expand(tokens->command[i]))
-				i++;
-			to_expand = ft_substr(tokens->command, j, i - j);
-			expanded = find_expandable(my_env, to_expand);
-			if (brackets)
-			{
-				j--;
-				i++;
-			}
-			expanded_nodes = create_nodes(expanded, tokens->command, j, i);
-			connect_nodes(expanded_nodes, pos, head);
-			ft_free(to_expand);
+			expand_token(tokens, var, head, my_env);
 			break ;
 		}
 		else
 		{
-			i++;
-			while (tokens->command[i] && tokens->command[i] != '$')
-				i++;
+			var->i++;
+			while (tokens->command[var->i] && tokens->command[var->i] != '$')
+				var->i++;
 		}
 	}
-	if (ft_strlen(expanded) == 0)
+	if (ft_strlen(var->expanded) == 0)
 	{
 		return (1);
 	}
