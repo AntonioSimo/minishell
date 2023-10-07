@@ -91,12 +91,15 @@ void	run_commands(t_command *cmds, t_env *env)
 {
 	int			**fd;
 	pid_t		*pid;
+	int			check;
 
+	check = 0;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
-			run_redirections(cmds->redirections);
-		exe_builtin(cmds->arguments, cmds->command, env, 0);
+			check = run_redirections(cmds->redirections);
+		if (!check)
+			exe_builtin(cmds->arguments, cmds->command, env, 0);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;
