@@ -12,11 +12,25 @@
 
 #include "../include/minishell.h"
 
+typedef struct s_parsing
+{
+	char	*word;
+	char	**args_arr;
+}	t_parsing;
+
+
 void	handle_redirections(t_redir **redir, t_token *tokens)
 {
 		t_type	redir_type;
 		char	*file;
 
+		if (!*redir)
+		{
+			(*redir) = ptr_check(malloc(sizeof(t_redir)));
+			(*redir)->lst = NULL;
+			(*redir)->stdin_cpy = dup(STDIN_FILENO);
+			(*redir)->stdout_cpy = dup(STDOUT_FILENO);
+		}
 		redir_type = tokens->type;
 		while (tokens)
 		{
@@ -30,6 +44,27 @@ void	handle_redirections(t_redir **redir, t_token *tokens)
 			*tokens = *(tokens)->next;
 		}
 }
+
+// static void	handle_cmds(t_token *tokens, t_command **commands, t_redir **redir, t_parsing **var)
+// {
+// 	if (is_word(tokens->type))
+// 	{
+// 		(*var)->word = ft_free_strjoin((*var)->word, tokens->command);
+// 	}
+// 	else if (tokens->type == SEPERATOR)
+// 	{
+// 		(*var)->args_arr = push_str_2d((*var)->args_arr, (*var)->word);
+// 		(*var)->word = ft_free((*var)->word);
+// 	}
+// 	else if (tokens->type == PIPE)
+// 	{
+// 		(*var)->args_arr = push_str_2d((*var)->args_arr, (*var)->word);
+// 		push_cmd(commands, lst_cmd_new((*var)->args_arr, *redir));
+// 		*redir = NULL;
+// 		(*var)->word = ft_free((*var)->word);
+// 		(*var)->args_arr = NULL;
+// 	}
+// }
 
 t_command	*merge_tokens(t_token	*tokens)
 {
@@ -46,14 +81,7 @@ t_command	*merge_tokens(t_token	*tokens)
 	{
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
-		{
-			if (!redir)
-			{
-				redir = ptr_check(malloc(sizeof(t_redir)));
-				redir->lst = NULL;
-			}
 			handle_redirections(&redir, tokens);
-		}
 		else if (is_word(tokens->type))
 		{
 			word = ft_free_strjoin(word, tokens->command);

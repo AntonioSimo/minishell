@@ -188,7 +188,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-void	run_redirections(t_redir *redir);
+int	run_redirections(t_redir *redir);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils

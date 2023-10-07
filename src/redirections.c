@@ -64,7 +64,7 @@ int	count_redir(t_redir_lst *redir, t_type type)
 	return (0);
 }
 
-static void	handle_redir_out(t_redir_lst *temp, t_redir *redir)
+static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 {
 	static int	i = 0;
 
@@ -75,12 +75,18 @@ static void	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
 	if (redir->fileout[i] == -1)
-		perror_exit("FD error\n");
+	{
+		ft_putstr_fd("mustash: ", redir->stdout_cpy);
+		ft_putstr_fd(temp->file, redir->stdout_cpy);
+		ft_putstr_fd(": No such file or directory\n", redir->stdout_cpy);
+		return (1);
+	}
 	dup2(redir->fileout[i], STDOUT_FILENO);
 	i++;
+	return (0);
 }
 
-static void	handle_redir_in(t_redir_lst *temp, t_redir *redir)
+static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 {
 	static int	j = 0;
 
@@ -89,12 +95,18 @@ static void	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	else if (temp->type == HEREDOC)
 		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
 	if (redir->filein[j] == -1)
-		perror_exit("FD error\n");
+	{
+		ft_putstr_fd("mustash: ", redir->stdout_cpy);
+		ft_putstr_fd(temp->file, redir->stdout_cpy);
+		ft_putstr_fd(": No such file or directory\n", redir->stdout_cpy);
+		return (1);
+	}
 	dup2(redir->filein[j], STDIN_FILENO);
 	j++;
+	return (0);
 }
 
-void	run_redirections(t_redir *redir)
+int	run_redirections(t_redir *redir)
 {
 	t_redir_lst	*temp;
 
@@ -103,16 +115,17 @@ void	run_redirections(t_redir *redir)
 					* count_redir(temp, REDIR_OUTPUT)));
 	redir->filein = ptr_check((malloc(sizeof(int) \
 					* count_redir(temp, REDIR_INPUT))));
-	redir->stdin_cpy = dup(STDIN_FILENO);
-	redir->stdout_cpy = dup(STDOUT_FILENO);
 	while (temp)
 	{
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
-			handle_redir_out(temp, redir);
-		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
 		{
-			handle_redir_in(temp, redir);
+			if (handle_redir_out(temp, redir))
+				return (1);
 		}
+		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+			if (handle_redir_in(temp, redir))
+				return (1);
 		temp = temp->next;
 	}
+	return (0);
 }
