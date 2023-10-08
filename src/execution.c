@@ -61,7 +61,7 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 			if (cmds->redirections)
 				run_redirections(cmds->redirections);
 			if (ft_isbuiltin(cmds->command))
-				exe_builtin(cmds->arguments, cmds->command, env, 1);
+				exe_builtin(cmds, env, 1);
 			find_cmd(cmds, env);
 		}
 		i++;
@@ -99,7 +99,7 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (cmds->redirections)
 			check = run_redirections(cmds->redirections);
 		if (!check)
-			exe_builtin(cmds->arguments, cmds->command, env, 0);
+			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;

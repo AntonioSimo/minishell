@@ -77,6 +77,14 @@ typedef enum e_character_category
 * @param rederection 
 */
 
+typedef struct s_expander
+{
+	int		i;
+	int		old_pos;
+	t_type	prev_type;
+	bool	move_ptr;
+}	t_expander;
+
 typedef struct s_redir_lst
 {
 	char				*file;
@@ -129,6 +137,12 @@ typedef struct s_env
     char				**env_copy;
 }	t_env;
 
+//expander_checkers
+int	is_double_dollar(t_token **tokens);
+int	is_single_dollar(t_token **tokens);
+int	is_error_code(t_token **tokens);
+void	handle_error_code(t_token **tokens, t_token *head, t_expander *var);
+void	check_prev_token(t_token **tokens, t_expander *var);
 
 
 //quotes
@@ -240,7 +254,7 @@ void	execute_pipe(int **fd, int i, t_command *head);
 
 
 void 	echo_command(char **args);
-void    exe_builtin(char **args, char *cmd, t_env *env, int exit);
+void	exe_builtin(t_command *cmd, t_env *env, int if_exit);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
@@ -258,6 +272,6 @@ void	envlst_add(t_envepval **lst, t_envepval *new);
 char    *get_cwd();
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
-void ft_cd(t_env *env, char **args);
+void	ft_cd(t_env *env, t_command *cmd);
 
 #endif

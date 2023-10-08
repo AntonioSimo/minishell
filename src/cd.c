@@ -59,26 +59,38 @@ void	update_pwd(t_env *env, char *pwd)
 	}
 }
 
-void	ft_cd(t_env *env, char **args)
+static char	*get_home(t_env *env)
+{
+	char	*nwd;
+
+	nwd = find_expandable(env->env, "HOME");
+	if (ft_strlen(nwd) == 0)
+	{
+		free(nwd);
+		nwd = find_home(env->env);
+	}
+	return (nwd);
+}
+
+void	ft_cd(t_env *env, t_command *cmd)
 {
 	char	*pwd;
 	char	*nwd;
 
+	printf("here\n");
 	pwd = get_cwd();
 	nwd = NULL;
-	if (args[1] == NULL)
+	if (ft_arraysize(cmd->arguments) > 2)
 	{
-		nwd = find_expandable(env->env, "HOME");
-		if (ft_strlen(nwd) == 0)
-		{
-			free(nwd);
-			nwd = find_home(env->env);
-		}
+
+		return ;
 	}
-	else if (!ft_strcmp(args[1], "-"))
+	if (cmd->arguments[1] == NULL)
+		nwd = get_home(env);
+	else if (!ft_strcmp(cmd->arguments[1], "-"))
 		nwd = find_expandable(env->env, "OLDPWD");
-	else if (args[1])
-		nwd = ft_strdup(args[1]);
+	else if (cmd->arguments[1])
+		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
 		perror("chdir() error");
 	else

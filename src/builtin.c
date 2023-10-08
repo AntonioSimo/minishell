@@ -31,22 +31,22 @@ int	ft_isbuiltin(char *command)
 	return (0);
 }
 
-void	exe_builtin(char **args, char *command, t_env *env, int if_exit)
+void	exe_builtin(t_command *cmd, t_env *env, int if_exit)
 {
-	if (ft_strcmp(command, "cd") == 0)
-		ft_cd(env, args);
-	else if (ft_strcmp(command, "echo") == 0)
-		echo_command(args);
-	else if (ft_strcmp(command, "pwd") == 0)
+	if (ft_strcmp(cmd->command, "cd") == 0)
+		ft_cd(env, cmd);
+	else if (ft_strcmp(cmd->command, "echo") == 0)
+		echo_command(cmd->arguments);
+	else if (ft_strcmp(cmd->command, "pwd") == 0)
 		get_current_working_dir();
-	else if (ft_strcmp(command, "exit") == 0)
-		ft_exit(args);
-	else if (ft_strcmp(command, "export") == 0)
-		ft_export(env, args);
-	else if (ft_strcmp(command, "env") == 0)
+	else if (ft_strcmp(cmd->command, "exit") == 0)
+		ft_exit(cmd->arguments);
+	else if (ft_strcmp(cmd->command, "export") == 0)
+		ft_export(env, cmd->arguments);
+	else if (ft_strcmp(cmd->command, "env") == 0)
 		print_my_env(env->env);
-	else if (ft_strcmp(command, "unset") == 0)
-		ft_unset(env, args);
+	else if (ft_strcmp(cmd->command, "unset") == 0)
+		ft_unset(env, cmd->arguments);
 	if (if_exit)
 		exit(EXIT_SUCCESS);
 }
