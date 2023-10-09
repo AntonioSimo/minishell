@@ -37,3 +37,11 @@ void	*ptr_check(void *ptr)
 		exit(EXIT_FAILURE);
 	}
 }
+
+//EXIT CODE
+
+// int	ft_syntaxerror(t_env *error_code)
+// {
+
+// 	return (error_code->error_code);
+// }

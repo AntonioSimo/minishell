@@ -32,7 +32,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	}
 	else
 		printf(RED"mustash: %s: command not found\n"RESET, cmd->command);
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 
@@ -66,6 +66,7 @@ void execute_second(t_command *cmd, t_env *env, int *fd)
 void	run_commands(t_command *cmds, t_env *env)
 {
 	int		fd[2];
+	int 	status;
 	pid_t	pid1;
 	// pid_t	pid2;
 	//function so far is trying to replicate right redir
@@ -103,7 +104,11 @@ void	run_commands(t_command *cmds, t_env *env)
         // 	execute_second(cmds->next, env, fd);
 			close(fd[0]);
 			close(fd[1]);
-			waitpid(pid1, NULL, 0);
+			waitpid(pid1, &status, 0);
+			if (WIFEXITED(status))
+			{
+				printf("%d\n", WEXITSTATUS(status));
+			}
 		}
 		// waitpid(pid2, NULL, 0);
 	}
