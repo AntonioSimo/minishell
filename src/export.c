@@ -21,11 +21,11 @@ void	print_my_export(t_envepval *env)
 	}
 }
 
-int    ft_isvariable(char *args)
+int	ft_isvariable(char *args)
 {
 	if (!*args || ft_isdigit(*args) || *args == '=' ||
 		(*args == '$' && !*(args + 1)) || *args == ' ')
-			return (0);
+		return (0);
 	while (*args && *args != '=')
 	{
 		if (*args == ' ' || *args == '+')
@@ -37,7 +37,7 @@ int    ft_isvariable(char *args)
 
 void	add_env_variable(t_envepval **lst, t_envepval *new)
 {
-	t_envepval *previous_variable;
+	t_envepval	*previous_variable;
 
 	previous_variable = *lst;
 	if (previous_variable == NULL)
@@ -53,7 +53,7 @@ void	add_env_variable(t_envepval **lst, t_envepval *new)
 	{
 		previous_variable = lstenv(*lst);
 		previous_variable->next = new;
-		return;
+		return ;
 	}
 	free(previous_variable->val);
 	previous_variable->val = new->val;
@@ -61,11 +61,11 @@ void	add_env_variable(t_envepval **lst, t_envepval *new)
 	free(new);
 }
 
-t_envepval *set_newvariable(char *args)
+t_envepval	*set_newvariable(char *args)
 {
-	char          *key;
-	char          *val;
-	t_envepval    *variable;
+	char			*key;
+	char			*val;
+	t_envepval		*variable;
 
 	if (!args)
 		return (NULL);
@@ -76,17 +76,17 @@ t_envepval *set_newvariable(char *args)
 	return (variable);
 }
 
-void ft_export(t_env *env, char **args)
+int	ft_export(t_env *env, char **args)
 {
 	t_envepval	*new_variable;
 	t_envepval	*empty_variable;
-	int i;
+	int			i;
 
 	i = 1;
 	if (!args[i])
 	{
 		print_my_export(env->env);
-		return ;
+		return (SUCCESS);
 	}
 	while (args[i] != NULL)
 	{
@@ -109,9 +109,10 @@ void ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			ft_putstr_fd(RED "mustash: variable not found\n" RESET, 2);
-			return ;
+			ft_putstr_fd(RED "mustash: not a valid identifier\n" RESET, 2);
+			return (ERROR);
 		}
-	i++;
+		i++;
 	}
-}    
+	return (SUCCESS);
+}

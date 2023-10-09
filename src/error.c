@@ -39,9 +39,18 @@ void	*ptr_check(void *ptr)
 }
 
 //EXIT CODE
+int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val)
+{
+	t_env env;
 
-// int	ft_syntaxerror(t_env *error_code)
-// {
-
-// 	return (error_code->error_code);
-// }
+	if (msg)
+	{
+		if (cmd)
+			printf("%s: %s\n", cmd, msg);
+		else
+			printf("%s\n", msg);
+	}
+	if (exit_code != ERROR)
+		env.exit_status = exit_code;
+	return (return_val);
+}

@@ -20,6 +20,15 @@
 # define RESET  "\x1b[0m"
 # define PATH_MAXSIZE 1024
 
+// Exit_STATUS
+# define SUCCESS 0
+# define ERROR 1
+# define SYNTAX_ERROR 2
+# define PERMISSION_DENIED 126
+# define COMMAND_NOT_FOUND 127
+# define TERMINATION_SIGINT 130
+# define TERMINATION_SIGTERM 143
+
 # include "../lib/Libft/include/libft.h"
 
 # include <errno.h>
@@ -134,6 +143,7 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
+	int					exit_status;
     char				**env_copy;
 }	t_env;
 
@@ -261,7 +271,7 @@ void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
 int 	ft_exit(char **args);
 int		ft_strcmp(char *s1, char *s2);
-void 	ft_export(t_env *env, char **args);
+int 	ft_export(t_env *env, char **args);
 void	ft_unset(t_env *env, char **args);
 void	*ft_ptrdel(void *ptr);
 void	ft_nodedel(t_envepval *env);
@@ -274,5 +284,6 @@ char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
+int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 
 #endif

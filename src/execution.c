@@ -20,8 +20,10 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf("%s: command not found\n", cmd->command);
-	exit(EXIT_FAILURE);
+		printf(RED"%s: command not found\n"RESET, cmd->command);
+		// ft_putstr_fd(RED": command not found\n"RESET, 2);
+		// printf("%s: command not found\n", cmd->command);
+	exit(127);
 }
 
 static int	**make_pipes(t_command *cmds)
@@ -73,6 +75,7 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
 {
 	int	i;
+	int	status;
 
 	i = 0;
 	while (i < count_cmds(cmds))
@@ -82,7 +85,11 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
 			close(fd[i][0]);
 			close(fd[i][1]);
 		}
-		waitpid(pid[i], NULL, 0);
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			printf("%d\n", WEXITSTATUS(status));
+		}
 		i++;
 	}
 }
