@@ -27,11 +27,11 @@ t_expander	*set_var(void)
 }
 
 void	single_dollar(t_token **tokens, t_envepval *my_env, \
-						t_token *head, t_expander *var)
+						t_token **head, t_expander *var)
 {
-	if (!dollar_expansion(*tokens, my_env, &head, var->i))
+	if (!dollar_expansion(*tokens, my_env, head, var->i))
 	{
-		*tokens = head;
+		*tokens = *head;
 		var->old_pos = var->i;
 		while (var->i--)
 			*tokens = (*tokens)->next;
@@ -40,12 +40,15 @@ void	single_dollar(t_token **tokens, t_envepval *my_env, \
 	else
 	{
 		var->move_ptr = false;
-		*tokens = head;
-		var->old_pos = var->i;
-		var->i--;
-		while (var->i-- >= 0)
-			*tokens = (*tokens)->next;
-		var->i = var->old_pos;
+		*tokens = *head;
+		// if ((*tokens))
+		// {
+			var->old_pos = var->i;
+			var->i--;
+			while (var->i-- >= 0)
+				*tokens = (*tokens)->next;
+			var->i = var->old_pos;
+		// }
 	}
 }
 
@@ -76,7 +79,7 @@ void	expander(t_token **tokens, t_envepval *my_env)
 		if (!is_double_dollar(tokens))
 			handle_double_dollar(tokens, head, var);
 		if (!is_single_dollar(tokens))
-			single_dollar(tokens, my_env, head, var);
+			single_dollar(tokens, my_env, &head, var);
 		check_prev_token(tokens, var);
 		if (var->move_ptr)
 		{
