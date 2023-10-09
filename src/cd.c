@@ -77,7 +77,6 @@ void	ft_cd(t_env *env, t_command *cmd)
 	char	*pwd;
 	char	*nwd;
 
-	printf("here\n");
 	pwd = get_cwd();
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)

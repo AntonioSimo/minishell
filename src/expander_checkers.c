@@ -26,7 +26,7 @@ int	is_single_dollar(t_token **tokens)
 	char	*temp;
 
 	temp = ft_strchr((*tokens)->command, '$');
-	if (ft_strlen(temp) > 1 && char_to_expand(temp[1]))
+	if (ft_strlen(temp) > 1 && (char_to_expand(temp[1]) || temp[1] == '{'))
 	{
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strchr((*tokens)->command, '$')
