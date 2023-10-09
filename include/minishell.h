@@ -125,7 +125,7 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
-	//struct s_export		*empty_key;
+	int					error_code;
     char				**env_copy;
 }	t_env;
 
