@@ -76,9 +76,9 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 						| O_CREAT | O_APPEND, 0644);
 	if (redir->fileout[i] == -1)
 	{
-		ft_putstr_fd("mustash: ", redir->stdout_cpy);
-		ft_putstr_fd(temp->file, redir->stdout_cpy);
-		ft_putstr_fd(": No such file or directory\n", redir->stdout_cpy);
+		ft_putstr_fd("mustash: ", STDERR_FILENO);
+		ft_putstr_fd(temp->file, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
 	dup2(redir->fileout[i], STDOUT_FILENO);
@@ -96,9 +96,9 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
 	if (redir->filein[j] == -1)
 	{
-		ft_putstr_fd("mustash: ", redir->stdout_cpy);
-		ft_putstr_fd(temp->file, redir->stdout_cpy);
-		ft_putstr_fd(": No such file or directory\n", redir->stdout_cpy);
+		ft_putstr_fd("mustash: ", STDERR_FILENO);
+		ft_putstr_fd(temp->file, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
 	dup2(redir->filein[j], STDIN_FILENO);

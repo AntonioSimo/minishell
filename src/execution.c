@@ -12,6 +12,23 @@
 
 #include "../include/minishell.h"
 
+typedef struct s_execution
+{
+	t_command	*head;
+	int			i;
+}	t_execution;
+
+t_execution *initialize_temp(t_command *cmds)
+{
+	t_execution	*temp;
+
+	temp = ptr_check(malloc(sizeof(t_execution)));
+	temp->head = cmds;
+	temp->i = 0;
+
+	return (temp);
+}
+
 void	find_cmd(t_command	*cmd, t_env *env)
 {
 	char	*path;
@@ -42,32 +59,42 @@ static int	**make_pipes(t_command *cmds)
 	return (fd);
 }
 
+void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
+							t_execution	*temp)
+{
+	int	check;
+
+	check = 0;
+	execute_pipe(fd, temp->i, temp->head);
+	if (cmds->redirections)
+		check = run_redirections(cmds->redirections);
+	if (check)
+	{
+		write(1, "", 1);
+		exit(1);
+	}
+	if (ft_isbuiltin(cmds->command))
+		exe_builtin(cmds, env, 1);
+	find_cmd(cmds, env);
+}
+
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 								int **fd)
 {
-	t_command	*head;
-	int			i;
+	t_execution	*temp;
 
-	i = 0;
-	head = cmds;
+	temp = initialize_temp(cmds);
 	while (cmds)
 	{
-		pid[i] = fork();
-		if (pid[i] == -1)
+		pid[temp->i] = fork();
+		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
-		if (pid[i] == 0)
-		{
-			execute_pipe(fd, i, head);
-			if (cmds->redirections)
-				run_redirections(cmds->redirections);
-			if (ft_isbuiltin(cmds->command))
-				exe_builtin(cmds, env, 1);
-			find_cmd(cmds, env);
-		}
-		i++;
+		if (pid[temp->i] == 0)
+			handle_child_process(fd, cmds, env, temp);
+		temp->i++;
 		cmds = cmds->next;
 	}
-	cmds = head;
+	cmds = temp->head;
 }
 
 static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
