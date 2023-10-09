@@ -45,10 +45,10 @@ int	is_error_code(t_token **tokens)
 	return (1);
 }
 
-void	handle_error_code(t_token **tokens, t_token *head, t_expander *var)
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var)
 {
-	error_code_expansion(*tokens, &head, var->i);
-	*tokens = head;
+	error_code_expansion(*tokens, head, var->i);
+	*tokens = *head;
 	var->old_pos = var->i;
 	while (var->i--)
 		*tokens = (*tokens)->next;

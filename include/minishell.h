@@ -141,7 +141,7 @@ typedef struct s_env
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
 int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token *head, t_expander *var);
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var);
 void	check_prev_token(t_token **tokens, t_expander *var);
 
 
