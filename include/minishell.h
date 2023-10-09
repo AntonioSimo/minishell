@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/09/21 22:01:11 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/05 17:40:45 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,21 +77,36 @@ typedef enum e_character_category
 * @param rederection 
 */
 
+typedef struct s_expander
+{
+	int		i;
+	int		old_pos;
+	t_type	prev_type;
+	bool	move_ptr;
+}	t_expander;
+
+typedef struct s_redir_lst
+{
+	char				*file;
+	t_type				type;
+	struct	s_redir_lst	*next;
+}	t_redir_lst;
+
 typedef struct s_redir
 {
-	char			*file;
-	t_type			type;
-	struct s_redir	*next;
+	int					*fileout;
+	int					*filein;
+	int					stdin_cpy;
+	int					stdout_cpy;
+	struct s_redir_lst	*lst;
 }	t_redir;
 
 typedef struct s_command
 {
 	char				**arguments;
 	char				*command;
-	int					fd[2];
+	// int					fd[2];
 	t_redir				*redirections;
-	// bool				builtin;
-	// int					redirection;
 	struct s_command	*next;
 }	t_command;
 
@@ -109,12 +124,6 @@ typedef struct s_envepval
 	struct s_envepval	*next;
 }				t_envepval;
 
-// typedef struct s_export
-// {
-// 	char				*empty_key;
-// 	struct s_export		*next;
-// }				t_export;
-
 typedef struct s_token
 {
 	char			*command;
@@ -125,10 +134,15 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
-	int					exit_status;
     char				**env_copy;
 }	t_env;
 
+//expander_checkers
+int	is_double_dollar(t_token **tokens);
+int	is_single_dollar(t_token **tokens);
+int	is_error_code(t_token **tokens);
+void	handle_error_code(t_token **tokens, t_token *head, t_expander *var);
+void	check_prev_token(t_token **tokens, t_expander *var);
 
 
 //quotes
@@ -143,7 +157,7 @@ void	strerror_exit();
 void	*ptr_check(void *ptr);
 
 void	parse(char *line);
-void	lexer(char *line, t_env *my_env, char *or_home);
+void	lexer(char *line, t_env *my_env);
 
 //executions
 void	run_commands(t_command *cmds, t_env *env);
@@ -166,22 +180,34 @@ void		tokenize_heredoc(t_token **token_lst, int *i);
 int			ft_isspace(int c);
 char		*find_path(char *cmd, char *envp);
 int			find_equal(char *line);
-char		**push_str_2d(char **args, char *str);
 void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
-char		**get_command(char **args);
+int			is_word(t_type type);
+
+//utils2
+char		**push_str_2d(char **args, char *str);
 //parser
-void	parse_redirections(t_command *commands);
+t_command	*merge_tokens(t_token	*tokens);
+// void	parse_redirections(t_command *commands);
 
 //expander
-void		expander(t_token **tokens, t_envepval *my_env, char *or_home);
+int			char_to_expand(char c);
+int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
+void	double_dollar(t_token *tokens, t_token **head, int pos);
+void		expander(t_token **tokens, t_envepval *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
+void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
+t_token		*create_new_nodes(char *expanded);
+char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
-t_token	*create_nodes(char *expanded, char	*str, int start, int end);
 
+//redirections
+int	run_redirections(t_redir *redir);
+void	close_redir(t_redir *redir);
+int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
 t_token		*lst_token_new(char *str, t_type type);
-void		lst_token_back(t_token **lst, t_token *new);
+// void		lst_token_back(t_token **lst, t_token *new);
 void		destroy_tokens(t_token	*tokens);
 void		push_token(t_token **lst, t_token *new);
 
@@ -192,25 +218,43 @@ void  copy_env(char **env, t_env **main_env);
 // t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 
+//tokens_utils2
+int		token_lst_size(t_token	*tokens);
+
+//expander_utils
+t_token	*create_nodes(char *expanded, char	*str, int start, int end);
+void	error_code_expansion(t_token *token, t_token **head, int pos);
+
+//tilde
+int		if_tilde(t_token **tokens, t_type prev_type);
+void	tilde_expansion(t_token *tokens, t_envepval *my_env);
+char	*find_home(t_envepval *env);
+
 //command_utils
 t_command	*lst_cmd_new(char **args, t_redir *redir);
 void	push_cmd(t_command **lst, t_command *new);
 void	print_cmds(t_command *cmd_lst);
 void	*destroy_cmds(t_command	*cmd_lst);
-void	push_redir(t_redir **redir_lst, t_redir *redir);
-t_redir	*redir_lst_last(t_redir *redir);
-t_redir	*lst_redir_new(char	*file, t_type type);
-void	*destroy_redir(t_redir *redir);
+void	push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
+t_redir_lst	*redir_lst_last(t_redir_lst *redir);
+t_redir_lst	*lst_redir_new(char	*file, t_type type);
+void	*destroy_redir(t_redir_lst *redir);
+void	print_redirections(t_redir_lst	*redir);
 
 //executions
 void	find_cmd(t_command	*cmd, t_env *env);
+int		count_cmds(t_command *cmds);
 
 //signals
 void    signal_int_handler(int sig);
 
 
+//redirections
+void	execute_pipe(int **fd, int i, t_command *head);
+
+
 void 	echo_command(char **args);
-void    exe_builtin(char **args, char *cmd, t_env *env);
+void	exe_builtin(t_command *cmd, t_env *env, int if_exit);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
@@ -228,9 +272,7 @@ void	envlst_add(t_envepval **lst, t_envepval *new);
 char    *get_cwd();
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
-void ft_cd(t_env *env, char **args);
-int    ft_isvariable(char *args);
-void	print_my_export(t_envepval *env);
+void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 
 #endif

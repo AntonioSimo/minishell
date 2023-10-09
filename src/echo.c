@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:15:54 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 16:18:57 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-int ft_arraysize(char **args)
+int	ft_arraysize(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (args[i])
@@ -10,9 +22,9 @@ int ft_arraysize(char **args)
 	return (i);
 }
 
-void    check_nl(char **args, bool *is_nl, int j, bool *if_print)
+void	check_nl(char **args, bool *is_nl, int j, bool *if_print)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	i++;
@@ -20,24 +32,31 @@ void    check_nl(char **args, bool *is_nl, int j, bool *if_print)
 		*is_nl = true;
 	if (args[j][i] && args[j][i] == 'n')
 	{
-		while(args[j][i] && args[j][i] == 'n')
+		while (args[j][i] && args[j][i] == 'n')
 			i++;
 		if (!args[j][i])
 		{
 			*is_nl = false;
 			*if_print = false;
-		}			
+		}
 	}
 }
 
-void echo_command(char **args)
+void	echo_token(bool *valid, char **args, int j)
 {
-	int     j;
-	bool    is_nl;
-	bool    if_print;
-	bool    valid; // this is to check if we need to validate -n, it will be set into not valid when we start printing text
-					//so it means when we will start printing text and will encounter -n, we will not be checking it is a flag
-					// e.g. echo -n o -n needs to print o -n
+	*valid = false;
+	ft_putstr_fd(args[j], 1);
+	if (j < ft_arraysize(args) - 1)
+		write(1, " ", 1);
+}
+
+void	echo_command(char **args)
+{
+	int		j;
+	bool	is_nl;
+	bool	if_print;
+	bool	valid;
+
 	j = 1;
 	valid = true;
 	is_nl = true;
@@ -47,14 +66,9 @@ void echo_command(char **args)
 		{
 			if_print = true;
 			if (valid && args[j][0] == '-')
-			   check_nl(args, &is_nl, j, &if_print);
+				check_nl(args, &is_nl, j, &if_print);
 			if (if_print)
-			{
-				valid = false;
-				ft_putstr_fd(args[j], 1);
-				if (j < ft_arraysize(args) - 1)
-					write(1, " ", 1);
-			}
+				echo_token(&valid, args, j);
 			j++;
 		}
 	}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/21 15:49:20 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 17:54:50 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	tokenize_space(t_token **token_lst, char *line, int *i)
@@ -27,7 +39,7 @@ void	tokenize_word(t_token **token_lst, char *line, int *position)
 	int		i;
 
 	i = 0;
-	while (line[*position + i] && !ft_strchr("|<>\'\"", line[*position + i])
+	while (line[*position + i] && !ft_strchr("|<>\'\"", line[*position + i]) \
 			&& !ft_isspace(line[*position + i]))
 		i++;
 	word = ft_substr(line, *position, i);
@@ -35,7 +47,8 @@ void	tokenize_word(t_token **token_lst, char *line, int *position)
 	push_token(token_lst, lst_token_new(word, DEFAULT));
 }
 
-void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
+void	tokenize_quotted(t_token **token_lst, char *line, int *pos, \
+						t_type quotes)
 {
 	int		quotes_len;
 	char	*quotted_sentence;
@@ -46,9 +59,9 @@ void	tokenize_quotted(t_token **token_lst, char *line, int *pos, t_type quotes)
 	*pos += quotes_len + 2;
 }
 
-void tokenize(char *line, t_token **token_lst)
+void	tokenize(char *line, t_token **token_lst)
 {
-	int i;
+	int		i;
 	t_type	quotes;
 
 	i = 0;

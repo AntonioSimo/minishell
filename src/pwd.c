@@ -15,7 +15,7 @@ void	get_current_working_dir(void)
 	ft_memset(pwd, 0, sizeof(pwd)); //initialize pwd to zero to not print weird char
 	temp = malloc(sizeof(char *) * ft_strlen(pwd) + 1);
 	if (!temp)
-		free(temp);
+		free(temp); //???
 	temp = getcwd(pwd, sizeof(pwd));
 		ft_printf("%s\n", temp);
 }
