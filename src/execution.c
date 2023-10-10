@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:01:32 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:58:12 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,23 @@ static int	**make_pipes(t_command *cmds)
 	int	**fd;
 
 	i = 0;
-	if (count_cmds(cmds) > 1)
-		fd = ptr_check(malloc(sizeof(int *) * count_cmds(cmds) - 1));
-	while (i < count_cmds(cmds) - 1)
+	if (count_cmds(cmds) == 1)
+		return (NULL);
+	if (count_cmds(cmds) == 2)
+	{
+		fd = ptr_check(malloc(sizeof(int *)));
+		i = 1;
+	}
+	if (count_cmds(cmds) > 2)
+	{
+		fd = ptr_check(malloc(sizeof(int *) * 2));
+		i = 2;
+	}
+	while (i--)
 	{
 		fd[i] = ptr_check(ft_calloc(2, sizeof(int)));
 		if (pipe(fd[i]) == -1)
 			perror_exit("Pipe error\n");
-		i++;
 	}
 	return (fd);
 }
@@ -99,21 +108,33 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 
 static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
 {
-	int	i;
+	int	cmds_size;
+	int		i = 0;
 
-	i = 0;
-	while (i < count_cmds(cmds))
+	cmds_size = count_cmds(cmds);
+	if (cmds_size == 1)
 	{
-		if (i < count_cmds(cmds) - 1)
-		{
-			close(fd[i][0]);
-			close(fd[i][1]);
-		}
+		waitpid(pid[0], NULL, 0);
+		return ;
+	}
+	if (cmds_size == 2)
+	{
+		close(fd[0][0]);
+		close(fd[0][1]);
+	}
+	else
+	{
+		close(fd[0][0]);
+		close(fd[0][1]);
+		close(fd[1][1]);
+		close(fd[1][0]);
+	}
+	while (i < cmds_size)
+	{
 		waitpid(pid[i], NULL, 0);
 		i++;
 	}
 }
-
 void	run_commands(t_command *cmds, t_env *env)
 {
 	int			**fd;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   redirections_utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:58:29 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,59 +28,6 @@ void	*destroy_redir(t_redir_lst *redir)
 	return (NULL);
 }
 
-static void	handle_first_cmd(int **fd, int i, int cmds_size)
-{
-	int	j;
-
-	j = 0;
-	close(fd[i][0]);
-	dup2(fd[i][1], STDOUT_FILENO);
-	while (j < cmds_size - 1)
-	{
-		if (j != i)
-		{
-			close(fd[j][0]);
-			close(fd[j][1]);
-		}
-		j++;
-	}
-}
-
-static void	handle_last_cmd(int **fd, int i, int cmds_size)
-{
-	int	j;
-
-	j = 0;
-	close(fd[i - 1][1]);
-	dup2(fd[i - 1][0], STDIN_FILENO);
-	while (j < cmds_size - 1)
-	{
-		if (j != i - 1)
-		{
-			close(fd[j][1]);
-			close(fd[j][0]);
-		}
-		j++;
-	}
-}
-
-static void	handle_middle_cmds(int **fd, int i, int cmds_size)
-{
-	int	j;
-
-	j = 0;
-	dup2(fd[i - 1][0], STDIN_FILENO);
-	dup2(fd[i][1], STDOUT_FILENO);
-	while (j < cmds_size - 1)
-	{
-		if (j != i -1)
-			close(fd[j][0]);
-		if (j != i)
-			close(fd[j][1]);
-		j++;
-	}
-}
-
 void	execute_pipe(int **fd, int i, t_command *head)
 {
 	int	cmds_size;
@@ -88,15 +35,46 @@ void	execute_pipe(int **fd, int i, t_command *head)
 	cmds_size = count_cmds(head);
 	if (cmds_size == 1)
 		return ;
-	if (i == 0)
+	if (cmds_size == 2)
 	{
-		handle_first_cmd(fd, i, cmds_size);
+		if (i == 0)
+		{
+			close(fd[0][0]);
+			dup2(fd[0][1], STDOUT_FILENO);
+		}
+		else
+		{
+			close(fd[0][1]);
+			dup2(fd[0][0], STDIN_FILENO);
+		}
+			
 		return ;
 	}
-	if (i == cmds_size - 1)
+	else
 	{
-		handle_last_cmd(fd, i, cmds_size);
-		return ;
+		if (i == 0)
+		{
+			close(fd[1][0]);
+			close(fd[1][1]);
+			close(fd[0][0]);
+			dup2(fd[0][1], STDOUT_FILENO);
+			return ;
+		}
+		if (i == count_cmds(head) - 1)
+		{
+			close(fd[1][1]);
+			close(fd[1][0]);
+			close(fd[0][1]);
+			dup2(fd[0][0], STDIN_FILENO);
+			return ;
+		}
+		else
+		{
+			dup2(fd[0][0], STDIN_FILENO);
+			dup2(fd[1][1], STDOUT_FILENO);
+			close(fd[0][1]);
+			close(fd[1][0]);
+			return ;
+		}
 	}
-	handle_middle_cmds(fd, i, cmds_size);
 }
