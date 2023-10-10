@@ -47,7 +47,6 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 		print_my_env(env->env);
 	else if (ft_strcmp(cmd->command, "unset") == 0)
 		ft_unset(env, cmd->arguments);
-	printf("exe_builtin -> exit_status:%i\n", exit_status);	
 	if (exit_status)
 		exit (EXIT_SUCCESS);
 }
