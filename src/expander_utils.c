@@ -59,14 +59,14 @@ int	char_to_expand(char c)
 	return (0);
 }
 
-void	error_code_expansion(t_token *token, t_token **head, int pos)
+void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status)
 {
 	char	*error_code;
 	size_t	i;
 	t_token	*new_node;
 
 	i = 0;
-	error_code = ptr_check(ft_itoa(g_error_code));
+	error_code = ptr_check(ft_itoa(exit_status));
 	while (i < ft_strlen(token->command))
 	{
 		if (token->command[i + 1] && token->command[i] == '$'

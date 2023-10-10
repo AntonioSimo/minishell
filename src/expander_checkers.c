@@ -26,7 +26,7 @@ int	is_single_dollar(t_token **tokens)
 	char	*temp;
 
 	temp = ft_strchr((*tokens)->command, '$');
-	if (ft_strlen(temp) > 1 && char_to_expand(temp[1]))
+	if (ft_strlen(temp) > 1 && (char_to_expand(temp[1]) || temp[1] == '{'))
 	{
 		if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 			&& ft_strchr((*tokens)->command, '$')
@@ -45,10 +45,10 @@ int	is_error_code(t_token **tokens)
 	return (1);
 }
 
-void	handle_error_code(t_token **tokens, t_token *head, t_expander *var)
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status)
 {
-	error_code_expansion(*tokens, &head, var->i);
-	*tokens = head;
+	error_code_expansion(*tokens, head, var->i, exit_status);
+	*tokens = *head;
 	var->old_pos = var->i;
 	while (var->i--)
 		*tokens = (*tokens)->next;

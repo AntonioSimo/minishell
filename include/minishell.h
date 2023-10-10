@@ -151,7 +151,7 @@ typedef struct s_env
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
 int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token *head, t_expander *var);
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status);
 void	check_prev_token(t_token **tokens, t_expander *var);
 
 
@@ -204,7 +204,7 @@ t_command	*merge_tokens(t_token	*tokens);
 int			char_to_expand(char c);
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
 void	double_dollar(t_token *tokens, t_token **head, int pos);
-void		expander(t_token **tokens, t_envepval *my_env);
+void	expander(t_token **tokens, t_env *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded);
@@ -233,7 +233,7 @@ int		token_lst_size(t_token	*tokens);
 
 //expander_utils
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
-void	error_code_expansion(t_token *token, t_token **head, int pos);
+void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status);
 
 //tilde
 int		if_tilde(t_token **tokens, t_type prev_type);

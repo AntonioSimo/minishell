@@ -12,6 +12,23 @@
 
 #include "../include/minishell.h"
 
+typedef struct s_execution
+{
+	t_command	*head;
+	int			i;
+}	t_execution;
+
+t_execution *initialize_temp(t_command *cmds)
+{
+	t_execution	*temp;
+
+	temp = ptr_check(malloc(sizeof(t_execution)));
+	temp->head = cmds;
+	temp->i = 0;
+
+	return (temp);
+}
+
 void	find_cmd(t_command	*cmd, t_env *env)
 {
 	char	*path;
@@ -20,9 +37,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf(RED"%s: command not found\n"RESET, cmd->command);
-		// ft_putstr_fd(RED": command not found\n"RESET, 2);
-		// printf("%s: command not found\n", cmd->command);
+		printf(RED"mustash: %s: command not found\n"RESET, cmd->command);
 	exit(127);
 }
 
@@ -44,35 +59,45 @@ static int	**make_pipes(t_command *cmds)
 	return (fd);
 }
 
+void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
+							t_execution	*temp)
+{
+	int	check;
+
+	check = 0;
+	execute_pipe(fd, temp->i, temp->head);
+	if (cmds->redirections)
+		check = run_redirections(cmds->redirections);
+	if (check)
+	{
+		write(1, "", 1);
+		exit(1);
+	}
+	if (ft_isbuiltin(cmds->command))
+		exe_builtin(cmds, env, 1);
+	find_cmd(cmds, env);
+}
+
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 								int **fd)
 {
-	t_command	*head;
-	int			i;
+	t_execution	*temp;
 
-	i = 0;
-	head = cmds;
+	temp = initialize_temp(cmds);
 	while (cmds)
 	{
-		pid[i] = fork();
-		if (pid[i] == -1)
+		pid[temp->i] = fork();
+		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
-		if (pid[i] == 0)
-		{
-			execute_pipe(fd, i, head);
-			if (cmds->redirections)
-				run_redirections(cmds->redirections);
-			if (ft_isbuiltin(cmds->command))
-				exe_builtin(cmds, env, 1);
-			find_cmd(cmds, env);
-		}
-		i++;
+		if (pid[temp->i] == 0)
+			handle_child_process(fd, cmds, env, temp);
+		temp->i++;
 		cmds = cmds->next;
 	}
-	cmds = head;
+	cmds = temp->head;
 }
 
-static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
+int	close_pipes(t_command *cmds, int **fd, pid_t *pid, int *exit_status)
 {
 	int	i;
 	int	status;
@@ -88,10 +113,12 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
 		waitpid(pid[i], &status, 0);
 		if (WIFEXITED(status))
 		{
-			printf("%d\n", WEXITSTATUS(status));
+			*exit_status = WEXITSTATUS(status);
+			return (*exit_status);
 		}
 		i++;
 	}
+	return (SUCCESS);
 }
 
 void	run_commands(t_command *cmds, t_env *env)
@@ -114,5 +141,5 @@ void	run_commands(t_command *cmds, t_env *env)
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	fd = make_pipes(cmds);
 	handle_multiple_cmds(cmds, env, pid, fd);
-	close_pipes(cmds, fd, pid);
+	close_pipes(cmds, fd, pid, &env->exit_status);
 }
