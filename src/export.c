@@ -1,74 +1,118 @@
 #include "../include/minishell.h"
 
-t_envepval	*lstenv(t_envepval *lst)
+t_envepval	*create_env_emptynode(char *key)
 {
-	if (lst == NULL)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	return (lst);
+	t_envepval	*node;
+
+	node = ptr_check(malloc(sizeof(t_envepval)));
+	node->key = ptr_check(ft_strdup(key));
+	node->val = malloc(1);
+	node->val[0] = 0;
+	node->next = NULL;
+	return (node);
 }
 
-void    add_env_variable(t_envepval *lst, t_envepval *new)
+void	print_my_export(t_envepval *env)
 {
-	t_envepval	*lst_node;
-
-    lst_node = lst;
-
-    // if (lst_node->key = ftrcmp(OK))
-    //     previous->next = lst->next;
-    //     free current
-	if (lst_node == NULL)
+	while (env)
 	{
-		lst_node = new;
+		printf("%s=%s\n", env->key, env->val);
+		env = env->next;
+	}
+}
+
+int	ft_isvariable(char *args)
+{
+	if (!*args || ft_isdigit(*args) || *args == '=' ||
+		(*args == '$' && !*(args + 1)) || *args == ' ')
+		return (0);
+	while (*args && *args != '=')
+	{
+		if (*args == ' ' || *args == '+')
+			return (0);
+		args++;
+	}
+	return (1);
+}
+
+void	add_env_variable(t_envepval **lst, t_envepval *new)
+{
+	t_envepval	*previous_variable;
+
+	previous_variable = *lst;
+	if (previous_variable == NULL)
+	{
+		*lst = new;
 		return ;
 	}
-	lst_node = lstenv(lst);
-	lst_node->next = new;
+	while (previous_variable && ft_strcmp(previous_variable->key, new->key) != 0)
+	{
+		previous_variable = previous_variable->next;
+	}
+	if (!previous_variable)
+	{
+		previous_variable = lstenv(*lst);
+		previous_variable->next = new;
+		return ;
+	}
+	free(previous_variable->val);
+	previous_variable->val = new->val;
+	free(new->key);
+	free(new);
 }
 
-t_envepval *set_newvariable(char *args)
+t_envepval	*set_newvariable(char *args)
 {
-    char          *key;
-    char          *val;
-    t_envepval    *variable;
+	char			*key;
+	char			*val;
+	t_envepval		*variable;
 
-    if (!args)
-        return (NULL);
-    val = ft_strchr(args, '=');
-    key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
-    val++;
-    variable = create_env_node(key, val);
-    return (variable);
+	if (!args)
+		return (NULL);
+	val = ft_strchr(args, '=');
+	key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
+	val++;
+	variable = create_env_node(key, val);
+	return (variable);
 }
 
-void ft_export(t_env *env, char **args)
+int	ft_export(t_env *env, char **args)
 {
-    t_envepval	*new_variable;
-    int i;
+	t_envepval	*new_variable;
+	t_envepval	*empty_variable;
+	int			i;
 
-    i = 1;
-    if (!args[i])
-        print_my_env(env->env);
-    while (args[i] != NULL)
-    {
-        if (ft_strchr(args[i], '=') != NULL)
-        {
-            new_variable = set_newvariable(args[i]);
-            if (new_variable != NULL)
-            {
-                add_env_variable((env->env), new_variable);
-                //print_my_env(env->env);
-            }
-        }
-    i++;
-    }
-}    
-
-// int main()
-// {
-//     char    variabile[50] = "Ciao_Sono_Francesco Ciao_sono_Antonio";
-//     char    *variabile_new_env;
-//     variabile_new_env = set_newvariable(variabile);
-//     printf("%s\n", variabile_new_env);
-// }
+	i = 1;
+	if (!args[i])
+	{
+		print_my_export(env->env);
+		return (SUCCESS);
+	}
+	while (args[i] != NULL)
+	{
+		if (ft_isvariable(args[i]) == 1)
+		{
+			if (!ft_strchr(args[i], '='))
+			{
+				if (!ft_strcmp(find_expandable(env->env, args[i]), ""))
+				{
+					empty_variable = create_env_emptynode(args[i]);
+					add_env_variable(&(env->env), empty_variable);
+				}
+			}
+			else
+			{
+				new_variable = set_newvariable(args[i]);
+				if (new_variable != NULL)
+					add_env_variable(&(env->env), new_variable);
+			}
+		}
+		else
+		{
+			ft_putstr_fd(RED "mustash: not a valid identifier\n" RESET, 2);
+			return (ERROR);
+		}
+		i++;
+	}
+	return (SUCCESS);
+}

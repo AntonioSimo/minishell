@@ -20,6 +20,15 @@
 # define RESET  "\x1b[0m"
 # define PATH_MAXSIZE 1024
 
+// Exit_STATUS
+# define SUCCESS 0
+# define ERROR 1
+# define SYNTAX_ERROR 2
+# define PERMISSION_DENIED 126
+# define COMMAND_NOT_FOUND 127
+# define TERMINATION_SIGINT 130
+# define TERMINATION_SIGTERM 143
+
 # include "../lib/Libft/include/libft.h"
 
 # include <errno.h>
@@ -134,6 +143,7 @@ typedef struct s_token
 typedef struct s_env
 {
     struct s_envepval	*env;
+	int					exit_status;
     char				**env_copy;
 }	t_env;
 
@@ -141,7 +151,7 @@ typedef struct s_env
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
 int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var);
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status);
 void	check_prev_token(t_token **tokens, t_expander *var);
 
 
@@ -194,7 +204,7 @@ t_command	*merge_tokens(t_token	*tokens);
 int			char_to_expand(char c);
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
 void	double_dollar(t_token *tokens, t_token **head, int pos);
-void		expander(t_token **tokens, t_envepval *my_env);
+void	expander(t_token **tokens, t_env *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded);
@@ -202,7 +212,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	run_redirections(t_redir *redir);
+int	run_redirections(t_redir *redir, t_env *env);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
@@ -223,7 +233,7 @@ int		token_lst_size(t_token	*tokens);
 
 //expander_utils
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
-void	error_code_expansion(t_token *token, t_token **head, int pos);
+void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status);
 
 //tilde
 int		if_tilde(t_token **tokens, t_type prev_type);
@@ -261,7 +271,7 @@ void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
 int 	ft_exit(char **args);
 int		ft_strcmp(char *s1, char *s2);
-void 	ft_export(t_env *env, char **args);
+int 	ft_export(t_env *env, char **args);
 void	ft_unset(t_env *env, char **args);
 void	*ft_ptrdel(void *ptr);
 void	ft_nodedel(t_envepval *env);
@@ -273,5 +283,7 @@ char    *get_cwd();
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
+t_envepval	*lstenv(t_envepval *lst);
+int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 
 #endif

@@ -59,7 +59,7 @@ void	handle_double_dollar(t_token **tokens, t_token **head, t_expander *var)
 	var->i = var->old_pos;
 }
 
-void	expander(t_token **tokens, t_envepval *my_env)
+void	expander(t_token **tokens, t_env *my_env)
 {
 	t_expander	*var;
 	t_token		*head;
@@ -70,13 +70,13 @@ void	expander(t_token **tokens, t_envepval *my_env)
 	{
 		var->move_ptr = true;
 		if (!if_tilde(tokens, var->prev_type))
-			tilde_expansion((*tokens), my_env);
+			tilde_expansion((*tokens), my_env->env);
 		if (!is_error_code(tokens))
-			handle_error_code(tokens, &head, var);
+			handle_error_code(tokens, &head, var, my_env->exit_status);
 		if (!is_double_dollar(tokens))
 			handle_double_dollar(tokens, &head, var);
 		if (!is_single_dollar(tokens))
-			single_dollar(tokens, my_env, &head, var);
+			single_dollar(tokens, my_env->env, &head, var);
 		check_prev_token(tokens, var);
 		if (var->move_ptr)
 		{

@@ -38,7 +38,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 		execve(path, cmd->arguments, env->env_copy);
 	else
 		printf("%s: command not found\n", cmd->command);
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 static int	**make_pipes(t_command *cmds)
@@ -76,7 +76,7 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	check = 0;
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
-		check = run_redirections(cmds->redirections);
+		check = run_redirections(cmds->redirections, env);
 	if (check)
 	{
 		write(1, "", 1);
@@ -106,15 +106,21 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 	cmds = temp->head;
 }
 
-static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
+static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 {
 	int	cmds_size;
+	int 	status;
 	int		i = 0;
 
 	cmds_size = count_cmds(cmds);
 	if (cmds_size == 1)
 	{
-		waitpid(pid[0], NULL, 0);
+		waitpid(pid[0], &status, 0);
+		if (WIFEXITED(status))
+	    {
+			env->exit_status = WEXITSTATUS(status);
+			return ;
+		}
 		return ;
 	}
 	if (cmds_size == 2)
@@ -131,7 +137,11 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid)
 	}
 	while (i < cmds_size)
 	{
-		waitpid(pid[i], NULL, 0);
+		waitpid(pid[i], &status, 0);
+		if (WIFEXITED(status))
+	    {
+			env->exit_status = WEXITSTATUS(status);
+		}
 		i++;
 	}
 }
@@ -145,9 +155,12 @@ void	run_commands(t_command *cmds, t_env *env)
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
-			check = run_redirections(cmds->redirections);
+			check = run_redirections(cmds->redirections, env);
 		if (!check)
+		{
 			exe_builtin(cmds, env, 0);
+			env->exit_status = SUCCESS;
+		}
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;
@@ -155,5 +168,5 @@ void	run_commands(t_command *cmds, t_env *env)
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	fd = make_pipes(cmds);
 	handle_multiple_cmds(cmds, env, pid, fd);
-	close_pipes(cmds, fd, pid);
+	close_pipes(cmds, fd, pid, env);
 }

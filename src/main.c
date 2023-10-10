@@ -40,11 +40,11 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	(void)argc;
-	g_error_code = 0;
 	env_main = NULL;
 	copy_env(env, &env_main);
 	signal(SIGINT, signal_int_handler);
 	signal(SIGQUIT, SIG_IGN);
 	loop(env_main);
+	//free env_main
 	exit (EXIT_SUCCESS);
 }
