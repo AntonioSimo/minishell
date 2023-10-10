@@ -212,7 +212,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	run_redirections(t_redir *redir);
+int	run_redirections(t_redir *redir, t_env *env);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
@@ -264,7 +264,7 @@ void	execute_pipe(int **fd, int i, t_command *head);
 
 
 void 	echo_command(char **args);
-void	exe_builtin(t_command *cmd, t_env *env, int if_exit);
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);

@@ -67,6 +67,7 @@ void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_stat
 
 	i = 0;
 	error_code = ptr_check(ft_itoa(exit_status));
+	printf("error_code_expansion:%i\n", exit_status);
 	while (i < ft_strlen(token->command))
 	{
 		if (token->command[i + 1] && token->command[i] == '$'

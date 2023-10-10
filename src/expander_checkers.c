@@ -47,6 +47,7 @@ int	is_error_code(t_token **tokens)
 
 void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status)
 {
+	printf("handle_error_code:%i\n", exit_status);
 	error_code_expansion(*tokens, head, var->i, exit_status);
 	*tokens = *head;
 	var->old_pos = var->i;

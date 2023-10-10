@@ -106,7 +106,7 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	return (0);
 }
 
-int	run_redirections(t_redir *redir)
+int	run_redirections(t_redir *redir, t_env *env)
 {
 	t_redir_lst	*temp;
 
@@ -120,11 +120,19 @@ int	run_redirections(t_redir *redir)
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
 			if (handle_redir_out(temp, redir))
+			{
+				env->exit_status = ERROR;
+				printf("run_redirections_out:%i\n", env->exit_status);
 				return (1);
+			}
 		}
 		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
 			if (handle_redir_in(temp, redir))
+			{
+				env->exit_status = ERROR;
+				printf("run_redirections_in:%i\n", env->exit_status);
 				return (1);
+			}
 		temp = temp->next;
 	}
 	return (0);

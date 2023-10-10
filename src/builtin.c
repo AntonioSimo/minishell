@@ -31,7 +31,7 @@ int	ft_isbuiltin(char *command)
 	return (0);
 }
 
-void	exe_builtin(t_command *cmd, t_env *env, int if_exit)
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 {
 	if (ft_strcmp(cmd->command, "cd") == 0)
 		ft_cd(env, cmd);
@@ -47,6 +47,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int if_exit)
 		print_my_env(env->env);
 	else if (ft_strcmp(cmd->command, "unset") == 0)
 		ft_unset(env, cmd->arguments);
-	if (if_exit)
-		exit(EXIT_SUCCESS);
+	printf("exe_builtin -> exit_status:%i\n", exit_status);	
+	if (exit_status)
+		exit (EXIT_SUCCESS);
 }

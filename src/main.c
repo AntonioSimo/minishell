@@ -45,5 +45,6 @@ int	main(int argc, char **argv, char **env)
 	signal(SIGINT, signal_int_handler);
 	signal(SIGQUIT, SIG_IGN);
 	loop(env_main);
+	//free env_main
 	exit (EXIT_SUCCESS);
 }

@@ -67,7 +67,7 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	check = 0;
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
-		check = run_redirections(cmds->redirections);
+		check = run_redirections(cmds->redirections, env);
 	if (check)
 	{
 		write(1, "", 1);
@@ -103,6 +103,7 @@ int	close_pipes(t_command *cmds, int **fd, pid_t *pid, int *exit_status)
 	int	status;
 
 	i = 0;
+	printf("close_pipes:%i\n", *exit_status);
 	while (i < count_cmds(cmds))
 	{
 		if (i < count_cmds(cmds) - 1)
@@ -116,6 +117,7 @@ int	close_pipes(t_command *cmds, int **fd, pid_t *pid, int *exit_status)
 			*exit_status = WEXITSTATUS(status);
 			return (*exit_status);
 		}
+		free(exit_status);
 		i++;
 	}
 	return (SUCCESS);
@@ -131,9 +133,12 @@ void	run_commands(t_command *cmds, t_env *env)
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
-			check = run_redirections(cmds->redirections);
+			check = run_redirections(cmds->redirections, env);
 		if (!check)
+		{
 			exe_builtin(cmds, env, 0);
+			env->exit_status = SUCCESS;
+		}
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;
@@ -141,5 +146,6 @@ void	run_commands(t_command *cmds, t_env *env)
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	fd = make_pipes(cmds);
 	handle_multiple_cmds(cmds, env, pid, fd);
+	printf("run commands:%i\n", env->exit_status);
 	close_pipes(cmds, fd, pid, &env->exit_status);
 }
