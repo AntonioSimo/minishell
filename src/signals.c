@@ -20,7 +20,7 @@ void	ft_signal(t_env *main)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	signal_int_handler(int sig)
+void    signal_int_handler(int sig, siginfo_t *info, void *context);
 {
 
 	if (sig == SIGINT)

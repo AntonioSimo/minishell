@@ -74,4 +74,5 @@ void	echo_command(char **args)
 	}
 	if (is_nl)
 		write(1, "\n", 1);
+	g_signal = 0;
 }

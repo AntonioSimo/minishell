@@ -97,13 +97,11 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 	while (cmds)
 	{
 		pid[temp->i] = fork();
-		//signal(SIGINT, SIG_IGN);
 		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
 		if (pid[temp->i] == 0)
 		{
 			handle_child_process(fd, cmds, env, temp);
-			//ft_signal(env);
 		}
 		temp->i++;
 		cmds = cmds->next;
@@ -121,18 +119,8 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	if (cmds_size == 1)
 	{
 		waitpid(pid[0], &status, 0);
-		printf("status:%i\n", status);
-		if (WIFSIGNALED(status))
-		{
-			env->exit_status = WTERMSIG(status) + 128;
-			printf("1)close_pipes....signal->exit_status:%i\n", env->exit_status);
-		}
-		else
-		{
-			(WIFEXITED(status));
+		if (WIFEXITED(status))
 			env->exit_status = WEXITSTATUS(status);
-			printf("1)close_pipes....command->exit_status:%i\n", env->exit_status);
-		}
 		return ;
 	}
 	if (cmds_size == 2)

@@ -154,6 +154,8 @@ typedef struct s_env
     char				**env_copy;
 }	t_env;
 
+extern int g_signal;
+
 //expander_checkers
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
@@ -263,7 +265,7 @@ void	find_cmd(t_command	*cmd, t_env *env);
 int		count_cmds(t_command *cmds);
 
 //signals
-void    signal_int_handler(int sig);
+void    signal_int_handler(int sig, siginfo_t *info, void *context);
 
 
 //redirections
@@ -292,8 +294,5 @@ void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
-void	ft_signal(t_env *main);
-
-extern int g_signal;
 
 #endif
