@@ -34,12 +34,8 @@ void	loop(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-		if (my_env->exit_status != 130)
-			rl_on_new_line();
-		else
-		{
-			g_signal = 0;
-		}
+		// if (my_env->exit_status != 130)
+		rl_on_new_line();
 	}
 }
 

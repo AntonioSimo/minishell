@@ -124,7 +124,7 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 			return ;
 		}
 		else
-			g_signal = 0;
+			g_signal = 1;
 		return ;
 	}
 	if (cmds_size == 2)
@@ -147,7 +147,9 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 			env->exit_status = WEXITSTATUS(status);
 		}
 		else
+		{
 			g_signal = 0;
+		}
 		i++;
 	}
 }
