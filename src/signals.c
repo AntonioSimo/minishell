@@ -20,7 +20,7 @@ void    signal_int_handler(int sig, siginfo_t *info, void *context)
 
 	if (sig == SIGINT)
 	{
-		g_signal = 128 + SIGINT;
+		//g_signal = 128 + SIGINT;
 		ft_putstr_fd("\n", STDIN_FILENO);
 		//rl_on_new_line();
 		g_signal = 1;
@@ -30,7 +30,6 @@ void    signal_int_handler(int sig, siginfo_t *info, void *context)
 	{
 		if (sig == SIGINT)
 		{
-			//ft_putstr_fd("\n", STDIN_FILENO);
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
