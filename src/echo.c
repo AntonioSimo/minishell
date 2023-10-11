@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern int g_signal;
+
 int	ft_arraysize(char **args)
 {
 	int	i;
@@ -74,4 +76,5 @@ void	echo_command(char **args)
 	}
 	if (is_nl)
 		write(1, "\n", 1);
+	g_signal = 0;
 }

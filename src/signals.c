@@ -12,18 +12,25 @@
 
 #include "../include/minishell.h"
 
-t_env	exit_s;
+extern int g_signal;
 
-void	signal_int_handler(int sig)
+void	signal_int_handler(int sig, siginfo_t *info, void *context)
 {
-
+	(void)context;
 	if (sig == SIGINT)
 	{
-		exit_s.exit_status= TERMINATION_SIGINT;
-		printf("exit status: %d\n", exit_s.exit_status);
 		ft_putstr_fd("\n", STDIN_FILENO);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		g_signal = 1;
+	}
+
+	if (info->si_pid != 0)
+	{
+
+		if (sig == SIGINT)
+		{
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
 	}
 }

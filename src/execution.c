@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern int g_signal;
+
 typedef struct s_execution
 {
 	t_command	*head;
@@ -121,6 +123,8 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 			env->exit_status = WEXITSTATUS(status);
 			return ;
 		}
+		else
+			g_signal = 0;
 		return ;
 	}
 	if (cmds_size == 2)
@@ -142,6 +146,8 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	    {
 			env->exit_status = WEXITSTATUS(status);
 		}
+		else
+			g_signal = 0;
 		i++;
 	}
 }

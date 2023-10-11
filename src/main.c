@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int	g_error_code;
+int	g_signal;
 
 void	loop(t_env *my_env)
 {
@@ -27,22 +27,36 @@ void	loop(t_env *my_env)
 			break ;
 		}
 		add_history(line);
+		if (g_signal)
+		{
+			my_env->exit_status = 130;
+		}
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-		rl_on_new_line();
+		if (my_env->exit_status != 130)
+			rl_on_new_line();
+		else
+		{
+			g_signal = 0;
+		}
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_env	*env_main;
+	struct sigaction	st_sa;
+
+	st_sa.sa_sigaction = signal_int_handler;
+	st_sa.sa_flags = SA_SIGINFO;
 
 	(void)argv;
 	(void)argc;
 	env_main = NULL;
+	g_signal = 0;
 	copy_env(env, &env_main);
-	signal(SIGINT, signal_int_handler);
+	sigaction(SIGINT, &st_sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
 	loop(env_main);
 	//free env_main
