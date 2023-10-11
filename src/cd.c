@@ -77,7 +77,6 @@ void	ft_cd(t_env *env, t_command *cmd)
 	char	*pwd;
 	char	*nwd;
 
-	printf("here\n");
 	pwd = get_cwd();
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
@@ -92,7 +91,10 @@ void	ft_cd(t_env *env, t_command *cmd)
 	else if (cmd->arguments[1])
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
-		perror("chdir() error");
+	{
+		printf("mustash: cd: %s: No such file or directory\n", nwd);
+		env->exit_status = ERROR;
+	}
 	else
 		update_pwd(env, pwd);
 	free(pwd);

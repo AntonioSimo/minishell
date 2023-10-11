@@ -40,7 +40,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 	else if (ft_strcmp(cmd->command, "pwd") == 0)
 		get_current_working_dir();
 	else if (ft_strcmp(cmd->command, "exit") == 0)
-		ft_exit(cmd->arguments);
+		ft_exit(cmd->arguments, env);
 	else if (ft_strcmp(cmd->command, "export") == 0)
 		ft_export(env, cmd->arguments);
 	else if (ft_strcmp(cmd->command, "env") == 0)

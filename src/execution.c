@@ -37,8 +37,8 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf("%s: command not found\n", cmd->command);
-	exit(127);
+		printf("mustash: Command '%s' not found\n", cmd->command);
+	exit (127);
 }
 
 static int	**make_pipes(t_command *cmds)
@@ -74,6 +74,7 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	int	check;
 
 	check = 0;
+	// signal(SIGINT, SIG_IGN);
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
 		check = run_redirections(cmds->redirections, env);
@@ -96,10 +97,14 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 	while (cmds)
 	{
 		pid[temp->i] = fork();
+		//signal(SIGINT, SIG_IGN);
 		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
 		if (pid[temp->i] == 0)
+		{
 			handle_child_process(fd, cmds, env, temp);
+			//ft_signal(env);
+		}
 		temp->i++;
 		cmds = cmds->next;
 	}
@@ -116,10 +121,17 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	if (cmds_size == 1)
 	{
 		waitpid(pid[0], &status, 0);
-		if (WIFEXITED(status))
-	    {
+		printf("status:%i\n", status);
+		if (WIFSIGNALED(status))
+		{
+			env->exit_status = WTERMSIG(status) + 128;
+			printf("1)close_pipes....signal->exit_status:%i\n", env->exit_status);
+		}
+		else
+		{
+			(WIFEXITED(status));
 			env->exit_status = WEXITSTATUS(status);
-			return ;
+			printf("1)close_pipes....command->exit_status:%i\n", env->exit_status);
 		}
 		return ;
 	}
@@ -141,6 +153,12 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 		if (WIFEXITED(status))
 	    {
 			env->exit_status = WEXITSTATUS(status);
+			printf("2)close_pipes....command->exit_status:%i\n", env->exit_status);
+		}
+		if (WIFSIGNALED(status))
+		{
+			env->exit_status = WTERMSIG(status) + 128;
+			printf("2)close_pipes....signal->exit_status:%i\n", env->exit_status);
 		}
 		i++;
 	}
@@ -157,10 +175,7 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (cmds->redirections)
 			check = run_redirections(cmds->redirections, env);
 		if (!check)
-		{
 			exe_builtin(cmds, env, 0);
-			env->exit_status = SUCCESS;
-		}
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;

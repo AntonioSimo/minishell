@@ -140,6 +140,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+// typedef struct s_signal
+// {
+
+// 	pid_t	pid;
+// };	t_signal;
+
+
 typedef struct s_env
 {
     struct s_envepval	*env;
@@ -151,7 +158,7 @@ typedef struct s_env
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
 int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status);
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, t_env *env);
 void	check_prev_token(t_token **tokens, t_expander *var);
 
 
@@ -233,7 +240,7 @@ int		token_lst_size(t_token	*tokens);
 
 //expander_utils
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
-void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status);
+void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env);
 
 //tilde
 int		if_tilde(t_token **tokens, t_type prev_type);
@@ -269,9 +276,9 @@ int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
-int 	ft_exit(char **args);
+void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
-int 	ft_export(t_env *env, char **args);
+void 	ft_export(t_env *env, char **args);
 void	ft_unset(t_env *env, char **args);
 void	*ft_ptrdel(void *ptr);
 void	ft_nodedel(t_envepval *env);
@@ -285,5 +292,8 @@ void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
+void	ft_signal(t_env *main);
+
+extern int g_signal;
 
 #endif

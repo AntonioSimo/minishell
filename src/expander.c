@@ -72,7 +72,7 @@ void	expander(t_token **tokens, t_env *my_env)
 		if (!if_tilde(tokens, var->prev_type))
 			tilde_expansion((*tokens), my_env->env);
 		if (!is_error_code(tokens))
-			handle_error_code(tokens, &head, var, my_env->exit_status);
+			handle_error_code(tokens, &head, var, my_env);
 		if (!is_double_dollar(tokens))
 			handle_double_dollar(tokens, &head, var);
 		if (!is_single_dollar(tokens))

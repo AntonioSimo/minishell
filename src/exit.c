@@ -14,26 +14,29 @@ bool	ft_isnumber(char *str)
 	return (true);
 }
 
-int	ft_exit(char **args)
+void	ft_exit(char **args, t_env *env)
 {
-	t_env   env;
-	int	exit_code;
-
 	if (args == NULL || args[1] == NULL) 
-		exit(0);
-	exit_code = ft_atoi(args[1]);
+	{
+		printf("exit\n");
+		exit(SUCCESS);
+	}
 	if (!ft_isnumber(args[1]))
 	{
-		ft_putstr_fd(RED"exit: numeric argument required\n" RESET, 2);
-		//error_code.exit_status = 2;
-		env.exit_status = ERROR;
-		return (env.exit_status);
+		printf("exit\n");
+		printf("mustash: exit: %s: numeric argument required\n", args[1]);
+		exit (SYNTAX_ERROR);
 	}
 	if (ft_arraysize(args) > 2)
 	{
-		ft_putstr_fd(RED"exit: too many arguments\n"RESET, 2);
-		//error_code.exit_status = 1;
-		return (1);
+		printf("exit\n");
+		printf("mustash: exit: too many arguments\n");
+		env->exit_status = ERROR;
 	}
-	exit(exit_code);
+	else
+	{
+		env->exit_status = ft_atoi(args[1]);
+		printf("exit\n");
+		exit (env->exit_status);
+	}
 }

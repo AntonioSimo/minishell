@@ -59,15 +59,14 @@ int	char_to_expand(char c)
 	return (0);
 }
 
-void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status)
+void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env)
 {
 	char	*error_code;
 	size_t	i;
 	t_token	*new_node;
 
 	i = 0;
-	error_code = ptr_check(ft_itoa(exit_status));
-	printf("error_code_expansion:%i\n", exit_status);
+	error_code = ptr_check(ft_itoa(env->exit_status));
 	while (i < ft_strlen(token->command))
 	{
 		if (token->command[i + 1] && token->command[i] == '$'
@@ -81,6 +80,7 @@ void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_stat
 		}
 		i++;
 	}
+	env->exit_status = SUCCESS;
 	free(error_code);
 }
 

@@ -30,13 +30,9 @@ void	ft_unset(t_env *env, char **args)
 		if (ft_strcmp(args[i], current_node->key) == 0)
 		{
 			if (previous_node == NULL)
-			{
 				env->env = current_node->next;
-			}
 			else
-			{
 				previous_node->next = current_node->next;
-			}
 			ft_nodedel(current_node);
 			return ;
 		}
