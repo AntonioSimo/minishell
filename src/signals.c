@@ -12,24 +12,28 @@
 
 #include "../include/minishell.h"
 
-void	ft_signal(t_env *main)
-{
-	signal(SIGINT, signal_int_handler);
-	main->exit_status = g_signal;
-	printf("ft_signal->main.exit_status:%i\n", main->exit_status);
-	signal(SIGQUIT, SIG_IGN);
-}
+int	g_signal;
 
-void    signal_int_handler(int sig, siginfo_t *info, void *context);
+void    signal_int_handler(int sig, siginfo_t *info, void *context)
 {
+	(void)context;
 
 	if (sig == SIGINT)
 	{
 		g_signal = 128 + SIGINT;
-		printf("signal_handler->g_signal:%i\n", g_signal);
 		ft_putstr_fd("\n", STDIN_FILENO);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		//rl_on_new_line();
+		g_signal = 1;
+	}
+
+	if (info->si_pid != 0)
+	{
+		if (sig == SIGINT)
+		{
+			//ft_putstr_fd("\n", STDIN_FILENO);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
 	}
 }

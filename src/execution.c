@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+int g_signal;
+
 typedef struct s_execution
 {
 	t_command	*head;
@@ -74,7 +76,6 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	int	check;
 
 	check = 0;
-	// signal(SIGINT, SIG_IGN);
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
 		check = run_redirections(cmds->redirections, env);
@@ -120,7 +121,12 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	{
 		waitpid(pid[0], &status, 0);
 		if (WIFEXITED(status))
+	    {
 			env->exit_status = WEXITSTATUS(status);
+			return ;
+		}
+		else
+			g_signal = 0;
 		return ;
 	}
 	if (cmds_size == 2)
@@ -141,13 +147,9 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 		if (WIFEXITED(status))
 	    {
 			env->exit_status = WEXITSTATUS(status);
-			printf("2)close_pipes....command->exit_status:%i\n", env->exit_status);
 		}
-		if (WIFSIGNALED(status))
-		{
-			env->exit_status = WTERMSIG(status) + 128;
-			printf("2)close_pipes....signal->exit_status:%i\n", env->exit_status);
-		}
+		else
+			g_signal = 0;
 		i++;
 	}
 }

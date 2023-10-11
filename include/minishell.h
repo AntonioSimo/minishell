@@ -140,13 +140,6 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-// typedef struct s_signal
-// {
-
-// 	pid_t	pid;
-// };	t_signal;
-
-
 typedef struct s_env
 {
     struct s_envepval	*env;
