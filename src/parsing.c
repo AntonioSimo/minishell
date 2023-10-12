@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/08/16 15:57:33 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 17:54:45 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,14 @@ t_parsing	*set_parsing_var(void)
 	return (var);
 }
 
-void	handle_redirections(t_redir **redir, t_token *tokens)
+int	handle_redirections(t_redir **redir, t_token **tokens)
 {
 	t_type	redir_type;
 	char	*file;
+	int		i;
 
+	i = 0;
+	file = NULL;
 	if (!*redir)
 	{
 		(*redir) = ptr_check(malloc(sizeof(t_redir)));
@@ -40,18 +43,38 @@ void	handle_redirections(t_redir **redir, t_token *tokens)
 		(*redir)->stdin_cpy = dup(STDIN_FILENO);
 		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
 	}
-	redir_type = tokens->type;
-	while (tokens)
+	redir_type = (*tokens)->type;
+	*tokens = (*tokens)->next;
+	if (*tokens && (*tokens)->type == SEPERATOR)
+		*tokens = (*tokens)->next;
+	while (*tokens)
 	{
-		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
-			|| tokens->type == SINGLE_QUOTED)
+		if ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED
+			|| (*tokens)->type == SINGLE_QUOTED)
 		{
-			file = ptr_check(ft_strdup(tokens->command));
-			push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
-			break ;
+			file = ft_free_strjoin(file, (*tokens)->command);
 		}
-		*tokens = *(tokens)->next;
+		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || (*tokens)->type == REDIR_INPUT
+			|| (*tokens)->type == REDIR_OUTPUT_APPEND || (*tokens)->type == HEREDOC
+			|| (*tokens)->type == REDIR_OUTPUT)
+		{
+			if (!(redir_type == REDIR_OUTPUT && (*tokens)->type == PIPE && i == 0))
+			{
+				break ;
+				
+				printf("here\n");
+			}
+		}
+		i++;
+		*tokens = (*tokens)->next;
 	}
+	if (!file)
+	{
+		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
+		return (1);
+	}
+	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+	return (0);
 }
 
 static void	handle_cmds(t_token *tokens, t_command **commands, \
@@ -89,9 +112,13 @@ t_command	*merge_tokens(t_token	*tokens)
 	{
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
-			handle_redirections(&redir, tokens);
-		else
-			handle_cmds(tokens, &commands, &redir, &var);
+		{
+			if (handle_redirections(&redir, &tokens))
+				return (NULL);
+		}
+		if (!tokens)
+			break ;
+		handle_cmds(tokens, &commands, &redir, &var);
 		tokens = tokens->next;
 	}
 	if (var->word || var->args_arr || redir)
