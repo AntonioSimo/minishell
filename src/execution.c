@@ -133,21 +133,21 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 		}
 		return ;
 	}
-	if (cmds_size == 2)
-	{
-		close(fd[0][0]);
-		close(fd[0][1]);
-	}
-	else
-	{
-		close(fd[0][0]);
-		close(fd[0][1]);
-		close(fd[1][1]);
-		close(fd[1][0]);
-	}
 	while (i < cmds_size)
 	{
-		waitpid(pid[i], &status, 0);
+		waitpid(pid[cmds_size], &status, 0);
+		if (cmds_size == 2)
+		{
+			close(fd[0][0]);
+			close(fd[0][1]);
+		}
+		else
+		{
+			close(fd[0][0]);
+			close(fd[0][1]);
+			close(fd[1][1]);
+			close(fd[1][0]);
+		}
 		if (WIFEXITED(status))
 	    {
 			g_signal = 0;

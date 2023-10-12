@@ -12,8 +12,6 @@
 
 #include "../include/minishell.h"
 
-extern int	g_error_code;
-
 t_expander	*set_var(void)
 {
 	t_expander	*var;
