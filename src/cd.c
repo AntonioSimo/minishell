@@ -93,10 +93,7 @@ void	ft_cd(t_env *env, t_command *cmd)
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
 	{
-		ft_putstr_fd("mustash: cd:", STDERR_FILENO);
-		ft_putstr_fd(nwd, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		//rintf("mustash: cd: %s: No such file or directory\n", nwd);
+		ft_print_message("mustash: cd: ", nwd, ": No such file or directory\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else

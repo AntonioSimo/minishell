@@ -23,13 +23,22 @@ void	print_my_export(t_envepval *env)
 
 int	ft_isvariable(char *args)
 {
-	if (!*args || ft_isdigit(*args) || *args == '=' ||
-		(*args == '$' && !*(args + 1)) || *args == ' ')
+	int i;
+
+	i = 0;
+	// printf("here");
+	if (*args == '=')
 		return (0);
 	while (*args && *args != '=')
-	{
-		if (*args == ' ' || *args == '+')
+	{	
+		if (!*args || ft_isdigit(*args) || *args == '=' || (*args == '$' && !*(args + 1)) || *args == ' ')
+		{
 			return (0);
+		}
+		if (*args == ' ' || *args == '+' || *args == '-')
+		{
+			return (0);
+		}
 		args++;
 	}
 	return (1);
@@ -109,10 +118,7 @@ void	ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			ft_putstr_fd("mustash: export: `", STDERR_FILENO);
-			ft_putstr_fd(args[i], STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			// printf("mustash: export: `%s': not a valid identifier\n", args[i]);
+			ft_print_message("mustash: export: `", args[i], "': not a valid identifier\n", STDERR_FILENO);
 			env->exit_status = ERROR;
 		}
 		i++;

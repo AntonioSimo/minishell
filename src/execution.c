@@ -39,7 +39,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf("mustash: Command '%s' not found\n", cmd->command);
+		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 	exit (127);
 }
 
