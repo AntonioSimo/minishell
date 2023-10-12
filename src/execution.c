@@ -76,6 +76,7 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	int	check;
 
 	check = 0;
+
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
 		check = run_redirections(cmds->redirections, env);

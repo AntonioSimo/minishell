@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:15:54 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:18:57 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:46:54 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	echo_token(bool *valid, char **args, int j)
 		write(1, " ", 1);
 }
 
-void	echo_command(char **args)
+void	echo_command(char **args, t_env *env)
 {
 	int		j;
 	bool	is_nl;
@@ -76,5 +76,6 @@ void	echo_command(char **args)
 	}
 	if (is_nl)
 		write(1, "\n", 1);
+	env->exit_status = SUCCESS;
 	g_signal = 0;
 }

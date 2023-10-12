@@ -74,6 +74,7 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	else if (temp->type == REDIR_OUTPUT_APPEND)
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
+	//access permission
 	if (redir->fileout[i] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
@@ -92,6 +93,7 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
 		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	//access permission
 	if (redir->filein[j] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:52:43 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:38:48 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	loop(t_env *my_env)
 		if (g_signal)
 		{
 			my_env->exit_status = TERMINATION_SIGINT;
+			g_signal = 0;
 		}
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
@@ -40,7 +41,7 @@ void	loop(t_env *my_env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env	*env_main;
+	t_env				*env_main;
 	struct sigaction	st_sa;
 	
 	(void)argv;
