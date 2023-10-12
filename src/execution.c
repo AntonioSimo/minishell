@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 13:41:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:55:08 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,15 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	cmds_size = count_cmds(cmds);
 	if (cmds_size == 1)
 	{
+		
 		waitpid(pid[0], &status, 0);
 		if (WIFEXITED(status))
 	    {
+			if (g_signal)
+				env->exit_status = 130;
+			else
+				env->exit_status = WEXITSTATUS(status);
 			g_signal = 0;
-			env->exit_status = WEXITSTATUS(status);
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:12:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:14:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:46:59 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 	if (ft_strcmp(cmd->command, "cd") == 0)
 		ft_cd(env, cmd);
 	else if (ft_strcmp(cmd->command, "echo") == 0)
-		echo_command(cmd->arguments);
+		echo_command(cmd->arguments, env);
 	else if (ft_strcmp(cmd->command, "pwd") == 0)
 		get_current_working_dir();
 	else if (ft_strcmp(cmd->command, "exit") == 0)

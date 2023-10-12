@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/05 17:40:45 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:46:34 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ void    signal_int_handler(int sig, siginfo_t *info, void *context);
 void	execute_pipe(int **fd, int i, t_command *head);
 
 
-void 	echo_command(char **args);
+void 	echo_command(char **args, t_env *env);
 void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
