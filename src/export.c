@@ -23,10 +23,6 @@ void	print_my_export(t_envepval *env)
 
 int	ft_isvariable(char *args)
 {
-	int i;
-
-	i = 0;
-	// printf("here");
 	if (*args == '=')
 		return (0);
 	while (*args && *args != '=')

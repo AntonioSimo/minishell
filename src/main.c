@@ -23,6 +23,8 @@ void	loop(t_env *my_env)
 		line = readline(GREEN BOLD "mustash> "RESET);
 		if (!line)
 		{
+			if (g_signal == 1)
+				my_env->exit_status = 130;
 			printf("exit\n");
 			break ;
 		}
