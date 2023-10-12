@@ -109,7 +109,10 @@ void	ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			printf("mustash: export: '%s': not a valid identifier\n", args[i]);
+			ft_putstr_fd("mustash: export: `", STDERR_FILENO);
+			ft_putstr_fd(args[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			// printf("mustash: export: `%s': not a valid identifier\n", args[i]);
 			env->exit_status = ERROR;
 		}
 		i++;

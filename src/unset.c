@@ -1,5 +1,7 @@
 #include "../include/minishell.h"
 
+extern int g_signal;
+
 void	ft_nodedel(t_envepval *env)
 {
 	if (env && env->next == NULL)
@@ -23,8 +25,12 @@ void	ft_unset(t_env *env, char **args)
 	i = 1;
 	current_node = env->env;
 	previous_node = NULL;
-	if (!args || !env)
+	if (ft_arraysize(args) < 2 || !env)
+	{
+		g_signal = 0;
+		env->exit_status = SUCCESS;
 		return ;
+	}
 	while (current_node != NULL)
 	{
 		if (ft_strcmp(args[i], current_node->key) == 0)

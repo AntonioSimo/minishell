@@ -37,3 +37,10 @@ void	*ptr_check(void *ptr)
 		exit(EXIT_FAILURE);
 	}
 }
+
+void	ft_print_message(char *command, char *str, char *error_message, int fd)
+{
+	write(fd, command, ft_strlen(command));
+	write(fd, str, ft_strlen(str));
+	write(fd, error_message, ft_strlen(error_message));
+}

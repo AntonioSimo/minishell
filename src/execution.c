@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int g_signal;
+// int g_signal;
 
 typedef struct s_execution
 {

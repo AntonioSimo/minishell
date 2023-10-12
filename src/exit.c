@@ -23,14 +23,14 @@ void	ft_exit(char **args, t_env *env)
 	}
 	if (!ft_isnumber(args[1]))
 	{
-		printf("exit\n");
-		printf("mustash: exit: %s: numeric argument required\n", args[1]);
-		exit (SYNTAX_ERROR);
+		ft_putstr_fd("exit\n", STDERR_FILENO);
+		ft_print_message("mustash: exit: ", args[1], ": numeric argument required\n", STDERR_FILENO);
+		exit (100);
 	}
 	if (ft_arraysize(args) > 2)
 	{
-		printf("exit\n");
-		printf("mustash: exit: too many arguments\n");
+		ft_putstr_fd("exit\n", STDERR_FILENO);
+		ft_putstr_fd("mustash: cd: too many arguments\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else

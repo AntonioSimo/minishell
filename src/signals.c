@@ -12,8 +12,6 @@
 
 #include "../include/minishell.h"
 
-int	g_signal;
-
 void    signal_int_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)context;

@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int g_signal = 0;
+int g_signal;
 
 void	loop(t_env *my_env)
 {
@@ -34,10 +34,7 @@ void	loop(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-		if (my_env->exit_status != TERMINATION_SIGINT)
-		{
 			rl_on_new_line();
-		}
 	}
 }
 
@@ -51,6 +48,7 @@ int	main(int argc, char **argv, char **env)
 	st_sa.sa_sigaction = signal_int_handler;
 	st_sa.sa_flags = SA_SIGINFO;
 	env_main = NULL;
+	g_signal = 0;
 	copy_env(env, &env_main);
 	sigaction(SIGINT, &st_sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
