@@ -45,10 +45,9 @@ int	is_error_code(t_token **tokens)
 	return (1);
 }
 
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status)
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, t_env *env)
 {
-	// printf("handle_error_code:%i\n", exit_status);
-	error_code_expansion(*tokens, head, var->i, exit_status);
+	error_code_expansion(*tokens, head, var->i, env);
 	*tokens = *head;
 	var->old_pos = var->i;
 	while (var->i--)

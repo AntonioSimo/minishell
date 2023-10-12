@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-extern int g_signal;
+// int g_signal;
 
 typedef struct s_execution
 {
@@ -39,8 +39,8 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf("%s: command not found\n", cmd->command);
-	exit(127);
+		printf("mustash: Command '%s' not found\n", cmd->command);
+	exit (127);
 }
 
 static int	**make_pipes(t_command *cmds)
@@ -101,7 +101,9 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
 		if (pid[temp->i] == 0)
+		{
 			handle_child_process(fd, cmds, env, temp);
+		}
 		temp->i++;
 		cmds = cmds->next;
 	}
@@ -147,9 +149,7 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 			env->exit_status = WEXITSTATUS(status);
 		}
 		else
-		{
 			g_signal = 0;
-		}
 		i++;
 	}
 }
@@ -165,10 +165,7 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (cmds->redirections)
 			check = run_redirections(cmds->redirections, env);
 		if (!check)
-		{
 			exe_builtin(cmds, env, 0);
-			env->exit_status = SUCCESS;
-		}
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		return ;

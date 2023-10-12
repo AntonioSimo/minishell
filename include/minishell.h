@@ -147,11 +147,13 @@ typedef struct s_env
     char				**env_copy;
 }	t_env;
 
+extern int g_signal;
+
 //expander_checkers
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
 int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, int exit_status);
+void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, t_env *env);
 void	check_prev_token(t_token **tokens, t_expander *var);
 
 
@@ -233,7 +235,7 @@ int		token_lst_size(t_token	*tokens);
 
 //expander_utils
 t_token	*create_nodes(char *expanded, char	*str, int start, int end);
-void	error_code_expansion(t_token *token, t_token **head, int pos, int exit_status);
+void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env);
 
 //tilde
 int		if_tilde(t_token **tokens, t_type prev_type);
@@ -264,14 +266,14 @@ void	execute_pipe(int **fd, int i, t_command *head);
 
 
 void 	echo_command(char **args);
-void	exe_builtin(t_command *cmd, t_env *env, int if_exit);
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
 bool    ft_isnumber(char *str);
-int 	ft_exit(char **args);
+void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
-int 	ft_export(t_env *env, char **args);
+void 	ft_export(t_env *env, char **args);
 void	ft_unset(t_env *env, char **args);
 void	*ft_ptrdel(void *ptr);
 void	ft_nodedel(t_envepval *env);
@@ -285,5 +287,6 @@ void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
+void	ft_print_message(char *command, char *str, char *error_message, int fd);
 
 #endif

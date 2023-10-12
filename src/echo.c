@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-extern int g_signal;
+// int g_signal;
 
 int	ft_arraysize(char **args)
 {

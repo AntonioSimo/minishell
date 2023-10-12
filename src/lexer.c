@@ -67,5 +67,8 @@ void	lexer(char *line, t_env *my_env)
 		}
 	}
 	else
-		ft_printf("Unclosed quotes.\n");
+	{
+		printf("mustash: syntax error: unexpected end of file\n");
+		my_env->exit_status = SYNTAX_ERROR;
+	}
 }

@@ -38,19 +38,9 @@ void	*ptr_check(void *ptr)
 	}
 }
 
-// //EXIT CODE
-// int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val)
-// {
-// 	t_env env;
-
-// 	if (msg)
-// 	{
-// 		if (cmd)
-// 			printf("%s: %s\n", cmd, msg);
-// 		else
-// 			printf("%s\n", msg);
-// 	}
-// 	if (exit_code != ERROR)
-// 		env.exit_status = exit_code;
-// 	return (return_val);
-// }
+void	ft_print_message(char *command, char *str, char *error_message, int fd)
+{
+	write(fd, command, ft_strlen(command));
+	write(fd, str, ft_strlen(str));
+	write(fd, error_message, ft_strlen(error_message));
+}

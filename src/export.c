@@ -76,7 +76,7 @@ t_envepval	*set_newvariable(char *args)
 	return (variable);
 }
 
-int	ft_export(t_env *env, char **args)
+void	ft_export(t_env *env, char **args)
 {
 	t_envepval	*new_variable;
 	t_envepval	*empty_variable;
@@ -86,7 +86,7 @@ int	ft_export(t_env *env, char **args)
 	if (!args[i])
 	{
 		print_my_export(env->env);
-		return (SUCCESS);
+		env->exit_status = SUCCESS;
 	}
 	while (args[i] != NULL)
 	{
@@ -109,10 +109,12 @@ int	ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			ft_putstr_fd(RED "mustash: not a valid identifier\n" RESET, 2);
-			return (ERROR);
+			ft_putstr_fd("mustash: export: `", STDERR_FILENO);
+			ft_putstr_fd(args[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			// printf("mustash: export: `%s': not a valid identifier\n", args[i]);
+			env->exit_status = ERROR;
 		}
 		i++;
 	}
-	return (SUCCESS);
 }
