@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/10 18:58:12 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:42:08 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	}
 	if (ft_isbuiltin(cmds->command))
 		exe_builtin(cmds, env, 1);
+	//here we have to execute program if token starts from ./
+	//else find_cmd
 	find_cmd(cmds, env);
 }
 
