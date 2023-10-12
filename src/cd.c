@@ -81,7 +81,8 @@ void	ft_cd(t_env *env, t_command *cmd)
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
-
+		ft_putstr_fd("mustash: cd: too many arguments\n", STDERR_FILENO);
+		env->exit_status = ERROR;
 		return ;
 	}
 	if (cmd->arguments[1] == NULL)
@@ -91,7 +92,10 @@ void	ft_cd(t_env *env, t_command *cmd)
 	else if (cmd->arguments[1])
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
-		perror("chdir() error");
+	{
+		ft_print_message("mustash: cd: ", nwd, ": No such file or directory\n", STDERR_FILENO);
+		env->exit_status = ERROR;
+	}
 	else
 		update_pwd(env, pwd);
 	free(pwd);

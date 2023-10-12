@@ -58,9 +58,9 @@ void	lexer(char *line, t_env *my_env)
 		expander(&tokens, my_env);
 		if (tokens && !check_pipes(tokens))
 		{
-			// print_tokens(tokens);
+			//print_tokens(tokens);
 			commands = merge_tokens(tokens);
-			// print_cmds(commands);
+			//print_cmds(commands);
 			if (commands)
 				run_commands(commands, my_env);
 			destroy_tokens(tokens);
@@ -68,7 +68,7 @@ void	lexer(char *line, t_env *my_env)
 	}
 	else
 	{
-		printf("mustash: syntax error: unexpected end of file\n");
+		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", STDERR_FILENO);
 		my_env->exit_status = SYNTAX_ERROR;
 	}
 }

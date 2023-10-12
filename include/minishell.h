@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/12 13:46:34 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:40:32 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
-bool    ft_isnumber(char *str);
+bool    ft_isnumber(char *str, t_env *env);
 void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
 void 	ft_export(t_env *env, char **args);

@@ -1,14 +1,27 @@
 #include "../include/minishell.h"
 
-bool	ft_isnumber(char *str)
+bool	ft_isnumber(char *str, t_env *env)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (!ft_isdigit(str[i]))
+		if (str[i] == '+')
+		{
+			env->exit_status = 100;
 			return (false);
+		}
+		if (str[i] == '-')
+		{
+			env->exit_status = 156;
+			return (false);
+		}
+		if (!ft_isdigit(str[i]))
+		{
+			env->exit_status = SYNTAX_ERROR;
+			return (false);
+		}
 		i++;
 	}
 	return (true);
@@ -21,11 +34,11 @@ void	ft_exit(char **args, t_env *env)
 		printf("exit\n");
 		exit(SUCCESS);
 	}
-	if (!ft_isnumber(args[1]))
+	if (!ft_isnumber(args[1], env))
 	{
 		ft_putstr_fd("exit\n", STDERR_FILENO);
 		ft_print_message("mustash: exit: ", args[1], ": numeric argument required\n", STDERR_FILENO);
-		exit (100);
+		exit (env->exit_status);
 	}
 	if (ft_arraysize(args) > 2)
 	{
@@ -36,7 +49,7 @@ void	ft_exit(char **args, t_env *env)
 	else
 	{
 		env->exit_status = ft_atoi(args[1]);
-		printf("exit\n");
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 		exit (env->exit_status);
 	}
 }

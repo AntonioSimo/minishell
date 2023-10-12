@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 14:55:08 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:30:21 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 	if (path)
 		execve(path, cmd->arguments, env->env_copy);
 	else
-		printf("mustash: Command '%s' not found\n", cmd->command);
+		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 	exit (127);
 }
 
