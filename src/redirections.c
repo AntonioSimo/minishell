@@ -92,7 +92,8 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
-		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	//__O_TMPFILE | 
+		redir->filein[j] = open(temp->file, O_RDWR);
 	//access permission
 	if (redir->filein[j] == -1)
 	{

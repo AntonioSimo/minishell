@@ -19,7 +19,7 @@ bool	ft_isnumber(char *str, t_env *env)
 		}
 		if (!ft_isdigit(str[i]))
 		{
-			env->exit_status = SYNTAX_ERROR;
+			env->exit_status = 255;
 			return (false);
 		}
 		i++;
@@ -29,10 +29,12 @@ bool	ft_isnumber(char *str, t_env *env)
 
 void	ft_exit(char **args, t_env *env)
 {
-	if (args == NULL || args[1] == NULL) 
+	if (ft_arraysize(args) == 1) 
 	{
 		printf("exit\n");
-		exit(SUCCESS);
+		// if (g_signal)
+		// 	exit(130);
+		exit(env->exit_status);
 	}
 	if (!ft_isnumber(args[1], env))
 	{

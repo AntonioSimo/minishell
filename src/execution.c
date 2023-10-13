@@ -6,13 +6,11 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 16:42:08 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:40:36 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// int g_signal;
 
 typedef struct s_execution
 {
@@ -76,7 +74,6 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	int	check;
 
 	check = 0;
-
 	execute_pipe(fd, temp->i, temp->head);
 	if (cmds->redirections)
 		check = run_redirections(cmds->redirections, env);
@@ -87,8 +84,6 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	}
 	if (ft_isbuiltin(cmds->command))
 		exe_builtin(cmds, env, 1);
-	//here we have to execute program if token starts from ./
-	//else find_cmd
 	find_cmd(cmds, env);
 }
 
@@ -122,37 +117,46 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	cmds_size = count_cmds(cmds);
 	if (cmds_size == 1)
 	{
+		
 		waitpid(pid[0], &status, 0);
 		if (WIFEXITED(status))
 	    {
-			env->exit_status = WEXITSTATUS(status);
-			return ;
+			if (g_signal)
+				env->exit_status = 130;
+			else
+				env->exit_status = WEXITSTATUS(status);
+			g_signal = 0;
 		}
 		else
-			g_signal = 1;
+		{
+			env->exit_status = SUCCESS;
+		}
 		return ;
-	}
-	if (cmds_size == 2)
-	{
-		close(fd[0][0]);
-		close(fd[0][1]);
-	}
-	else
-	{
-		close(fd[0][0]);
-		close(fd[0][1]);
-		close(fd[1][1]);
-		close(fd[1][0]);
 	}
 	while (i < cmds_size)
 	{
-		waitpid(pid[i], &status, 0);
+		waitpid(pid[cmds_size], &status, 0);
+		if (cmds_size == 2)
+		{
+			close(fd[0][0]);
+			close(fd[0][1]);
+		}
+		else
+		{
+			close(fd[0][0]);
+			close(fd[0][1]);
+			close(fd[1][1]);
+			close(fd[1][0]);
+		}
 		if (WIFEXITED(status))
 	    {
+			g_signal = 0;
 			env->exit_status = WEXITSTATUS(status);
 		}
 		else
-			g_signal = 0;
+		{
+			env->exit_status = SUCCESS;
+		}
 		i++;
 	}
 }
