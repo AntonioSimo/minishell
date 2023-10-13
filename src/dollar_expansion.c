@@ -57,7 +57,7 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 		var->j--;
 		var->i++;
 	}
-	expanded_nodes = create_nodes(var->expanded, tokens->command, \
+	expanded_nodes = create_nodes(var->expanded, tokens, \
 								var->j, var->i);
 	connect_nodes(expanded_nodes, var->pos, head);
 	ft_free(var->to_expand);
@@ -107,7 +107,7 @@ void	double_dollar(t_token *tokens, t_token **head, int pos)
 		{
 			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr \
 				(tokens->command, "$$", ft_strlen(tokens->command)));
-			new_node = create_nodes(pid, tokens->command, i + 1, i + 2);
+			new_node = create_nodes(pid, tokens, i + 1, i + 2);
 			connect_nodes(new_node, pos, head);
 			break ;
 		}

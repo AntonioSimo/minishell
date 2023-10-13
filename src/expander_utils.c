@@ -14,13 +14,13 @@
 
 extern int	g_error_code;
 
-static void	handle_first_part(char *expanded, t_token **temp_node)
+static void	handle_first_part(char *expanded, t_token **temp_node, t_type type)
 {
 	int		i;
 	t_token	*temp_expanded;
 	t_token	*expanded_nodes;
 
-	expanded_nodes = create_new_nodes(expanded);
+	expanded_nodes = create_new_nodes(expanded, type);
 	i = token_lst_size(expanded_nodes);
 	while (i)
 	{
@@ -32,21 +32,22 @@ static void	handle_first_part(char *expanded, t_token **temp_node)
 	}
 }
 
-t_token	*create_nodes(char *expanded, char	*str, int start, int end)
+t_token	*create_nodes(char *expanded, t_token *token, int start, int end)
 {
 	char	*before;
 	char	*after;
 	t_token	*temp_node;
 
 	temp_node = NULL;
-	before = ft_substr(str, 0, start - 1);
-	after = ft_substr(str, end, ft_strlen(str) - end);
+	before = ft_substr(token->command, 0, start - 1);
+	after = ft_substr(token->command, end, ft_strlen(token->command) - end);
 	if (ft_strlen(before) > 0)
-		push_token(&temp_node, lst_token_new(before, DEFAULT));
-	if (ft_strlen(expanded) > 0)
-		handle_first_part(expanded, &temp_node);
+		push_token(&temp_node, lst_token_new(before, token->type));
+	if ((ft_strlen(expanded) > 0 && token->type == DEFAULT)
+		|| ((int)ft_strlen(expanded) >= 0 && token->type == DOUBLE_QUOTED))
+		handle_first_part(expanded, &temp_node, token->type);
 	if (ft_strlen(after) > 0)
-		push_token(&temp_node, lst_token_new(after, DEFAULT));
+		push_token(&temp_node, lst_token_new(after, token->type));
 	free(before);
 	free(after);
 	return (temp_node);
@@ -74,7 +75,7 @@ void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env)
 		{
 			i = ft_strlen(token->command) - ft_strlen(ft_strnstr \
 				(token->command, "$?", ft_strlen(token->command)));
-			new_node = create_nodes(error_code, token->command, i + 1, i + 2);
+			new_node = create_nodes(error_code, token, i + 1, i + 2);
 			connect_nodes(new_node, pos, head);
 			break ;
 		}

@@ -209,7 +209,7 @@ void	double_dollar(t_token *tokens, t_token **head, int pos);
 void	expander(t_token **tokens, t_env *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
-t_token		*create_new_nodes(char *expanded);
+t_token		*create_new_nodes(char *expanded, t_type type);
 char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
@@ -234,7 +234,7 @@ void   print_copy_env(t_env *env);
 int		token_lst_size(t_token	*tokens);
 
 //expander_utils
-t_token	*create_nodes(char *expanded, char	*str, int start, int end);
+t_token	*create_nodes(char *expanded, t_token *token, int start, int end);
 void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env);
 
 //tilde

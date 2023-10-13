@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_env				*env_main;
 	struct sigaction	st_sa;
-	
+
 	(void)argv;
 	(void)argc;
 	st_sa.sa_sigaction = signal_int_handler;
