@@ -31,7 +31,7 @@ int	ft_isbuiltin(char *command)
 	return (0);
 }
 
-void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
+void	exe_builtin(t_command *cmd, t_env *env, int	exit_status)
 {
 	if (ft_strcmp(cmd->command, "cd") == 0)
 		ft_cd(env, cmd);

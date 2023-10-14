@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <sys/stat.h>
 
 extern int	g_error_code;
 

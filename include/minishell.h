@@ -288,5 +288,6 @@ void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
+void	is_executable(t_command *cmds, t_env *env);
 
 #endif

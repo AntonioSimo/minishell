@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <sys/stat.h>
 
 typedef struct s_execution
 {
@@ -69,7 +70,7 @@ static int	**make_pipes(t_command *cmds)
 }
 
 void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
-							t_execution	*temp)
+											 t_execution	*temp)
 {
 	int	check;
 
@@ -84,7 +85,44 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	}
 	if (ft_isbuiltin(cmds->command))
 		exe_builtin(cmds, env, 1);
+	if (cmds->command[0] == '/')
+	{
+		ft_print_message("mustash: ", cmds->command, ": No such file or directory\n", 2);
+		exit (127);
+	}
+	if (cmds->command[0] == '.' && cmds->command[1] == '/' )
+	{
+		is_executable(cmds, env);
+	}
 	find_cmd(cmds, env);
+}
+
+void	is_executable(t_command *cmds, t_env *env)
+{
+	struct stat file_info;
+
+	if (access(cmds->command, X_OK) == 0 && stat(cmds->command, &file_info) == 0 && !S_ISDIR(file_info.st_mode))
+	{
+		execve(cmds->command, cmds->arguments, env->env_copy);
+	}
+	if (access(cmds->command, F_OK) != 0)
+	{
+		ft_print_message("mustash: ", cmds->command, ": No such file or directory\n", STDERR_FILENO);
+    	exit (127);
+	}
+	if (stat(cmds->command, &file_info) == 0 && S_ISDIR(file_info.st_mode))
+	{
+		if (strncmp(cmds->command, "cd", 2) != 0) 
+		{
+       		ft_print_message("mustash: ", cmds->command, ": is a directory\n", 2);
+			exit (126);
+		}
+	}
+	else
+	{
+		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", STDERR_FILENO);
+    	exit (126);
+	}
 }
 
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \

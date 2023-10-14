@@ -31,7 +31,7 @@ void	ft_exit(char **args, t_env *env)
 {
 	if (ft_arraysize(args) == 1) 
 	{
-		printf("exit\n");
+		//printf("exit\n");
 		// if (g_signal)
 		// 	exit(130);
 		exit(env->exit_status);
