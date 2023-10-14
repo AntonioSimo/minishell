@@ -74,6 +74,11 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	else if (temp->type == REDIR_OUTPUT_APPEND)
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
+	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
+	{
+            ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
+            return (1); //here do something to set exit status to 1 
+	} 
 	if (redir->fileout[i] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
@@ -92,6 +97,11 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
 		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
+	{
+            ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
+            return (1);
+	} 
 	if (redir->filein[j] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);

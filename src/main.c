@@ -37,7 +37,7 @@ void	loop(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-			rl_on_new_line();
+		rl_on_new_line();
 	}
 }
 
