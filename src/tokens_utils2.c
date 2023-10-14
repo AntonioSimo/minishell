@@ -90,7 +90,7 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 		*head = or_head;
 }
 
-t_token	*create_new_nodes(char *expanded)
+t_token	*create_new_nodes(char *expanded, t_type type)
 {
 	char	**temp_arr;
 	t_token	*new_nodes;
@@ -101,14 +101,14 @@ t_token	*create_new_nodes(char *expanded)
 	new_nodes = NULL;
 	if (ft_strlen(expanded) == 0)
 	{
-		push_token(&new_nodes, lst_token_new("", DEFAULT));
+		push_token(&new_nodes, lst_token_new("", type));
 		return (new_nodes);
 	}
 	temp_arr = ptr_check(ft_split(expanded, ' '));
 	while (temp_arr[i])
 	{
 		token = ptr_check(ft_strdup(temp_arr[i]));
-		push_token(&new_nodes, lst_token_new(token, DEFAULT));
+		push_token(&new_nodes, lst_token_new(token, type));
 		if (temp_arr[i + 1])
 			push_token(&new_nodes, lst_token_new(" ", SEPERATOR));
 		free(token);
