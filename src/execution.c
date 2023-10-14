@@ -87,13 +87,12 @@ void	is_executable(t_command *cmds, t_env *env)
 	{
 		if (strncmp(cmds->command, "cd", 2) != 0) 
 		{
-       		ft_print_message("mustash: ", cmds->command, ": is a directory\n", 2);
+       		ft_print_message("mustash: ", cmds->command, ": Is a directory\n", 2);
 			exit (126);
 		}
 	}
 	else
 	{
-		printf("here\n");
 		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", STDERR_FILENO);
     	exit (126);
 	}
