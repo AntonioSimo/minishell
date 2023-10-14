@@ -61,8 +61,6 @@ int	handle_redirections(t_redir **redir, t_token **tokens)
 			if (!(redir_type == REDIR_OUTPUT && (*tokens)->type == PIPE && i == 0))
 			{
 				break ;
-				
-				printf("here\n");
 			}
 		}
 		i++;

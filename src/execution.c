@@ -76,6 +76,7 @@ void	is_executable(t_command *cmds, t_env *env)
 	if (access(cmds->command, X_OK) == 0 && stat(cmds->command, &file_info) == 0 && !S_ISDIR(file_info.st_mode))
 	{
 		execve(cmds->command, cmds->arguments, env->env_copy);
+		exit(0);
 	}
 	if (access(cmds->command, F_OK) != 0)
 	{
@@ -92,6 +93,7 @@ void	is_executable(t_command *cmds, t_env *env)
 	}
 	else
 	{
+		printf("here\n");
 		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", STDERR_FILENO);
     	exit (126);
 	}
@@ -165,7 +167,7 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	}
 	while (i < cmds_size)
 	{
-		waitpid(pid[cmds_size], &status, 0);
+		waitpid(-1, &status, 0);
 		if (cmds_size == 2)
 		{
 			close(fd[0][0]);
