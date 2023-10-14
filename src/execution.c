@@ -85,11 +85,8 @@ void	is_executable(t_command *cmds, t_env *env)
 	}
 	if (stat(cmds->command, &file_info) == 0 && S_ISDIR(file_info.st_mode))
 	{
-		if (strncmp(cmds->command, "cd", 2) != 0) 
-		{
        		ft_print_message("mustash: ", cmds->command, ": Is a directory\n", 2);
 			exit (126);
-		}
 	}
 	else
 	{
@@ -129,6 +126,7 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 		pid[temp->i] = fork();
 		if (pid[temp->i] == -1)
 			return (perror_exit("Fork error\n"));
+		// signal(SIGINT, SIG_IGN); // here turn off signals or do something with it to be able ctrl c in bash
 		if (pid[temp->i] == 0)
 		{
 			handle_child_process(fd, cmds, env, temp);
@@ -141,7 +139,7 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 
 static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 {
-	int	cmds_size;
+	int		cmds_size;
 	int 	status;
 	int		i = 0;
 
@@ -166,7 +164,6 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 	}
 	while (i < cmds_size)
 	{
-		waitpid(-1, &status, 0);
 		if (cmds_size == 2)
 		{
 			close(fd[0][0]);
@@ -179,6 +176,7 @@ static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
 			close(fd[1][1]);
 			close(fd[1][0]);
 		}
+		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
 	    {
 			g_signal = 0;
