@@ -69,29 +69,6 @@ static int	**make_pipes(t_command *cmds)
 	return (fd);
 }
 
-void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
-											 t_execution	*temp)
-{
-	int	check;
-
-	check = 0;
-	execute_pipe(fd, temp->i, temp->head);
-	if (cmds->redirections)
-		check = run_redirections(cmds->redirections, env);
-	if (check)
-	{
-		write(1, "", 1);
-		exit(1);
-	}
-	if (ft_isbuiltin(cmds->command))
-		exe_builtin(cmds, env, 1);
-	if (ft_strnstr(cmds->command, "../", ft_strlen(cmds->command))
-		|| ft_strnstr(cmds->command, "./", ft_strlen(cmds->command))
-		|| ft_strchr(cmds->command, '/'))
-		is_executable(cmds, env);
-	find_cmd(cmds, env);
-}
-
 void	is_executable(t_command *cmds, t_env *env)
 {
 	struct stat file_info;
@@ -119,6 +96,26 @@ void	is_executable(t_command *cmds, t_env *env)
     	exit (126);
 	}
 }
+void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
+											 t_execution	*temp)
+{
+	int	check;
+
+	check = 0;
+	execute_pipe(fd, temp->i, temp->head);
+	if (cmds->redirections)
+		check = run_redirections(cmds->redirections, env);
+	if (check)
+		exit(1);
+	if (ft_isbuiltin(cmds->command))
+		exe_builtin(cmds, env, 1);
+	if (ft_strnstr(cmds->command, "../", ft_strlen(cmds->command))
+		|| ft_strnstr(cmds->command, "./", ft_strlen(cmds->command))
+		|| ft_strchr(cmds->command, '/'))
+		is_executable(cmds, env);
+	find_cmd(cmds, env);
+}
+
 
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 								int **fd)
