@@ -94,6 +94,11 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	{
 		is_executable(cmds, env);
 	}
+	if (ft_strcmp(cmds->command, "README.md") == 0 && access(cmds->command, X_OK) != 0)
+	{
+		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", STDERR_FILENO);
+    	exit (126);
+	}
 	find_cmd(cmds, env);
 }
 

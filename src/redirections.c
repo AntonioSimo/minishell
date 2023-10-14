@@ -91,7 +91,8 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
-		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	// __O_TMPFILE |
+		redir->filein[j] = open(temp->file, O_RDWR);
 	if (redir->filein[j] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
