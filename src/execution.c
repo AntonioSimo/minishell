@@ -85,8 +85,8 @@ void	is_executable(t_command *cmds, t_env *env)
 	}
 	if (stat(cmds->command, &file_info) == 0 && S_ISDIR(file_info.st_mode))
 	{
-       		ft_print_message("mustash: ", cmds->command, ": Is a directory\n", 2);
-			exit (126);
+       	ft_print_message("mustash: ", cmds->command, ": Is a directory\n", 2);
+		exit (126);
 	}
 	else
 	{
