@@ -33,10 +33,11 @@ t_execution *initialize_temp(t_command *cmds)
 void	find_cmd(t_command	*cmd, t_env *env)
 {
 	char	*path;
-
 	path = find_path(cmd->command, find_expandable(env->env, "PATH"));
 	if (path)
+	{
 		execve(path, cmd->arguments, env->env_copy);
+	}
 	else
 		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 	exit (127);
@@ -72,7 +73,6 @@ static int	**make_pipes(t_command *cmds)
 void	is_executable(t_command *cmds, t_env *env)
 {
 	struct stat file_info;
-
 	if (access(cmds->command, X_OK) == 0 && stat(cmds->command, &file_info) == 0 && !S_ISDIR(file_info.st_mode))
 	{
 		execve(cmds->command, cmds->arguments, env->env_copy);
