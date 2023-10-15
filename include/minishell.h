@@ -270,7 +270,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
-bool    ft_isnumber(char *str, t_env *env);
+bool    ft_isnumber(char *str);
 void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
 void 	ft_export(t_env *env, char **args);
