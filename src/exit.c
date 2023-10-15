@@ -1,5 +1,32 @@
 #include "../include/minishell.h"
 
+int64_t	ft_atoint64_t(const char *str)
+{
+	int	i;
+	int	neg;
+	int64_t	result;
+
+	i = 0;
+	result = 0;
+	neg = 1;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			neg = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - 48);
+		i++;
+	}
+	if (neg < 0)
+		return (result * neg);
+	return (result);
+}
+
 bool	ft_isnumber(char *str, t_env *env)
 {
 	int	i;
@@ -50,7 +77,7 @@ void	ft_exit(char **args, t_env *env)
 	}
 	else
 	{
-		env->exit_status = ft_atoi(args[1]);
+		env->exit_status = ft_atoint64_t(args[1]);
 		ft_putstr_fd("exit\n", STDERR_FILENO);
 		exit (env->exit_status);
 	}
