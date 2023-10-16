@@ -20,7 +20,9 @@ void	loop(t_env *my_env)
 
 	while (1)
 	{
+		manage_signals(1);
 		line = readline(GREEN BOLD "mustash> "RESET);
+		manage_signals(0);
 		if (!line)
 		{
 			if (g_signal == 1)
@@ -37,6 +39,8 @@ void	loop(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
+		if (g_signal)
+			printf("\n");
 		rl_on_new_line();
 	}
 }
@@ -44,17 +48,17 @@ void	loop(t_env *my_env)
 int	main(int argc, char **argv, char **env)
 {
 	t_env				*env_main;
-	struct sigaction	st_sa;
-
+	// struct sigaction	st_sa;
 	(void)argv;
 	(void)argc;
-	st_sa.sa_sigaction = signal_int_handler;
-	st_sa.sa_flags = SA_SIGINFO;
+	manage_signals(0);
+	// st_sa.sa_sigaction = signal_int_handler;
+	// st_sa.sa_flags = SA_SIGINFO;
 	env_main = NULL;
 	g_signal = 0;
 	copy_env(env, &env_main);
-	sigaction(SIGINT, &st_sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	// sigaction(SIGINT, &st_sa, NULL);
+	// signal(SIGQUIT, SIG_IGN);
 	loop(env_main);
 	exit (env_main->exit_status);
 }

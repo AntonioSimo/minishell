@@ -12,23 +12,50 @@
 
 #include "../include/minishell.h"
 
-void    signal_int_handler(int sig, siginfo_t *info, void *context)
+void	ctrl_c_child(int sig)
 {
-	(void)context;
-
 	if (sig == SIGINT)
 	{
-		ft_putstr_fd("\n", STDIN_FILENO);
 		g_signal = 1;
+		// printf("here\n");
+		// ft_putstr_fd("\n", STDIN_FILENO);
+		// rl_replace_line("", 0);
+		// rl_on_new_line();
+		// rl_redisplay();
 	}
+}
 
-	if (info->si_pid != 0)
+void	manage_signals(int control)
+{
+	if (control == 0)
 	{
-		if (sig == SIGINT)
-		{
-			rl_replace_line("", 0);
-			rl_on_new_line();
-			rl_redisplay();
-		}
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (control == 1)
+	{
+		signal(SIGINT, ctrl_c_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (control == 2)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
+	else if (control == 3)
+	{
+		signal(SIGINT, ctrl_c_child);
+	}
+}
+
+void    ctrl_c_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_signal = 1;
+		ft_putstr_fd("\n", STDIN_FILENO);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }

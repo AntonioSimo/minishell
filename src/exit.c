@@ -61,7 +61,7 @@ void	ft_exit(char **args, t_env *env)
 	}
 	if (ft_arraysize(args) > 2)
 	{
-		ft_putstr_fd("mustash: cd: too many arguments\n", STDERR_FILENO);
+		ft_putstr_fd("mustash: exit: too many arguments\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else

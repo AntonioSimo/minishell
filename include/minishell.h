@@ -258,7 +258,8 @@ void	find_cmd(t_command	*cmd, t_env *env);
 int		count_cmds(t_command *cmds);
 
 //signals
-void    signal_int_handler(int sig, siginfo_t *info, void *context);
+void	ctrl_c_handler(int sig);
+void	manage_signals(int control);
 
 
 //redirections

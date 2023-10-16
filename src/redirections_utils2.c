@@ -28,6 +28,52 @@ void	*destroy_redir(t_redir_lst *redir)
 	return (NULL);
 }
 
+void	handle_even(int i, t_command *head, int **fd)
+{
+	if (i == count_cmds(head) - 1)
+	{
+		close(fd[1][1]);
+		close(fd[0][0]);
+		close(fd[0][1]);
+		dup2(fd[1][0], STDIN_FILENO);
+		// close(fd[1][0]);
+		return ;
+	}
+	else
+	{
+		close(fd[1][1]);
+		close(fd[0][0]);
+		// close(fd[1][0]);
+		// close(fd[0][1]);
+		dup2(fd[1][0], STDIN_FILENO);
+		dup2(fd[0][1], STDOUT_FILENO);
+		return ;
+	}
+
+}
+void	handle_uneven(int i, t_command *head, int **fd)
+{
+	if (i == count_cmds(head) - 1)
+	{
+		close(fd[1][1]);
+		close(fd[1][0]);
+		close(fd[0][1]);
+		// close(fd[0][0]);
+		dup2(fd[0][0], STDIN_FILENO);
+		return ;
+	}
+	else
+	{
+		close(fd[1][0]);
+		close(fd[0][1]);
+		// close(fd[0][0]);
+		// close(fd[1][1]);
+		dup2(fd[0][0], STDIN_FILENO);
+		dup2(fd[1][1], STDOUT_FILENO);
+		return ;
+	}
+}
+
 void	execute_pipe(int **fd, int i, t_command *head)
 {
 	int	cmds_size;
@@ -41,13 +87,14 @@ void	execute_pipe(int **fd, int i, t_command *head)
 		{
 			close(fd[0][0]);
 			dup2(fd[0][1], STDOUT_FILENO);
+			// close(fd[0][1]);
 		}
 		else
 		{
 			close(fd[0][1]);
 			dup2(fd[0][0], STDIN_FILENO);
+			// close(fd[0][0]);
 		}
-			
 		return ;
 	}
 	else
@@ -58,23 +105,12 @@ void	execute_pipe(int **fd, int i, t_command *head)
 			close(fd[1][1]);
 			close(fd[0][0]);
 			dup2(fd[0][1], STDOUT_FILENO);
+			// close(fd[0][1]);
 			return ;
 		}
-		if (i == count_cmds(head) - 1)
-		{
-			close(fd[1][1]);
-			close(fd[1][0]);
-			close(fd[0][1]);
-			dup2(fd[0][0], STDIN_FILENO);
-			return ;
-		}
+		if (i % 2)
+			handle_uneven(i, head, fd);
 		else
-		{
-			dup2(fd[0][0], STDIN_FILENO);
-			dup2(fd[1][1], STDOUT_FILENO);
-			close(fd[0][1]);
-			close(fd[1][0]);
-			return ;
-		}
+			handle_even(i, head, fd);
 	}
 }

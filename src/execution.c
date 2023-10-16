@@ -63,7 +63,7 @@ static int	**make_pipes(t_command *cmds)
 	}
 	while (i--)
 	{
-		fd[i] = ptr_check(ft_calloc(2, sizeof(int)));
+		fd[i] = ptr_check(malloc(sizeof(int) * 2));
 		if (pipe(fd[i]) == -1)
 			perror_exit("Pipe error\n");
 	}
@@ -113,9 +113,61 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 		is_executable(cmds, env);
 	find_cmd(cmds, env);
 }
+void	close_pipes(int **fd, t_execution *temp)
+{
+	int cmds_size;
 
+	cmds_size = count_cmds(temp->head);
+	if (cmds_size == 2)
+	{
+		if (temp->i == 0)
+			close(fd[0][1]);
+		else
+			close(fd[0][0]);
+	}
+	else
+	{
+		if (temp->i == 0)
+			close(fd[0][1]);
+		else if (temp->i % 2)
+		{
+			if(temp->i == cmds_size - 1)
+			{
+				close(fd[0][0]);
+				close(fd[0][1]);
+				close(fd[1][1]);
+				close(fd[1][0]);
+			}
+			else
+			{
+				close(fd[0][0]);
+				close(fd[1][1]);
+			}
+		}
+		else
+		{
+			
+			if(temp->i == cmds_size - 1)
+			{
+				close(fd[0][0]);
+				close(fd[0][1]);
+				close(fd[1][1]);
+				close(fd[1][0]);
+			}
+			else
+			{
+				close(fd[0][1]);
+				close(fd[1][0]);
+			
+			}
+			
+		}
 
-static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
+		
+	}
+}
+
+static int	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 								int **fd)
 {
 	t_execution	*temp;
@@ -125,75 +177,91 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 	{
 		pid[temp->i] = fork();
 		if (pid[temp->i] == -1)
-			return (perror_exit("Fork error\n"));
+			perror_exit("Fork error\n");
 		// signal(SIGINT, SIG_IGN); // here turn off signals or do something with it to be able ctrl c in bash
+		// manage_signals(0);
 		if (pid[temp->i] == 0)
 		{
+			manage_signals(2);
 			handle_child_process(fd, cmds, env, temp);
 		}
+		if (count_cmds(temp->head) > 1)
+			close_pipes(fd, temp);
 		temp->i++;
 		cmds = cmds->next;
 	}
+	// manage_signals(3);
 	cmds = temp->head;
+	// printf("pid: %i\n", pid[temp->i - 1]);
+	return (pid[temp->i - 1]);
 }
 
-static void	close_pipes(t_command *cmds, int **fd, pid_t *pid, t_env *env)
+static void	wait_last_child(int **fd, t_command *cmds, int last_pid, t_env *env)
 {
-	int		cmds_size;
-	int 	status;
-	int		i = 0;
+	int	cmds_size;
+	int	wait_ret;
+	int status;
+	int	i;
+	int	last_status;
 
+	i = 0;
 	cmds_size = count_cmds(cmds);
-	if (cmds_size == 1)
+	// printf("last pid: %i\ncmds size: %i\n", last_pid, cmds_size);
+	if (count_cmds(cmds) == 2)
 	{
-		
-		waitpid(pid[0], &status, 0);
-		if (WIFEXITED(status))
-	    {
-			if (g_signal)
-				env->exit_status = 130;
-			else
-				env->exit_status = WEXITSTATUS(status);
-			g_signal = 0;
-		}
-		else
-		{
-			env->exit_status = SUCCESS;
-		}
-		return ;
+		close(fd[0][0]);
+		close(fd[0][1]);
+	}
+	else if (count_cmds(cmds) > 2)
+	{
+		close(fd[0][0]);
+		close(fd[0][1]);
+		close(fd[1][1]);
+		close(fd[1][0]);
 	}
 	while (i < cmds_size)
 	{
-		if (cmds_size == 2)
-		{
-			close(fd[0][0]);
-			close(fd[0][1]);
-		}
+		
+		wait_ret = waitpid(-1, &status, 0);
+		if (wait_ret == last_pid)
+			last_status = status;
+		if (WIFEXITED(status) || WIFSIGNALED(status))
+			i++;
+		
+	}
+	// printf("here g sig:%i\n", g_signal);
+	if (WIFEXITED(last_status))
+	{
+		env->exit_status = WEXITSTATUS(last_status);
+		g_signal = 0;
+	}
+	else
+	{
+		if (g_signal)
+			env->exit_status = 130;
 		else
-		{
-			close(fd[0][0]);
-			close(fd[0][1]);
-			close(fd[1][1]);
-			close(fd[1][0]);
-		}
-		waitpid(-1, &status, 0);
-		if (WIFEXITED(status))
-	    {
-			g_signal = 0;
-			env->exit_status = WEXITSTATUS(status);
-		}
-		else
-		{
 			env->exit_status = SUCCESS;
-		}
-		i++;
+		g_signal = 0;
 	}
 }
+
+// void	free_pid_fd(pid_t *pid, int **fd, t_command *cmds)
+// {
+// 	int	cmds_size;
+// 	int	i;
+
+// 	i = 0;
+// 	cmds_size = count_cmds(cmds);
+// 	while (i < cmds_size)
+	
+// 	}
+// }
 void	run_commands(t_command *cmds, t_env *env)
 {
 	int			**fd;
 	pid_t		*pid;
 	int			check;
+	int			last_pid;
 
 	check = 0;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
@@ -208,6 +276,8 @@ void	run_commands(t_command *cmds, t_env *env)
 	}
 	pid = ptr_check(malloc(sizeof(pid_t) * count_cmds(cmds)));
 	fd = make_pipes(cmds);
-	handle_multiple_cmds(cmds, env, pid, fd);
-	close_pipes(cmds, fd, pid, env);
+	last_pid = handle_multiple_cmds(cmds, env, pid, fd);
+	wait_last_child(fd, cmds, last_pid, env);
+	// free_pid_fd(pid, fd);
+	
 }
