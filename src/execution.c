@@ -175,6 +175,7 @@ static int	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 	temp = initialize_temp(cmds);
 	while (cmds)
 	{
+		// printf("i:%i\n", temp->i);
 		pid[temp->i] = fork();
 		if (pid[temp->i] == -1)
 			perror_exit("Fork error\n");
@@ -185,8 +186,8 @@ static int	handle_multiple_cmds(t_command *cmds, t_env *env, pid_t *pid, \
 			manage_signals(2);
 			handle_child_process(fd, cmds, env, temp);
 		}
-		if (count_cmds(temp->head) > 1)
-			close_pipes(fd, temp);
+		// if (count_cmds(temp->head) > 1)
+		// 	close_pipes(fd, temp);
 		temp->i++;
 		cmds = cmds->next;
 	}
