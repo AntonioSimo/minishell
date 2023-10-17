@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expander.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   redirections.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asimone <asimone@student.42.fr>              +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/08/16 16:20:24 by pskrucha      #+#    #+#                 */
+/*   Updated: 2023/10/17 15:51:35 by asimone       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,17 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	static int	i = 0;
 
 	if (temp->type == REDIR_OUTPUT)
+	{
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_TRUNC, 0644);
+		printf("redir_out: %i\n", redir->filein[i]);
+	}
 	else if (temp->type == REDIR_OUTPUT_APPEND)
+	{
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
+		printf("redir_append_out: %i\n", redir->filein[i]);
+	}
 	if (redir->fileout[i] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
@@ -89,10 +95,17 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	static int	j = 0;
 
 	if (temp->type == REDIR_INPUT)
+	{
 		redir->filein[j] = open(temp->file, O_RDONLY);
+		printf("redir_input: %i\n", redir->filein[j]);
+	}
 	else if (temp->type == HEREDOC)
 	// __O_TMPFILE |
-		redir->filein[j] = open(temp->file, O_RDWR);
+		{
+			redir->filein[j] = open(temp->file, O_RDWR);
+			heredoc(temp, redir);
+			printf("Heredoc fd: %i\n", redir->filein[j]);
+		}
 	if (redir->filein[j] == -1)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
@@ -122,13 +135,14 @@ int	run_redirections(t_redir *redir, t_env *env)
 				return (ERROR);
 			}
 		}
-		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+		else if (temp->type == REDIR_INPUT)// || temp->type == HEREDOC)
 			if (handle_redir_in(temp, redir))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
-		temp = temp->next;
+		if (temp->type == HEREDOC)
+			heredoc(temp, redir);
 	}
 	return (SUCCESS);
 }
