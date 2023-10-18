@@ -147,8 +147,15 @@ typedef struct s_env
     char				**env_copy;
 }	t_env;
 
-extern int g_signal;
 
+typedef struct s_execution
+{
+	t_command	*head;
+	int			i;
+	int			cmds_size;
+}	t_execution;
+
+extern int g_signal;
 //expander_checkers
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
@@ -263,7 +270,7 @@ void	manage_signals(int control);
 
 
 //redirections
-void	execute_pipe(int **fd, int i, t_command *head);
+void	execute_pipe(int **fd, t_execution *temp);
 
 
 void 	echo_command(char **args, t_env *env);
