@@ -17,6 +17,7 @@ void	ctrl_c_child(int sig)
 	if (sig == SIGINT)
 	{
 		g_signal = 1;
+		// rl_catch_signals = 1;
 		// printf("here\n");
 		ft_putstr_fd("\n", STDIN_FILENO);
 		rl_replace_line("", 0);
