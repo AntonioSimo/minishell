@@ -151,8 +151,11 @@ typedef struct s_env
 typedef struct s_execution
 {
 	t_command	*head;
+	int			**fd;
+	pid_t		*pid;
 	int			i;
 	int			cmds_size;
+	int			error_pipe[2];
 }	t_execution;
 
 extern int g_signal;
@@ -221,7 +224,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	run_redirections(t_redir *redir, t_env *env);
+int	run_redirections(t_redir *redir, t_env *env, int *error_pipe);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
@@ -261,7 +264,7 @@ void	*destroy_redir(t_redir_lst *redir);
 void	print_redirections(t_redir_lst	*redir);
 
 //executions
-void	find_cmd(t_command	*cmd, t_env *env);
+void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp);
 int		count_cmds(t_command *cmds);
 
 //signals
@@ -274,7 +277,7 @@ void	execute_pipe(int **fd, t_execution *temp);
 
 
 void 	echo_command(char **args, t_env *env);
-void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status, t_execution *temp);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);

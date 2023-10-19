@@ -97,6 +97,14 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 	}
 }
 
+int	check_if_redir(t_type type)
+{
+	if (type == DEFAULT || type == SEPERATOR
+		|| type == PIPE)
+		return (0);
+	return (1);
+}
+
 t_command	*merge_tokens(t_token	*tokens)
 {
 	t_command	*commands;
@@ -117,7 +125,8 @@ t_command	*merge_tokens(t_token	*tokens)
 		if (!tokens)
 			break ;
 		handle_cmds(tokens, &commands, &redir, &var);
-		tokens = tokens->next;
+		if (!check_if_redir(tokens->type))
+			tokens = tokens->next;
 	}
 	if (var->word || var->args_arr || redir)
 	{

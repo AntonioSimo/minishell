@@ -30,6 +30,7 @@ void	*destroy_redir(t_redir_lst *redir)
 
 void	execute_pipe(int **fd, t_execution *temp)
 {
+	close(temp->error_pipe[0]);
 	if (temp->cmds_size == 1)
 		return ;
 	if (temp->i == 0)
@@ -51,5 +52,4 @@ void	execute_pipe(int **fd, t_execution *temp)
 		close(fd[temp->i - 1][0]);
 		close(fd[temp->i][1]);
 	}
-
 }
