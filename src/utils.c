@@ -48,7 +48,15 @@ char	*find_path(char *cmd, char *envp)
 		path = ft_strjoin(part_path, cmd);
 		free(part_path);
 		if (access(path, F_OK) == 0)
-			return (path);
+		{
+			if (access(path, X_OK) == 0)
+				return (path);
+			else
+			{
+				ft_print_message("mustash: ", cmd, ": Permission denied\n", STDERR_FILENO);
+				exit (126);
+			}
+		}
 		free(path);
 		i++;
 	}

@@ -1,27 +1,33 @@
 #include "minishell.h"
 
-void	heredoc(t_redir_lst *temp, t_redir *redir)
+void	heredoc(char *file)
 {
-	(void) redir;
-	char *line;
-	char *end_of_file = temp->file;
-	int i = 0;
+	char	*line;
+	//printf("%s\n", file);
+	char	*end_of_file = file;
+	int		fd;
 
-	if (end_of_file)
+	fd = (open("/goinfre/file", O_RDWR | O_CREAT | O_TRUNC, 0644));
+	printf("%i\n", fd);
+	if (fd == -1) 
 	{
-		while (1)
-		{
-			line = readline("> ");
-			printf("heredoc EOF: %s\n", end_of_file);
-			printf("line: %s\n", line);
-			if (line == NULL || ft_strcmp(end_of_file, line) == 0)
-			{
-				//free(line);
-				printf("Ciao\n");
-				break ;
-			}
-			free(line);
-			//i++;
-		}
+		perror("Errore durante l'apertura del file");
+		exit(1);
 	}
+	while (1)
+	{
+		line = readline("> ");
+		printf("%s\n", line);
+		if (line == NULL || ft_strncmp(end_of_file, line, ft_strlen(end_of_file) + 1) == 0)
+		{
+			//free(line);
+			break ;
+		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	free(line);
+	close(fd);
+	exit(0);
 }

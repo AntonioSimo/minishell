@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/06/07 14:31:52 by asimone       #+#    #+#                 */
-/*   Updated: 2023/10/17 15:15:31 by asimone       ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
+/*   Updated: 2023/10/12 15:40:32 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,18 @@ typedef struct s_env
     char				**env_copy;
 }	t_env;
 
-extern int g_signal;
 
+typedef struct s_execution
+{
+	t_command	*head;
+	int			**fd;
+	pid_t		*pid;
+	int			i;
+	int			cmds_size;
+	int			error_pipe[2];
+}	t_execution;
+
+extern int g_signal;
 //expander_checkers
 int	is_double_dollar(t_token **tokens);
 int	is_single_dollar(t_token **tokens);
@@ -214,7 +224,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	run_redirections(t_redir *redir, t_env *env);
+int	run_redirections(t_redir *redir, t_env *env, int *error_pipe);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
@@ -254,23 +264,24 @@ void	*destroy_redir(t_redir_lst *redir);
 void	print_redirections(t_redir_lst	*redir);
 
 //executions
-void	find_cmd(t_command	*cmd, t_env *env);
+void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp);
 int		count_cmds(t_command *cmds);
 
 //signals
-void    signal_int_handler(int sig, siginfo_t *info, void *context);
+void	ctrl_c_handler(int sig);
+void	manage_signals(int control);
 
 
 //redirections
-void	execute_pipe(int **fd, int i, t_command *head);
+void	execute_pipe(int **fd, t_execution *temp);
 
 
 void 	echo_command(char **args, t_env *env);
-void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status, t_execution *temp);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
-bool    ft_isnumber(char *str, t_env *env);
+bool    ft_isnumber(char *str);
 void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
 void 	ft_export(t_env *env, char **args);
@@ -288,6 +299,6 @@ void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
-void	heredoc(t_redir_lst *temp, t_redir *redir);
+void	heredoc(char *file);
 
 #endif

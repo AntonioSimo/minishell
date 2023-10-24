@@ -14,13 +14,15 @@
 
 int g_signal;
 
-void	loop(t_env *my_env)
+void	minishell(t_env *my_env)
 {
 	char	*line;
 
 	while (1)
 	{
+		manage_signals(1);
 		line = readline(GREEN BOLD "mustash> "RESET);
+		// manage_signals(0);
 		if (!line)
 		{
 			if (g_signal == 1)
@@ -37,24 +39,22 @@ void	loop(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-			rl_on_new_line();
+		if (g_signal)
+			printf("\n");
+		rl_on_new_line();
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env				*env_main;
-	struct sigaction	st_sa;
-	
+	t_env   *env_main;
+
 	(void)argv;
 	(void)argc;
-	st_sa.sa_sigaction = signal_int_handler;
-	st_sa.sa_flags = SA_SIGINFO;
 	env_main = NULL;
 	g_signal = 0;
+	manage_signals(0);
 	copy_env(env, &env_main);
-	sigaction(SIGINT, &st_sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-	loop(env_main);
+	minishell(env_main);
 	exit (env_main->exit_status);
 }

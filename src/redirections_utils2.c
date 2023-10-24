@@ -28,53 +28,28 @@ void	*destroy_redir(t_redir_lst *redir)
 	return (NULL);
 }
 
-void	execute_pipe(int **fd, int i, t_command *head)
+void	execute_pipe(int **fd, t_execution *temp)
 {
-	int	cmds_size;
-
-	cmds_size = count_cmds(head);
-	if (cmds_size == 1)
+	close(temp->error_pipe[0]);
+	if (temp->cmds_size == 1)
 		return ;
-	if (cmds_size == 2)
+	if (temp->i == 0)
 	{
-		if (i == 0)
-		{
-			close(fd[0][0]);
-			dup2(fd[0][1], STDOUT_FILENO);
-		}
-		else
-		{
-			close(fd[0][1]);
-			dup2(fd[0][0], STDIN_FILENO);
-		}
-			
-		return ;
+		close(fd[temp->i][0]);
+		dup2(fd[temp->i][1], STDOUT_FILENO);
+		close(fd[temp->i][1]);
+	}
+	else if(temp->i == temp->cmds_size - 1)
+	{
+		dup2(fd[temp->i - 1][0], STDIN_FILENO);
+		close(fd[temp->i - 1][0]);
 	}
 	else
 	{
-		if (i == 0)
-		{
-			close(fd[1][0]);
-			close(fd[1][1]);
-			close(fd[0][0]);
-			dup2(fd[0][1], STDOUT_FILENO);
-			return ;
-		}
-		if (i == count_cmds(head) - 1)
-		{
-			close(fd[1][1]);
-			close(fd[1][0]);
-			close(fd[0][1]);
-			dup2(fd[0][0], STDIN_FILENO);
-			return ;
-		}
-		else
-		{
-			dup2(fd[0][0], STDIN_FILENO);
-			dup2(fd[1][1], STDOUT_FILENO);
-			close(fd[0][1]);
-			close(fd[1][0]);
-			return ;
-		}
+		close(fd[temp->i][0]);
+		dup2(fd[temp->i - 1][0], STDIN_FILENO);
+		dup2(fd[temp->i][1], STDOUT_FILENO);
+		close(fd[temp->i - 1][0]);
+		close(fd[temp->i][1]);
 	}
 }

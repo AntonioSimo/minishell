@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   redirections.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: asimone <asimone@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/08/16 16:20:24 by pskrucha      #+#    #+#                 */
-/*   Updated: 2023/10/17 15:51:35 by asimone       ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,19 @@ void	close_redir(t_redir *redir)
 	{
 		if (temp->type == REDIR_OUTPUT)
 		{
-			close(redir->fileout[j]);
-			j++;
+			if (redir->fileout[j])
+			{
+				close(redir->fileout[j]);
+				j++;
+			}
 		}
 		else if (temp->type == REDIR_INPUT)
 		{
-			close(redir->filein[j]);
-			k++;
+			if (redir->filein[k])
+			{
+				close(redir->filein[j]);
+				k++;
+			}
 		}
 		temp = temp->next;
 	}
@@ -64,59 +70,59 @@ int	count_redir(t_redir_lst *redir, t_type type)
 	return (0);
 }
 
-static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
+static int	handle_redir_out(t_redir_lst *temp, t_redir *redir, int *error_pipe)
 {
 	static int	i = 0;
 
 	if (temp->type == REDIR_OUTPUT)
-	{
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_TRUNC, 0644);
-		printf("redir_out: %i\n", redir->filein[i]);
-	}
 	else if (temp->type == REDIR_OUTPUT_APPEND)
-	{
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
-		printf("redir_append_out: %i\n", redir->filein[i]);
-	}
-	if (redir->fileout[i] == -1)
+	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: ", temp->file, ": Permission denied\n", error_pipe[1]);
+		return (1);
+	} 
+	if (access(temp->file, F_OK) != 00)
+	{
+		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", error_pipe[1]);
 		return (1);
 	}
+	if (redir->fileout[i] == -1)
+		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
 	i++;
 	return (0);
 }
 
-static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
+static int	handle_redir_in(t_redir_lst *temp, t_redir *redir, int *error_pipe)
 {
 	static int	j = 0;
 
 	if (temp->type == REDIR_INPUT)
-	{
 		redir->filein[j] = open(temp->file, O_RDONLY);
-		printf("redir_input: %i\n", redir->filein[j]);
-	}
-	else if (temp->type == HEREDOC)
-	// __O_TMPFILE |
-		{
-			redir->filein[j] = open(temp->file, O_RDWR);
-			heredoc(temp, redir);
-			printf("Heredoc fd: %i\n", redir->filein[j]);
-		}
-	if (redir->filein[j] == -1)
+	// else if (temp->type == HEREDOC)
+	// 	redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
+			ft_print_message("mustash: ", temp->file, ": Permission denied\n", error_pipe[1]);
+			return (1);
+	} 
+	if (access(temp->file, F_OK) != 00)
+	{
+		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", error_pipe[1]);
 		return (1);
 	}
+	if (redir->filein[j] == -1)
+		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
 	j++;
 	return (0);
 }
 
-int	run_redirections(t_redir *redir, t_env *env)
+int	run_redirections(t_redir *redir, t_env *env, int *error_pipe)
 {
 	t_redir_lst	*temp;
 
@@ -129,20 +135,25 @@ int	run_redirections(t_redir *redir, t_env *env)
 	{
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
-			if (handle_redir_out(temp, redir))
+			if (handle_redir_out(temp, redir, error_pipe))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
 		}
 		else if (temp->type == REDIR_INPUT)// || temp->type == HEREDOC)
-			if (handle_redir_in(temp, redir))
+		{
+			if (handle_redir_in(temp, redir, error_pipe))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
-		if (temp->type == HEREDOC)
-			heredoc(temp, redir);
+		}
+		else if (temp->type == HEREDOC)
+		{
+			(heredoc(temp->file));
+		}
+		temp = temp->next;
 	}
 	return (SUCCESS);
 }

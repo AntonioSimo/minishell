@@ -31,7 +31,7 @@ int	ft_isbuiltin(char *command)
 	return (0);
 }
 
-void	exe_builtin(t_command *cmd, t_env *env, int	exit_status)
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status, t_execution *temp)
 {
 	if (ft_strcmp(cmd->command, "cd") == 0)
 		ft_cd(env, cmd);
@@ -48,5 +48,12 @@ void	exe_builtin(t_command *cmd, t_env *env, int	exit_status)
 	else if (ft_strcmp(cmd->command, "unset") == 0)
 		ft_unset(env, cmd->arguments);
 	if (exit_status)
+	{
+		if (temp->i == temp->cmds_size - 1)
+		{
+			ft_putstr_fd("EOF", temp->error_pipe[1]);
+			close(temp->error_pipe[1]);
+		}
 		exit (EXIT_SUCCESS);
+	}
 }
