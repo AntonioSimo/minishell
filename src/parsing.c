@@ -100,7 +100,8 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 int	check_if_redir(t_type type)
 {
 	if (type == DEFAULT || type == SEPERATOR
-		|| type == PIPE)
+		|| type == PIPE || type == SINGLE_QUOTED
+		|| type == DOUBLE_QUOTED)
 		return (0);
 	return (1);
 }

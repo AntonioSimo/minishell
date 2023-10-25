@@ -20,7 +20,7 @@ void	minishell(t_env *my_env)
 
 	while (1)
 	{
-		manage_signals(1);
+		
 		line = readline(GREEN BOLD "mustash> "RESET);
 		// manage_signals(0);
 		if (!line)
@@ -39,8 +39,8 @@ void	minishell(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-		if (g_signal)
-			printf("\n");
+		// if (g_signal)
+		// 	printf("\n");
 		rl_on_new_line();
 	}
 }
@@ -53,7 +53,8 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	env_main = NULL;
 	g_signal = 0;
-	manage_signals(0);
+	manage_signals(1);
+	// manage_signals(0);
 	copy_env(env, &env_main);
 	minishell(env_main);
 	exit (env_main->exit_status);

@@ -190,7 +190,7 @@ void	print_error(t_execution *var)
 		if (!ft_strcmp(line, "EOF"))
 		{
 			if (ft_strlen(message))
-				printf("%s", message);
+				ft_putstr_fd(message, 2);
 			free(message);
 			free(line);
 			break ;
@@ -213,21 +213,21 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 		temp->pid[temp->i] = fork();
 		if (temp->pid[temp->i] == -1)
 			perror_exit("Fork error\n");
-		manage_signals(0);
+		// manage_signals(0);
 		if (temp->pid[temp->i] == 0)
 		{
-			manage_signals(2);
+			// manage_signals(2);
 			handle_child_process(temp->fd, cmds, env, temp);
 		}
-		manage_signals(3);
+		// manage_signals(3);
 		close_pipes(temp->fd, temp);
 		temp->i++;
 		cmds = cmds->next;
 	}
 	// manage_signals(3);
 	cmds = temp->head;
-	print_error(temp);
 	wait_last_child(cmds, temp->pid[temp->i - 1], env);
+	print_error(temp);
 }
 
 
@@ -281,6 +281,5 @@ void	run_commands(t_command *cmds, t_env *env)
 	}
 	handle_multiple_cmds(cmds, env, temp);
 	free_temp(temp);
-	// free_pid_fd(pid, fd);
 	
 }
