@@ -1,15 +1,14 @@
 #include "minishell.h"
 
-void	heredoc(char *file)
+int heredoc(char *file)
 {
 	char	*line;
-	//printf("%s\n", file);
 	char	*end_of_file = file;
-	int		fd;
+	int		fd1;
+	int		fd2;
 
-	fd = (open("/goinfre/file", O_RDWR | O_CREAT | O_TRUNC, 0644));
-	printf("%i\n", fd);
-	if (fd == -1) 
+	fd1 = (open("/tmp/file", O_CREAT | O_RDWR | O_TRUNC, 0644));
+	if (fd1 == -1) 
 	{
 		perror("Errore durante l'apertura del file");
 		exit(1);
@@ -17,17 +16,16 @@ void	heredoc(char *file)
 	while (1)
 	{
 		line = readline("> ");
-		printf("%s\n", line);
-		if (line == NULL || ft_strncmp(end_of_file, line, ft_strlen(end_of_file) + 1) == 0)
+		if (line == NULL || ft_strncmp(end_of_file, line, ft_strlen(end_of_file)) == 0)
 		{
-			//free(line);
+			free(line);
 			break ;
 		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		write(fd1, line, ft_strlen(line));
+		write(fd1, "\n", 1);
 		free(line);
 	}
-	free(line);
-	close(fd);
-	exit(0);
+	fd2 = open("/tmp/file", O_RDONLY, 0644);
+	close(fd1);
+	return (fd2);
 }

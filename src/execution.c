@@ -60,7 +60,7 @@ void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp)
 	}
 	else
 	{
-		ft_print_message(NULL, cmd->command, ": command not found\n", temp->error_pipe[1]);
+		ft_print_message(NULL, cmd->command, ": command not found\n", 2);
 		if (temp->i == temp->cmds_size - 1)
 			ft_putstr_fd("EOF", temp->error_pipe[1]);
 		exit (127);
@@ -174,32 +174,34 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 	}
 }
 
-void	print_error(t_execution *var)
-{
-	char 	*line;
-	char	*message;
-	// int	i;
+//void	print_error(t_execution *var)
+//{
+//	char 	*line;
+//	char	*message;
+//	// int	i;
 
-	// i = 0;
+//	// i = 0;
 
-	message = ft_strdup("");
-	while (1)
-	{
-		line = get_next_line(var->error_pipe[0]);
-		// printf("%i %s\n", i, line);
-		if (!ft_strcmp(line, "EOF"))
-		{
-			if (ft_strlen(message))
-				printf("%s", message);
-			free(message);
-			free(line);
-			break ;
-		}
-		message = ft_free_strjoin(message, line);
-		free(line);
-	}
-	close(var->error_pipe[0]);
-}
+//	if (!line)
+//		return;
+
+//	message = ft_strdup("");
+//	while (1)
+//	{
+//		line = get_next_line(var->error_pipe[0]);
+//		if (line && !ft_strcmp(line, "EOF"))
+//		{
+//			if (ft_strlen(message))
+//				printf("%s", message);
+//			free(message);
+//			free(line);
+//			break ;
+//		}
+//		message = ft_free_strjoin(message, line);
+//		free(line);
+//	}
+//	close(var->error_pipe[0]);
+//}
 
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 {
@@ -226,7 +228,7 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 	}
 	// manage_signals(3);
 	cmds = temp->head;
-	print_error(temp);
+	//print_error(temp);
 	wait_last_child(cmds, temp->pid[temp->i - 1], env);
 }
 
@@ -269,14 +271,16 @@ void	run_commands(t_command *cmds, t_env *env)
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
+		{
 			check = run_redirections(cmds->redirections, env, temp->error_pipe);
+		}
 		if (!check)
 			exe_builtin(cmds, env, 0, temp);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		ft_putstr_fd("EOF", temp->error_pipe[1]);
 		close(temp->error_pipe[1]);
-		print_error(temp);
+		//print_error(temp);
 		return ;
 	}
 	handle_multiple_cmds(cmds, env, temp);
