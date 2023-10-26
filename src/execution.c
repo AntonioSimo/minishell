@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:36:46 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:38:55 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,19 +173,6 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 	cmds = temp->head;
 	wait_last_child(cmds, temp->pid[temp->i - 1], env);
 }
-
-
-// void	free_pid_fd(pid_t *pid, int **fd, t_command *cmds)
-// {
-// 	int	cmds_size;
-// 	int	i;
-
-// 	i = 0;
-// 	cmds_size = count_cmds(cmds);
-// 	while (i < cmds_size)
-	
-// 	}
-// }
 
 void	free_temp(t_execution *temp)
 {
