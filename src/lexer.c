@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:40:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 18:24:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,11 @@ void	lexer(char *line, t_env *my_env)
 		expander(&tokens, my_env);
 		if (tokens && !check_pipes(tokens))
 		{
-			// print_tokens(tokens);
 			commands = merge_tokens(tokens);
-			// print_cmds(commands);
 			if (commands)
 				run_commands(commands, my_env);
-			destroy_tokens(tokens);
+			tokens = destroy_tokens(tokens);
+			commands = destroy_cmds(commands);
 		}
 	}
 	else

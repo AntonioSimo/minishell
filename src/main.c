@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:39:08 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 18:21:14 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	minishell(t_env *my_env)
 int	main(int argc, char **argv, char **env)
 {
 	t_env   *env_main;
-
+	
 	(void)argv;
 	(void)argc;
 	env_main = NULL;

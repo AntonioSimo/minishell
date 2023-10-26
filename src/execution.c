@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:38:55 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:30:08 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,5 +209,4 @@ void	run_commands(t_command *cmds, t_env *env)
 	}
 	handle_multiple_cmds(cmds, env, temp);
 	free_temp(temp);
-	
 }
