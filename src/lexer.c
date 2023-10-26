@@ -46,6 +46,21 @@ int	check_pipes(t_token *tokens)
 	return (0);
 }
 
+static void	check_heredoc(t_token *tokens, t_command *command, t_env *my_env)
+{
+	(void) my_env;
+	while (tokens)
+	{
+		if (tokens->type == HEREDOC)
+		{
+			printf("This is the delimiter: %s\n", command->redirections->lst->file);
+			ft_here_document(tokens, command, my_env);
+			//heredoc(command->redirections->lst->file);
+		}
+		tokens = tokens->next;
+	}
+}
+
 void	lexer(char *line, t_env *my_env)
 {
 	t_token		*tokens;
@@ -62,7 +77,13 @@ void	lexer(char *line, t_env *my_env)
 			commands = merge_tokens(tokens);
 			// print_cmds(commands);
 			if (commands)
+			{
+				printf("This is the line: %s\n", line);
+				print_tokens(tokens);
+				check_heredoc(tokens, commands, my_env);
+				// heredoc(commands->redirections->lst->file);
 				run_commands(commands, my_env);
+			}
 			destroy_tokens(tokens);
 		}
 	}

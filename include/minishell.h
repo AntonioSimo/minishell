@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/12 15:40:32 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:30:22 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ typedef struct s_execution
 	pid_t		*pid;
 	int			i;
 	int			cmds_size;
-	int			error_pipe[2];
 }	t_execution;
 
 extern int g_signal;
@@ -224,7 +223,7 @@ char	*replace_string(char *expanded, char	*str, int start, int end);
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	run_redirections(t_redir *redir, t_env *env, int *error_pipe);
+int	run_redirections(t_redir *redir, t_env *env);
 void	close_redir(t_redir *redir);
 int		count_redir(t_redir_lst *redir, t_type type);
 //list utils
@@ -264,7 +263,7 @@ void	*destroy_redir(t_redir_lst *redir);
 void	print_redirections(t_redir_lst	*redir);
 
 //executions
-void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp);
+void	find_cmd(t_command	*cmd, t_env *env);
 int		count_cmds(t_command *cmds);
 
 //signals
@@ -277,7 +276,7 @@ void	execute_pipe(int **fd, t_execution *temp);
 
 
 void 	echo_command(char **args, t_env *env);
-void	exe_builtin(t_command *cmd, t_env *env, int exit_status, t_execution *temp);
+void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
 void	get_current_working_dir(void);
@@ -299,6 +298,7 @@ void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
-int	heredoc(char *file);
+void    ft_here_document(t_token *token, t_command *command, t_env *env);
+int		heredoc(char *file);
 
 #endif
