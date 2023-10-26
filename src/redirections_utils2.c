@@ -39,7 +39,7 @@ void	execute_pipe(int **fd, t_execution *temp)
 		dup2(fd[temp->i][1], STDOUT_FILENO);
 		close(fd[temp->i][1]);
 	}
-	else if(temp->i == temp->cmds_size - 1)
+	else if (temp->i == temp->cmds_size - 1)
 	{
 		dup2(fd[temp->i - 1][0], STDIN_FILENO);
 		close(fd[temp->i - 1][0]);

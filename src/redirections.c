@@ -82,12 +82,14 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir, int *error_pipe)
 						| O_CREAT | O_APPEND, 0644);
 	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": Permission denied\n", error_pipe[1]);
+		ft_print_message("mustash: ", temp->file, ": Permission denied\n", \
+			error_pipe[1]);
 		return (1);
-	} 
+	}
 	if (access(temp->file, F_OK) != 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", error_pipe[1]);
+		ft_print_message("mustash: ", temp->file, \
+		": No such file or directory\n", error_pipe[1]);
 		return (1);
 	}
 	if (redir->fileout[i] == -1)

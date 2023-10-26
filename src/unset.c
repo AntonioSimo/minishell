@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:51:34 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 17:24:01 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-extern int g_signal;
+extern int	g_signal;
 
 void	ft_nodedel(t_envepval *env)
 {
@@ -42,7 +54,7 @@ void	ft_unset(t_env *env, char **args)
 			ft_nodedel(current_node);
 			return ;
 		}
-	previous_node = current_node;
-	current_node = current_node->next;
+		previous_node = current_node;
+		current_node = current_node->next;
 	}
 }
