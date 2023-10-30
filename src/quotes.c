@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	strlen_quoted(char *line, int position, t_type quotes_type)
 {
 	int	length;
-	
+
 	length = 0;
 	position++;
 	while (line[position + length])
@@ -14,15 +26,14 @@ int	strlen_quoted(char *line, int position, t_type quotes_type)
 			return (length);
 		length++;
 	}
-	ft_printf("error quotted\n");
 	return (0);
 }
 
 t_type	quotes_type(char *line, int pos)
 {
-	bool d_quotes;
-	bool s_quotes;
-	int	i;
+	bool	d_quotes;
+	bool	s_quotes;
+	int		i;
 
 	i = 0;
 	d_quotes = true;
@@ -43,10 +54,10 @@ t_type	quotes_type(char *line, int pos)
 		return (DEFAULT);
 }
 
-bool check_quotes(char *line)
+bool	check_quotes(char *line)
 {
-	bool d_quotes;
-	bool s_quotes;
+	bool	d_quotes;
+	bool	s_quotes;
 
 	d_quotes = true;
 	s_quotes = true;

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/libft.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -33,8 +33,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 // int	main(void)
 // {
-// 	char	s1[50] = "";
-// 	char	s2[50] = "AAAAAAA";
+// 	char	s1[50] = "Ciao";
+// 	char	s2[50] = "Ciaoa	";
 // 	size_t	n;
 // 	int		a;
 // 	int		b;
