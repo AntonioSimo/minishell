@@ -300,5 +300,6 @@ t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
 int	heredoc(char *file);
+void	add_env_variable(t_envepval **lst, t_envepval *new);
 
 #endif

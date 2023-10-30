@@ -16,7 +16,10 @@ void	print_my_export(t_envepval *env)
 {
 	while (env)
 	{
-		printf("%s=%s\n", env->key, env->val);
+		if (env->val && env->val[0] != '\0')
+			printf("declare -x %s=%s\n", env->key, env->val);
+		else
+			printf("declare -x %s\n", env->key);
 		env = env->next;
 	}
 }

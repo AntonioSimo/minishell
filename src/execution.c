@@ -13,6 +13,58 @@
 #include "../include/minishell.h"
 #include <sys/stat.h>
 
+int	lstenv_c(t_envepval *lst)
+{
+	int i;
+	i = 0;
+	if (lst == NULL)
+		return (i);
+	while (lst->next != NULL)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
+}
+
+char	*env_str(t_envepval *current)
+{
+	char	*str;
+
+	str = ft_strdup(current->key);
+	if (!str)
+		return (NULL);
+	str = ft_strjoin(str, "=");
+	if (!str)
+		return (NULL);
+	if (current->val)
+		str = ft_strjoin(str, current->val);
+	return (str);
+}
+
+char	**get_envp(t_env *env)
+{
+	t_envepval	*current;
+	char	**envp;
+	int		i;
+	char	*temp;
+
+	current = env->env;
+	i = 0;
+	envp = (char **) malloc(((lstenv_c(current) + 1) * sizeof(char *)));
+	if (!envp)
+		return (printf("Malloc error"), NULL);
+	while (current)
+	{
+		temp = env_str(current);
+		envp[i] = temp;
+		current = current->next;
+		++i;
+	}
+	envp[i] = NULL;
+	return (envp);
+}
+
 static int	**make_pipes(t_command *cmds)
 {
 	int	i;
@@ -56,7 +108,7 @@ void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp)
 		if (temp->i == temp->cmds_size - 1)
 			ft_putstr_fd("EOF", temp->error_pipe[1]);
 		close(temp->error_pipe[1]);
-		execve(path, cmd->arguments, env->env_copy);
+		execve(path, cmd->arguments, get_envp(env));
 	}
 	else
 	{
@@ -75,7 +127,7 @@ void	is_executable(t_command *cmds, t_env *env, t_execution *temp)
 	{
 		if (temp->i == temp->cmds_size - 1)
 			ft_putstr_fd("EOF", temp->error_pipe[1]);
-		execve(cmds->command, cmds->arguments, env->env_copy);
+		execve(cmds->command, cmds->arguments, get_envp(env));
 		exit(0);
 	}
 	if (access(cmds->command, F_OK) != 0)
@@ -158,6 +210,14 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 		if (status == 2)
 		{
 			printf("\n");
+			env->exit_status = 130;
+			g_signal = 1;
+		}
+		else if (status == 131 || status == 3)
+		{
+			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			env->exit_status = 131;
+			g_signal = 1;
 		}
 		if (wait_ret == last_pid)
 			last_status = status;

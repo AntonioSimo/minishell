@@ -17,7 +17,6 @@ void	ctrl_c_child(int sig)
 	if (sig == SIGINT)
 	{
 		g_signal = 1;
-		// printf("here\n");
 		ft_putstr_fd("\n", STDIN_FILENO);
 		rl_replace_line("", 0);
 		rl_on_new_line();
@@ -49,7 +48,7 @@ void	manage_signals(int control)
 	}
 }
 
-void    ctrl_c_handler(int sig)
+void	ctrl_c_handler(int sig)
 {
 	if (sig == SIGINT)
 	{

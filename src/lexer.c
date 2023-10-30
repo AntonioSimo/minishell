@@ -41,8 +41,8 @@ int	check_pipes(t_token *tokens)
 			flag = true;
 		tokens = tokens->next;
 	}
-	if (flag && printf("Incorrect pipes\n"))
-		return (1);
+	//if (flag && printf("Incorrect pipes\n"))
+	//	return (1);
 	return (0);
 }
 

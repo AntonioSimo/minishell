@@ -50,6 +50,7 @@ void	set_env(t_envepval	**my_env, char **env)
 	char *value;
 	int equal_pos;
 	char    *shlvl;
+    t_envepval	*new_variable;
 
 	i = 0;
 	while (env[i])
@@ -64,6 +65,12 @@ void	set_env(t_envepval	**my_env, char **env)
                 value = ft_strdup(shlvl);
                 free(shlvl);
         }
+        else
+		{
+			new_variable = set_newvariable("SHLVL=1");
+			if (new_variable != NULL)
+				add_env_variable(my_env, new_variable);
+		}
 		envlst_add(my_env, create_env_node(key, value));
 		ft_free(key);
 		ft_free(value);
