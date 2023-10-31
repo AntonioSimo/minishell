@@ -78,9 +78,10 @@ t_envepval	*set_newvariable(char *args)
 	if (!args)
 		return (NULL);
 	val = ft_strchr(args, '=');
-	key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
+	key = ptr_check(ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val))));
 	val++;
 	variable = create_env_node(key, val);
+	free(key);
 	return (variable);
 }
 

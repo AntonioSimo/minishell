@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 13:19:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 17:39:44 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 16:14:31 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ void	*destroy_cmds(t_command	*cmd_lst)
 		node = (cmd_lst)->next;
 		while ((cmd_lst)->arguments[i])
 		{
-			ft_free((cmd_lst)->arguments[i]);
+			free((cmd_lst)->arguments[i]);
 			i++;
 		}
-		free(cmd_lst->arguments);
+		// free(cmd_lst->arguments);
 		free(cmd_lst->command);
 		cmd_lst->redirections = destroy_redir(cmd_lst->redirections);
 		free(cmd_lst);

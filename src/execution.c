@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 14:45:57 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 		execve(path, cmd->arguments, env->env_copy);
 	else
 	{
+		free(path);
 		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
@@ -189,15 +190,21 @@ void	free_temp(t_execution *temp)
 	int	i;
 
 	i = 0;
-	while (i < temp->cmds_size - 1)
+	if (temp->cmds_size > 1)
 	{
-		free(temp->fd[i]);
-		i++;
+		while (i < temp->cmds_size - 1)
+		{
+			free(temp->fd[i]);
+			i++;
+		}
+		free(temp->fd);
+		i = 0;
 	}
-	free(temp->fd);
 	free(temp->pid);
+	i++;
 	temp->head = NULL;
 	free(temp);
+	temp = NULL;
 }
 
 void	run_commands(t_command *cmds, t_env *env)
@@ -215,6 +222,7 @@ void	run_commands(t_command *cmds, t_env *env)
 			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
+		free_temp(temp);
 		return ;
 	}
 	handle_multiple_cmds(cmds, env, temp);

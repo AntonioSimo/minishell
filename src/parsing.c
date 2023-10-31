@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 17:39:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:49:56 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,15 @@ int	check_if_redir(t_type type)
 	return (1);
 }
 
+void	free_parsing_temp(t_parsing *temp)
+{
+	if (temp->args_arr)
+		double_free(temp->args_arr);
+	if (temp->word)
+		free(temp->word);
+	free(temp);
+}
+
 t_command	*merge_tokens(t_token	*tokens)
 {
 	t_command	*commands;
@@ -121,7 +130,10 @@ t_command	*merge_tokens(t_token	*tokens)
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
 		{
 			if (handle_redirections(&redir, &tokens))
+			{
+				// free_parsing_temp(var);	
 				return (NULL);
+			}
 		}
 		if (!tokens)
 			break ;
@@ -134,7 +146,7 @@ t_command	*merge_tokens(t_token	*tokens)
 		var->args_arr = push_str_2d(var->args_arr, var->word);
 		if (var->args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		free(var->word);
+		// free_parsing_temp(var);	
 		redir = NULL;
 	}
 	return (commands);

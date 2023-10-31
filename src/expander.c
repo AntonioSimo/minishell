@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:31:44 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,5 @@ void	expander(t_token **tokens, t_env *my_env)
 		}
 	}
 	*tokens = head;
+	free(var);
 }

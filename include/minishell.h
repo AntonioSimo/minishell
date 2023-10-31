@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/31 14:47:16 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:57:25 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ int			find_equal(char *line);
 void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
+int			free_env(t_env *env);
 
 //utils2
 char		**push_str_2d(char **args, char *str);
@@ -194,7 +195,7 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
-void  copy_env(char **env, t_env **main_env);
+t_env  *copy_env(char **env);
 // t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 

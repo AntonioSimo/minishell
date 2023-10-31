@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 15:49:20 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:54:50 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:30:11 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	tokenize_word(t_token **token_lst, char *line, int *position)
 	word = ft_substr(line, *position, i);
 	*position += i;
 	push_token(token_lst, lst_token_new(word, DEFAULT));
+	free(word);
 }
 
 void	tokenize_quotted(t_token **token_lst, char *line, int *pos, \

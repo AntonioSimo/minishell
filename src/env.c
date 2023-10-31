@@ -92,31 +92,32 @@ size_t env_len(t_envepval *env)
     return (i);
 }
 
-void  copy_env(char **env, t_env **main_env)
+t_env  *copy_env(char **env)
 {
        t_envepval       *env_lst;
        size_t  size;
+	   t_env	*temp;
        int i;
        char    *key;
 
        i = 0;
 	   env_lst = NULL;
        set_env(&env_lst, env);
-       *main_env = ptr_check(malloc(sizeof(t_env)));
-       (*main_env)->exit_status = SUCCESS;
-       (*main_env)->env = env_lst;
+       temp = ptr_check(malloc(sizeof(t_env)));
+       temp->exit_status = SUCCESS;
+       temp->env = env_lst;
        size = env_len(env_lst);
-       (*main_env)->env_copy = malloc(sizeof(char *) * (size + 1));
+       temp->env_copy = malloc(sizeof(char *) * (size + 1));
        while(env_lst)
        {
                key = ptr_check(ft_strjoin(env_lst->key, "="));
-               (*main_env)->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
+               temp->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
                free(key);
                env_lst = env_lst->next;
                i++;
        }
-       (*main_env)->env_copy[i] = NULL;
-       return ;
+       temp->env_copy[i] = NULL;
+       return (temp);
  }
 
 void   print_copy_env(t_env *env)
