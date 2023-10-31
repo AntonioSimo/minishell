@@ -53,10 +53,11 @@ bool	ft_isnumber(char *str)
 void	ft_exit(char **args, t_env *env)
 {
 	if (ft_arraysize(args) == 1) 
-		exit(env->exit_status);
+		exit(free_env(env));
 	if (!ft_isnumber(args[1]))
 	{
 		ft_print_message("mustash: exit: ", args[1], ": numeric argument required\n", STDERR_FILENO);
+		free_env(env);
 		exit (2);
 	}
 	if (ft_arraysize(args) > 2)
@@ -67,7 +68,7 @@ void	ft_exit(char **args, t_env *env)
 	else
 	{
 		env->exit_status = ft_atoint64_t(args[1]);
-		ft_putstr_fd("exit\n", STDOUT_FILENO);
-		exit (env->exit_status);
+		ft_putstr_fd("exit\n", STDERR_FILENO);
+		exit (free_env(env));
 	}
 }

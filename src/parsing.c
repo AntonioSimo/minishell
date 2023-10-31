@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 17:39:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:49:56 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_parsing	*set_parsing_var(void)
 	return (var);
 }
 
-int	handle_redirections(t_redir **redir, t_token **tokens)
+int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 {
 	t_type	redir_type;
 	char	*file;
@@ -69,6 +69,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens)
 	if (!file)
 	{
 		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
+		env->exit_status = 2;
 		return (1);
 	}
 	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
@@ -106,7 +107,16 @@ int	check_if_redir(t_type type)
 	return (1);
 }
 
-t_command	*merge_tokens(t_token	*tokens)
+void	free_parsing_temp(t_parsing *temp)
+{
+	if (temp->args_arr)
+		double_free(temp->args_arr);
+	if (temp->word)
+		free(temp->word);
+	free(temp);
+}
+
+t_command	*merge_tokens(t_token	*tokens, t_env *env)
 {
 	t_command	*commands;
 	t_redir		*redir;
@@ -120,8 +130,11 @@ t_command	*merge_tokens(t_token	*tokens)
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
 		{
-			if (handle_redirections(&redir, &tokens))
+			if (handle_redirections(&redir, &tokens, env))
+			{
+				// free_parsing_temp(var);	
 				return (NULL);
+			}
 		}
 		if (!tokens)
 			break ;
@@ -134,7 +147,7 @@ t_command	*merge_tokens(t_token	*tokens)
 		var->args_arr = push_str_2d(var->args_arr, var->word);
 		if (var->args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		free(var->word);
+		// free_parsing_temp(var);	
 		redir = NULL;
 	}
 	return (commands);

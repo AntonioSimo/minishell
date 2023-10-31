@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 17:30:08 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 		execve(path, cmd->arguments, env->env_copy);
 	else
 	{
+		free(path);
 		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
@@ -113,7 +114,6 @@ void	close_pipes(int **fd, t_execution *temp)
 			close(fd[temp->i - 1][0]);
 	}
 }
-
 static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 {
 	int	cmds_size;
@@ -125,6 +125,18 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 	while (cmds_size > 0)
 	{
 		wait_ret = waitpid(-1, &status, 0);
+		if (status == 2)
+		{
+			printf("\n");
+			env->exit_status = 130;
+			g_signal = 1;
+		}
+		else if (status == 131 || status == 3)
+		{
+			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			env->exit_status = 131;
+			g_signal = 1;
+		}
 		if (wait_ret == last_pid)
 			last_status = status;
 		if (WIFEXITED(status) || WIFSIGNALED(status))
@@ -157,21 +169,20 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 		temp->pid[temp->i] = fork();
 		if (temp->pid[temp->i] == -1)
 			perror_exit("Fork error\n");
-		// manage_signals(0);
+		manage_signals(0);
 		if (temp->pid[temp->i] == 0)
 		{
-			// manage_signals(2);
+			manage_signals(3);
 			handle_child_process(temp->fd, cmds, env, temp);
 		}
-		// manage_signals(3);
 		if (temp->cmds_size > 1)
 			close_pipes(temp->fd, temp);
 		temp->i++;
 		cmds = cmds->next;
 	}
-	// manage_signals(3);
 	cmds = temp->head;
 	wait_last_child(cmds, temp->pid[temp->i - 1], env);
+	manage_signals(1);
 }
 
 void	free_temp(t_execution *temp)
@@ -179,15 +190,21 @@ void	free_temp(t_execution *temp)
 	int	i;
 
 	i = 0;
-	while (i < temp->cmds_size - 1)
+	if (temp->cmds_size > 1)
 	{
-		free(temp->fd[i]);
-		i++;
+		while (i < temp->cmds_size - 1)
+		{
+			free(temp->fd[i]);
+			i++;
+		}
+		free(temp->fd);
+		i = 0;
 	}
-	free(temp->fd);
 	free(temp->pid);
+	i++;
 	temp->head = NULL;
 	free(temp);
+	temp = NULL;
 }
 
 void	run_commands(t_command *cmds, t_env *env)
@@ -205,6 +222,7 @@ void	run_commands(t_command *cmds, t_env *env)
 			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
+		free_temp(temp);
 		return ;
 	}
 	handle_multiple_cmds(cmds, env, temp);

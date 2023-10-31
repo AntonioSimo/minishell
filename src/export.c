@@ -16,7 +16,10 @@ void	print_my_export(t_envepval *env)
 {
 	while (env)
 	{
-		printf("%s=%s\n", env->key, env->val);
+		if (env->val && env->val[0] != '\0')
+			printf("declare -x %s=%s\n", env->key, env->val);
+		else
+			printf("declare -x %s\n", env->key);
 		env = env->next;
 	}
 }
@@ -75,9 +78,10 @@ t_envepval	*set_newvariable(char *args)
 	if (!args)
 		return (NULL);
 	val = ft_strchr(args, '=');
-	key = ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val)));
+	key = ptr_check(ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val))));
 	val++;
 	variable = create_env_node(key, val);
+	free(key);
 	return (variable);
 }
 

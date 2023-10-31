@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/26 17:04:45 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:57:25 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,11 +162,12 @@ int			find_equal(char *line);
 void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
+int			free_env(t_env *env);
 
 //utils2
 char		**push_str_2d(char **args, char *str);
 //parser
-t_command	*merge_tokens(t_token	*tokens);
+t_command	*merge_tokens(t_token	*tokens, t_env *env);
 // void	parse_redirections(t_command *commands);
 
 //expander
@@ -194,7 +195,7 @@ void		push_token(t_token **lst, t_token *new);
 //env
 void	set_env(t_envepval	**my_env, char **env);
 void	print_my_env(t_envepval *my_env);
-void  copy_env(char **env, t_env **main_env);
+t_env  *copy_env(char **env);
 // t_env  *copy_env(char **env);
 void   print_copy_env(t_env *env);
 
@@ -232,13 +233,14 @@ void	manage_signals(int control);
 
 //redirections
 void	execute_pipe(int **fd, t_execution *temp);
+void	add_env_variable(t_envepval **lst, t_envepval *new);
 
 
 void 	echo_command(char **args, t_env *env);
 void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
 int 	ft_isbuiltin(char *command);
 int 	ft_arraysize(char **args);
-void	get_current_working_dir(void);
+void	get_current_working_dir(t_env *env);
 bool    ft_isnumber(char *str);
 void 	ft_exit(char **args, t_env *env);
 int		ft_strcmp(char *s1, char *s2);
@@ -257,5 +259,7 @@ void	ft_cd(t_env *env, t_command *cmd);
 t_envepval	*lstenv(t_envepval *lst);
 int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
+int	check_pipes(t_token *tokens, t_env *my_env);
+int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
 
 #endif

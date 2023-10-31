@@ -50,6 +50,7 @@ void	set_env(t_envepval	**my_env, char **env)
 	char *value;
 	int equal_pos;
 	char    *shlvl;
+    t_envepval	*new_variable;
 
 	i = 0;
 	while (env[i])
@@ -64,6 +65,12 @@ void	set_env(t_envepval	**my_env, char **env)
                 value = ft_strdup(shlvl);
                 free(shlvl);
         }
+        else
+		{
+			new_variable = set_newvariable("SHLVL=1");
+			if (new_variable != NULL)
+				add_env_variable(my_env, new_variable);
+		}
 		envlst_add(my_env, create_env_node(key, value));
 		ft_free(key);
 		ft_free(value);
@@ -85,31 +92,32 @@ size_t env_len(t_envepval *env)
     return (i);
 }
 
-void  copy_env(char **env, t_env **main_env)
+t_env  *copy_env(char **env)
 {
        t_envepval       *env_lst;
        size_t  size;
+	   t_env	*temp;
        int i;
        char    *key;
 
        i = 0;
 	   env_lst = NULL;
        set_env(&env_lst, env);
-       *main_env = ptr_check(malloc(sizeof(t_env)));
-       (*main_env)->exit_status = SUCCESS;
-       (*main_env)->env = env_lst;
+       temp = ptr_check(malloc(sizeof(t_env)));
+       temp->exit_status = SUCCESS;
+       temp->env = env_lst;
        size = env_len(env_lst);
-       (*main_env)->env_copy = malloc(sizeof(char *) * (size + 1));
+       temp->env_copy = malloc(sizeof(char *) * (size + 1));
        while(env_lst)
        {
                key = ptr_check(ft_strjoin(env_lst->key, "="));
-               (*main_env)->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
+               temp->env_copy[i] = ptr_check(ft_strjoin(key, env_lst->val));
                free(key);
                env_lst = env_lst->next;
                i++;
        }
-       (*main_env)->env_copy[i] = NULL;
-       return ;
+       temp->env_copy[i] = NULL;
+       return (temp);
  }
 
 void   print_copy_env(t_env *env)
@@ -125,3 +133,55 @@ void   print_copy_env(t_env *env)
                i++;
        }
  }
+
+ int	lstenv_c(t_envepval *lst)
+{
+	int i;
+	i = 0;
+	if (lst == NULL)
+		return (i);
+	while (lst->next != NULL)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
+}
+
+char	*env_str(t_envepval *current)
+{
+	char	*str;
+
+	str = ft_strdup(current->key);
+	if (!str)
+		return (NULL);
+	str = ft_strjoin(str, "=");
+	if (!str)
+		return (NULL);
+	if (current->val)
+		str = ft_strjoin(str, current->val);
+	return (str);
+}
+
+char	**get_envp(t_env *env)
+{
+	t_envepval	*current;
+	char	**envp;
+	int		i;
+	char	*temp;
+
+	current = env->env;
+	i = 0;
+	envp = (char **) malloc(((lstenv_c(current) + 1) * sizeof(char *)));
+	if (!envp)
+		return (printf("Malloc error"), NULL);
+	while (current)
+	{
+		temp = env_str(current);
+		envp[i] = temp;
+		current = current->next;
+		++i;
+	}
+	envp[i] = NULL;
+	return (envp);
+}

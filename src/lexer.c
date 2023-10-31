@@ -22,7 +22,7 @@ int	is_divider(t_type type)
 	return (0);
 }
 
-int	check_pipes(t_token *tokens)
+int	check_pipes(t_token *tokens, t_env *env)
 {
 	bool	flag;
 
@@ -35,15 +35,20 @@ int	check_pipes(t_token *tokens)
 			|| tokens->type == REDIR_OUTPUT_APPEND
 			|| tokens->type == HEREDOC)
 			flag = false;
-		if (flag && tokens->type == PIPE && printf("Incorrect pipes\n"))
+		if (flag && tokens->type == PIPE)
+		{
+			ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
+			env->exit_status = 2;
 			return (1);
+		}
 		if (tokens->type == PIPE)
 			flag = true;
 		tokens = tokens->next;
 	}
-	if (flag && printf("Incorrect pipes\n"))
-		return (1);
-	return (0);
+	if (!flag)  
+		return (0);
+	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);	
+	return (1); 
 }
 
 void	lexer(char *line, t_env *my_env)
@@ -56,9 +61,9 @@ void	lexer(char *line, t_env *my_env)
 	{
 		tokenize(line, &tokens);
 		expander(&tokens, my_env);
-		if (tokens && !check_pipes(tokens))
+		if (tokens && !check_pipes(tokens, my_env))
 		{
-			commands = merge_tokens(tokens);
+			commands = merge_tokens(tokens, my_env);
 			if (commands)
 				run_commands(commands, my_env);
 			tokens = destroy_tokens(tokens);
