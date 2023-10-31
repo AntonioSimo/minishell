@@ -65,7 +65,7 @@ char	*find_path(char *cmd, char *envp)
 	while (paths[++i])
 		free(paths[i]);
 	free(paths);
-	return (0);
+	return (NULL);
 }
 
 void	*ft_ptrdel(void *ptr)
