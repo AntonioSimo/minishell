@@ -48,7 +48,12 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 		var->i++;
 	}
 	var->j = var->i;
-	while (tokens->command[var->i] && char_to_expand(tokens->command[var->i]))
+	if (tokens->command[var->i] && !ft_isdigit(tokens->command[var->i]))
+	{
+		while (tokens->command[var->i] && char_to_expand(tokens->command[var->i]))
+			var->i++;
+	}
+	else
 		var->i++;
 	var->to_expand = ft_substr(tokens->command, var->j, var->i - var->j);
 	var->expanded = find_expandable(my_env, var->to_expand);
@@ -86,9 +91,7 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 		}
 	}
 	if (ft_strlen(var->expanded) == 0)
-	{
 		return (1);
-	}
 	return (0);
 }
 

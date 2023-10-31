@@ -64,6 +64,8 @@ void	lexer(char *line, t_env *my_env)
 		if (tokens && !check_pipes(tokens, my_env))
 		{
 			commands = merge_tokens(tokens, my_env);
+			// if (check_assignments(commands))
+			// 	remove_assigmnets(&commands);
 			if (commands)
 				run_commands(commands, my_env);
 			tokens = destroy_tokens(tokens);

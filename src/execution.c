@@ -53,7 +53,6 @@ void	find_cmd(t_command	*cmd, t_env *env)
 		execve(path, cmd->arguments, env->env_copy);
 	else
 	{
-		free(path);
 		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
@@ -84,6 +83,11 @@ void	is_executable(t_command *cmds, t_env *env)
     	exit (126);
 	}
 }
+
+// void	assign_variable()
+// {
+// 	if (ft_strchr(command, '=') && !ft_isdigit(command[0]))
+// }
 void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 											 t_execution	*temp)
 {
@@ -101,6 +105,8 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 		|| ft_strnstr(cmds->command, "./", ft_strlen(cmds->command))
 		|| ft_strchr(cmds->command, '/'))
 		is_executable(cmds, env);
+	// if (ft_strchr(cmds->command, '=') && !ft_isdigit(cmds->command[0]))
+	// 	assign_variable(cmds, env);
 	find_cmd(cmds, env);
 }
 void	close_pipes(int **fd, t_execution *temp)
