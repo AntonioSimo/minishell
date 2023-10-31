@@ -132,3 +132,55 @@ void   print_copy_env(t_env *env)
                i++;
        }
  }
+
+ int	lstenv_c(t_envepval *lst)
+{
+	int i;
+	i = 0;
+	if (lst == NULL)
+		return (i);
+	while (lst->next != NULL)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
+}
+
+char	*env_str(t_envepval *current)
+{
+	char	*str;
+
+	str = ft_strdup(current->key);
+	if (!str)
+		return (NULL);
+	str = ft_strjoin(str, "=");
+	if (!str)
+		return (NULL);
+	if (current->val)
+		str = ft_strjoin(str, current->val);
+	return (str);
+}
+
+char	**get_envp(t_env *env)
+{
+	t_envepval	*current;
+	char	**envp;
+	int		i;
+	char	*temp;
+
+	current = env->env;
+	i = 0;
+	envp = (char **) malloc(((lstenv_c(current) + 1) * sizeof(char *)));
+	if (!envp)
+		return (printf("Malloc error"), NULL);
+	while (current)
+	{
+		temp = env_str(current);
+		envp[i] = temp;
+		current = current->next;
+		++i;
+	}
+	envp[i] = NULL;
+	return (envp);
+}

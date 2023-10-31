@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 17:54:45 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:39:01 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	handle_redirections(t_redir **redir, t_token **tokens)
 		(*redir)->lst = NULL;
 		(*redir)->stdin_cpy = dup(STDIN_FILENO);
 		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
+		(*redir)->filein = NULL;
+		(*redir)->fileout = NULL;
 	}
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;
@@ -59,9 +61,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens)
 			|| (*tokens)->type == REDIR_OUTPUT)
 		{
 			if (!(redir_type == REDIR_OUTPUT && (*tokens)->type == PIPE && i == 0))
-			{
 				break ;
-			}
 		}
 		i++;
 		*tokens = (*tokens)->next;
@@ -100,7 +100,8 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 int	check_if_redir(t_type type)
 {
 	if (type == DEFAULT || type == SEPERATOR
-		|| type == PIPE)
+		|| type == PIPE || type == SINGLE_QUOTED
+		|| type == DOUBLE_QUOTED)
 		return (0);
 	return (1);
 }

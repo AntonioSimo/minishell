@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+// int g_signal;
+
 int	ft_arraysize(char **args)
 {
 	int	i;

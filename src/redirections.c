@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.c                                         :+:      :+:    :+:   */
+/*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:28:50 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	count_redir(t_redir_lst *redir, t_type type)
 	return (0);
 }
 
-static int	handle_redir_out(t_redir_lst *temp, t_redir *redir, int *error_pipe)
+static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 {
 	static int	i = 0;
 
@@ -82,64 +82,49 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir, int *error_pipe)
 						| O_CREAT | O_APPEND, 0644);
 	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": Permission denied\n", error_pipe[1]);
+		ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
 		return (1);
 	} 
 	if (access(temp->file, F_OK) != 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", error_pipe[1]);
+		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
 	if (redir->fileout[i] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
+	// close(redir->fileout[i]);
 	i++;
 	return (0);
 }
 
-static int	ft_check_permission(t_redir_lst *temp, int *error_pipe)
+static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 {
-	int tmp = *(error_pipe) + 1;
-	printf("Chechk permission: %i\n", tmp);
-	//(void) error_pipe;
+	static int	j = 0;
+
+	if (temp->type == REDIR_INPUT)
+		redir->filein[j] = open(temp->file, O_RDONLY);
+	else if (temp->type == HEREDOC)
+		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-			ft_print_message("mustash: ", temp->file, ": Permission denied\n", 2);
+			ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
 			return (1);
 	} 
 	if (access(temp->file, F_OK) != 00)
 	{
-		//int a = *(error_pipe + 1);
-		//ft_print_message("mustash: ", temp->file, ": No such file or directory\n", *(error_pipe)[1]);
+		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
-	return (0);
-}
-
-static int	handle_redir_in(t_redir_lst *temp, t_redir *redir, int *error_pipe)
-{
-	static int	j = 0;
-	int return_value = 0;
-
-	if (temp->type == HEREDOC)
-	{
-	 	redir->filein[j] = heredoc(temp->file);
-		//return_value = ft_check_permission(temp, error_pipe);
-	}
-	if (temp->type == REDIR_INPUT)
-	{
-		redir->filein[j] = open(temp->file, O_RDONLY);
-		return_value = ft_check_permission(temp, error_pipe);
-	}
-		//open(temp->file, __O_TMPFILE | O_RDWR);
 	if (redir->filein[j] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
+	// close(redir->filein[j]);
 	j++;
-	return (return_value);
+	return (0);
 }
 
-int	run_redirections(t_redir *redir, t_env *env, int *error_pipe)
+int	run_redirections(t_redir *redir, t_env *env)
 {
 	t_redir_lst	*temp;
 
@@ -150,22 +135,20 @@ int	run_redirections(t_redir *redir, t_env *env, int *error_pipe)
 					* count_redir(temp, REDIR_INPUT))));
 	while (temp)
 	{
-		if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
-			if (handle_redir_in(temp, redir, error_pipe))
+			if (handle_redir_out(temp, redir))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
 		}
-		else if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
-		{
-			if (handle_redir_out(temp, redir, error_pipe))
+		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+			if (handle_redir_in(temp, redir))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
-		}
 		temp = temp->next;
 	}
 	return (SUCCESS);

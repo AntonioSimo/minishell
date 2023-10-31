@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:38:43 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:39:02 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:13:52 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ void	print_tokens(t_token *token_lst)
 	printf("\n");
 }
 
-void	destroy_tokens(t_token	*tokens)
+void	*destroy_tokens(t_token	*tokens)
 {
 	t_token	*temp;
 
 	if (!tokens)
-		return ;
+		return (NULL);
 	while (tokens)
 	{
 		temp = tokens->next;
@@ -83,5 +83,5 @@ void	destroy_tokens(t_token	*tokens)
 		free(tokens);
 		tokens = temp;
 	}
-	tokens = NULL;
+	return (NULL);
 }

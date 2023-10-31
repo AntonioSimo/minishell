@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 18:39:23 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:51:11 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	minishell(t_env *my_env)
 
 	while (1)
 	{
-		//manage_signals(1);
+		
 		line = readline(GREEN BOLD "mustash> "RESET);
 		// manage_signals(0);
 		if (!line)
@@ -39,8 +39,6 @@ void	minishell(t_env *my_env)
 		if (ft_strlen(line) > 0)
 			lexer(line, my_env);
 		ft_free(line);
-		if (g_signal)
-			printf("\n");
 		rl_on_new_line();
 	}
 }

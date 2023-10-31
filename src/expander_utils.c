@@ -6,13 +6,11 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:51:34 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:24:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:49:03 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-extern int	g_error_code;
 
 static void	handle_first_part(char *expanded, t_token **temp_node, t_type type)
 {

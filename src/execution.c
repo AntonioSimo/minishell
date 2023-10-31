@@ -6,64 +6,12 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 16:40:36 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:45:57 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include <sys/stat.h>
-
-int	lstenv_c(t_envepval *lst)
-{
-	int i;
-	i = 0;
-	if (lst == NULL)
-		return (i);
-	while (lst->next != NULL)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
-}
-
-char	*env_str(t_envepval *current)
-{
-	char	*str;
-
-	str = ft_strdup(current->key);
-	if (!str)
-		return (NULL);
-	str = ft_strjoin(str, "=");
-	if (!str)
-		return (NULL);
-	if (current->val)
-		str = ft_strjoin(str, current->val);
-	return (str);
-}
-
-char	**get_envp(t_env *env)
-{
-	t_envepval	*current;
-	char	**envp;
-	int		i;
-	char	*temp;
-
-	current = env->env;
-	i = 0;
-	envp = (char **) malloc(((lstenv_c(current) + 1) * sizeof(char *)));
-	if (!envp)
-		return (printf("Malloc error"), NULL);
-	while (current)
-	{
-		temp = env_str(current);
-		envp[i] = temp;
-		current = current->next;
-		++i;
-	}
-	envp[i] = NULL;
-	return (envp);
-}
 
 static int	**make_pipes(t_command *cmds)
 {
@@ -94,61 +42,44 @@ t_execution *initialize_temp(t_command *cmds)
 	temp->cmds_size = count_cmds(cmds);
 	temp->pid = ptr_check(malloc(sizeof(pid_t) * temp->cmds_size));
 	temp->fd = make_pipes(cmds);
-	if (pipe(temp->error_pipe) == -1)
-		perror_exit("Pipe creation failed\n");
 	return (temp);
 }
 
-void	find_cmd(t_command	*cmd, t_env *env, t_execution *temp)
+void	find_cmd(t_command	*cmd, t_env *env)
 {
 	char	*path;
 	path = find_path(cmd->command, find_expandable(env->env, "PATH"));
 	if (path)
-	{	
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
-		close(temp->error_pipe[1]);
-		execve(path, cmd->arguments, get_envp(env));
-	}
+		execve(path, cmd->arguments, env->env_copy);
 	else
 	{
-		ft_print_message(NULL, cmd->command, ": command not found\n", 2);
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
+		ft_print_message(NULL, cmd->command, ": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
 }
 
 
-void	is_executable(t_command *cmds, t_env *env, t_execution *temp)
+void	is_executable(t_command *cmds, t_env *env)
 {
 	struct stat file_info;
 	if (access(cmds->command, X_OK) == 0 && stat(cmds->command, &file_info) == 0 && !S_ISDIR(file_info.st_mode))
 	{
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
-		execve(cmds->command, cmds->arguments, get_envp(env));
+		execve(cmds->command, cmds->arguments, env->env_copy);
 		exit(0);
 	}
 	if (access(cmds->command, F_OK) != 0)
 	{
-		ft_print_message("mustash: ", cmds->command, ": No such file or directory\n", temp->error_pipe[1]);
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
+		ft_print_message("mustash: ", cmds->command, ": No such file or directory\n", STDERR_FILENO);
     	exit (127);
 	}
 	if (stat(cmds->command, &file_info) == 0 && S_ISDIR(file_info.st_mode))
 	{
-       	ft_print_message("mustash: ", cmds->command, ": Is a directory\n", 2);
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
+       	ft_print_message("mustash: ", cmds->command, ": Is a directory\n", STDERR_FILENO);
 		exit (126);
 	}
 	else
 	{
-		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", temp->error_pipe[1]);
-		if (temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
+		ft_print_message("mustash: ", cmds->command, ": Permission denied\n", STDERR_FILENO);
     	exit (126);
 	}
 }
@@ -160,34 +91,21 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	check = 0;
 	execute_pipe(fd, temp);
 	if (cmds->redirections)
-		check = run_redirections(cmds->redirections, env, temp->error_pipe);
+		check = run_redirections(cmds->redirections, env);
 	if (check)
-	{
-		if (ft_isbuiltin(cmds->command) || temp->i == temp->cmds_size - 1)
-			ft_putstr_fd("EOF", temp->error_pipe[1]);
 		exit(1);
-	}
 	if (ft_isbuiltin(cmds->command))
-		exe_builtin(cmds, env, 1, temp);
+		exe_builtin(cmds, env, 1);
 	if (ft_strnstr(cmds->command, "../", ft_strlen(cmds->command))
 		|| ft_strnstr(cmds->command, "./", ft_strlen(cmds->command))
 		|| ft_strchr(cmds->command, '/'))
-		is_executable(cmds, env, temp);
-	find_cmd(cmds, env, temp);
+		is_executable(cmds, env);
+	find_cmd(cmds, env);
 }
-
 void	close_pipes(int **fd, t_execution *temp)
 {
-	if (temp->cmds_size == 1)
-	{
-		close(temp->error_pipe[1]);
-		return ;
-	}
 	if (temp->i == temp->cmds_size - 1)
-	{
 		close(fd[temp->i - 1][0]);
-		close(temp->error_pipe[1]);
-	}
 	else
 	{
 		close(fd[temp->i][1]);
@@ -195,7 +113,6 @@ void	close_pipes(int **fd, t_execution *temp)
 			close(fd[temp->i - 1][0]);
 	}
 }
-
 static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 {
 	int	cmds_size;
@@ -239,35 +156,6 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 	}
 }
 
-//void	print_error(t_execution *var)
-//{
-//	char 	*line;
-//	char	*message;
-//	// int	i;
-
-//	// i = 0;
-
-//	if (!line)
-//		return;
-
-//	message = ft_strdup("");
-//	while (1)
-//	{
-//		line = get_next_line(var->error_pipe[0]);
-//		if (line && !ft_strcmp(line, "EOF"))
-//		{
-//			if (ft_strlen(message))
-//				printf("%s", message);
-//			free(message);
-//			free(line);
-//			break ;
-//		}
-//		message = ft_free_strjoin(message, line);
-//		free(line);
-//	}
-//	close(var->error_pipe[0]);
-//}
-
 static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 {
 	while (cmds)
@@ -286,7 +174,8 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 			manage_signals(3);
 			handle_child_process(temp->fd, cmds, env, temp);
 		}
-		close_pipes(temp->fd, temp);
+		if (temp->cmds_size > 1)
+			close_pipes(temp->fd, temp);
 		temp->i++;
 		cmds = cmds->next;
 	}
@@ -294,19 +183,6 @@ static void	handle_multiple_cmds(t_command *cmds, t_env *env, t_execution *temp)
 	wait_last_child(cmds, temp->pid[temp->i - 1], env);
 	manage_signals(1);
 }
-
-
-// void	free_pid_fd(pid_t *pid, int **fd, t_command *cmds)
-// {
-// 	int	cmds_size;
-// 	int	i;
-
-// 	i = 0;
-// 	cmds_size = count_cmds(cmds);
-// 	while (i < cmds_size)
-	
-// 	}
-// }
 
 void	free_temp(t_execution *temp)
 {
@@ -333,21 +209,14 @@ void	run_commands(t_command *cmds, t_env *env)
 	check = 0;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
-
 		if (cmds->redirections)
-		{
-			check = run_redirections(cmds->redirections, env, temp->error_pipe);
-		}
+			check = run_redirections(cmds->redirections, env);
 		if (!check)
-			exe_builtin(cmds, env, 0, temp);
+			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
-		ft_putstr_fd("EOF", temp->error_pipe[1]);
-		close(temp->error_pipe[1]);
-		//print_error(temp);
 		return ;
 	}
 	handle_multiple_cmds(cmds, env, temp);
 	free_temp(temp);
-	// free_pid_fd(pid, fd);
 }
