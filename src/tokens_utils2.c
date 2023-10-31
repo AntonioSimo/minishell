@@ -84,8 +84,12 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	while (new_nodes->next)
 		new_nodes = new_nodes->next;
 	new_nodes->next = next_head;
-	if (pos == 0)
+	if (pos == 0) {
+		t_token *test = *head;
 		*head = or_head->next;
+		free(test->command);
+		free(test);
+	}
 	else
 		*head = or_head;
 }

@@ -27,7 +27,7 @@ void	minishell(t_env *my_env)
 		{
 			if (g_signal == 1)
 				my_env->exit_status = 130;
-			printf("exit\n");
+			ft_putstr_fd("exit\n", STDERR_FILENO);
 			break ;
 		}
 		add_history(line);
@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	(void)argc;
+	rl_outstream = stderr;
 	env_main = NULL;
 	g_signal = 0;
 	manage_signals(1);

@@ -28,7 +28,7 @@ t_parsing	*set_parsing_var(void)
 	return (var);
 }
 
-int	handle_redirections(t_redir **redir, t_token **tokens)
+int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 {
 	t_type	redir_type;
 	char	*file;
@@ -69,6 +69,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens)
 	if (!file)
 	{
 		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
+		env->exit_status = 2;
 		return (1);
 	}
 	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
@@ -115,7 +116,7 @@ void	free_parsing_temp(t_parsing *temp)
 	free(temp);
 }
 
-t_command	*merge_tokens(t_token	*tokens)
+t_command	*merge_tokens(t_token	*tokens, t_env *env)
 {
 	t_command	*commands;
 	t_redir		*redir;
@@ -129,7 +130,7 @@ t_command	*merge_tokens(t_token	*tokens)
 		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
 		{
-			if (handle_redirections(&redir, &tokens))
+			if (handle_redirections(&redir, &tokens, env))
 			{
 				// free_parsing_temp(var);	
 				return (NULL);
