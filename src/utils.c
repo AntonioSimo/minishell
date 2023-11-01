@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:39:33 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:41:03 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:13:32 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*find_path(char *cmd, char *envp)
 	char	*part_path;
 
 	paths = ft_split(envp, ':');
+	free(envp);
 	i = 0;
 	while (paths[i])
 	{
@@ -64,7 +65,7 @@ char	*find_path(char *cmd, char *envp)
 	while (paths[++i])
 		free(paths[i]);
 	free(paths);
-	return (0);
+	return (NULL);
 }
 
 void	*ft_ptrdel(void *ptr)
@@ -92,4 +93,25 @@ void	*double_free(char **ptr)
 		free(ptr);
 	}
 	return (NULL);
+}
+
+int	free_env(t_env *env)
+{
+	t_envepval *temp;
+	int			exit_code;
+	
+	exit_code = env->exit_status;
+	double_free(env->env_copy);
+	while (env->env)
+	{
+		temp = env->env->next;
+		if (env->env->key)
+			free(env->env->key);
+		if (env->env->val)
+			free(env->env->val);
+		free(env->env);
+		env->env = temp;
+	}
+	free(env);
+	return (exit_code);
 }

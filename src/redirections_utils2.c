@@ -6,13 +6,13 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:28:21 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:39:25 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	*destroy_redir(t_redir_lst *redir)
+void	*destroy_redir_lst(t_redir_lst *redir)
 {
 	t_redir_lst	*node;
 
@@ -25,6 +25,21 @@ void	*destroy_redir(t_redir_lst *redir)
 		free(redir);
 		redir = node;
 	}
+	return (NULL);
+}
+
+void	*destroy_redir(t_redir *redir)
+{
+	if (!redir)
+		return (NULL);
+	if (redir->filein)
+		free(redir->filein);
+	if (redir->fileout)
+		free(redir->fileout);
+	destroy_redir_lst(redir->lst);
+	close(redir->stdin_cpy);
+	close(redir->stdout_cpy);
+	free(redir);
 	return (NULL);
 }
 

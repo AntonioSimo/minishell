@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:39:08 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:57:02 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	minishell(t_env *my_env)
 		{
 			if (g_signal == 1)
 				my_env->exit_status = 130;
-			printf("exit\n");
+			ft_putstr_fd("exit\n", STDERR_FILENO);
 			break ;
 		}
 		add_history(line);
@@ -49,10 +49,11 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	(void)argc;
+	rl_outstream = stderr;
 	env_main = NULL;
 	g_signal = 0;
 	manage_signals(1);
-	copy_env(env, &env_main);
+	env_main = copy_env(env);
 	minishell(env_main);
-	exit (env_main->exit_status);
+	exit (free_env(env_main));
 }

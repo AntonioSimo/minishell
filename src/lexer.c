@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 17:40:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 18:24:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_divider(t_type type)
 	return (0);
 }
 
-int	check_pipes(t_token *tokens)
+int	check_pipes(t_token *tokens, t_env *env)
 {
 	bool	flag;
 
@@ -35,30 +35,20 @@ int	check_pipes(t_token *tokens)
 			|| tokens->type == REDIR_OUTPUT_APPEND
 			|| tokens->type == HEREDOC)
 			flag = false;
-		if (flag && tokens->type == PIPE && printf("Incorrect pipes\n"))
+		if (flag && tokens->type == PIPE)
+		{
+			ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
+			env->exit_status = 2;
 			return (1);
+		}
 		if (tokens->type == PIPE)
 			flag = true;
 		tokens = tokens->next;
 	}
-	if (flag && printf("Incorrect pipes\n"))
-		return (1);
-	return (0);
-}
-
-static void	check_heredoc(t_token *tokens, t_command *command, t_env *my_env)
-{
-	(void) my_env;
-	while (tokens)
-	{
-		if (tokens->type == HEREDOC)
-		{
-			printf("This is the delimiter: %s\n", command->redirections->lst->file);
-			ft_here_document(tokens, command, my_env);
-			//heredoc(command->redirections->lst->file);
-		}
-		tokens = tokens->next;
-	}
+	if (!flag)  
+		return (0);
+	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);	
+	return (1); 
 }
 
 void	lexer(char *line, t_env *my_env)
@@ -71,20 +61,15 @@ void	lexer(char *line, t_env *my_env)
 	{
 		tokenize(line, &tokens);
 		expander(&tokens, my_env);
-		if (tokens && !check_pipes(tokens))
+		if (tokens && !check_pipes(tokens, my_env))
 		{
-			// print_tokens(tokens);
-			commands = merge_tokens(tokens);
-			// print_cmds(commands);
+			commands = merge_tokens(tokens, my_env);
+			// if (check_assignments(commands))
+			// 	remove_assigmnets(&commands);
 			if (commands)
-			{
-				printf("This is the line: %s\n", line);
-				print_tokens(tokens);
-				check_heredoc(tokens, commands, my_env);
-				// heredoc(commands->redirections->lst->file);
 				run_commands(commands, my_env);
-			}
-			destroy_tokens(tokens);
+			tokens = destroy_tokens(tokens);
+			commands = destroy_cmds(commands);
 		}
 	}
 	else

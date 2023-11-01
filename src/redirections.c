@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 14:29:20 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:28:50 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	if (redir->fileout[i] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
+	// close(redir->fileout[i]);
 	i++;
 	return (0);
 }
@@ -103,8 +104,8 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
-	// else if (temp->type == HEREDOC)
-	// 	redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	else if (temp->type == HEREDOC)
+		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
 			ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
@@ -118,6 +119,7 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (redir->filein[j] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
+	// close(redir->filein[j]);
 	j++;
 	return (0);
 }
@@ -141,7 +143,7 @@ int	run_redirections(t_redir *redir, t_env *env)
 				return (ERROR);
 			}
 		}
-		else if (temp->type == REDIR_INPUT)// || temp->type == HEREDOC)
+		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
 			if (handle_redir_in(temp, redir))
 			{
 				env->exit_status = ERROR;
