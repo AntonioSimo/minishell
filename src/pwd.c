@@ -1,15 +1,36 @@
 #include "../include/minishell.h"
 
-void	get_current_working_dir(t_env *env)
+void get_current_working_dir(t_env *env)
 {
-	char	pwd[FILENAME_MAX + 1];
-	char	*temp;
+    char *current_pwd;
+	char *previous_pwd;
 
-	ft_memset(pwd, 0, sizeof(pwd));
-	temp = malloc(sizeof(char *) * ft_strlen(pwd) + 1);
-	if (!temp)
-		free(temp);
-	temp = getcwd(pwd, sizeof(pwd));
-		ft_printf("%s\n", temp);
-	env->exit_status = SUCCESS;
+	current_pwd = malloc(PATH_MAX + 1);
+    if (!current_pwd)
+    {
+        env->exit_status = ERROR;
+        return;
+    }
+    if (getcwd(current_pwd, PATH_MAX) != NULL)
+    {
+        ft_putstr_fd(current_pwd, 1);
+        ft_putchar_fd('\n', 1);
+    }
+    else
+    {
+		update_pwd(env, current_pwd);
+        previous_pwd = get_pwd(env);
+        if (previous_pwd != NULL)
+        {
+            ft_putstr_fd(previous_pwd, 1);
+            ft_putchar_fd('\n', 1);
+        }
+        else
+        {
+            perror("getcwd");
+            env->exit_status = ERROR;
+        }
+    }
+    free(current_pwd);
+    env->exit_status = SUCCESS;
 }

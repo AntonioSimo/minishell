@@ -58,7 +58,7 @@ void	ft_exit(char **args, t_env *env)
 	{
 		ft_print_message("mustash: exit: ", args[1], ": numeric argument required\n", STDERR_FILENO);
 		free_env(env);
-		exit (2);
+		exit (255);
 	}
 	if (ft_arraysize(args) > 2)
 	{

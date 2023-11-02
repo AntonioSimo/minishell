@@ -12,10 +12,12 @@
 
 #include "../include/minishell.h"
 
-char	*get_cwd(void)
+char	*get_cwd(t_env *env)
 {
 	char	*cwd;
+	char	*pwd;
 
+	pwd = NULL;
 	cwd = malloc(PATH_MAXSIZE);
 	if (!cwd)
 		return (NULL);
@@ -23,8 +25,16 @@ char	*get_cwd(void)
 		return (cwd);
 	else
 	{
-		perror("getcwd() error");
-		exit (EXIT_FAILURE);
+		pwd = get_pwd(env);
+		//update_pwd(env, pwd);
+		
+		//ft_putstr_fd(pwd, 1);
+		//ft_putchar_fd('\n', 1);
+		//chdir(pwd);
+		//free (pwd);
+		//free (cwd);
+		//perror("getcwd() error");
+		return (pwd);
 	}
 }
 
@@ -77,7 +87,7 @@ void	ft_cd(t_env *env, t_command *cmd)
 	char	*pwd;
 	char	*nwd;
 
-	pwd = get_cwd();
+	pwd = get_cwd(env);
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
@@ -97,7 +107,8 @@ void	ft_cd(t_env *env, t_command *cmd)
 		env->exit_status = ERROR;
 	}
 	else
-		update_pwd(env, pwd);
+		if (!nwd)
+			chdir(pwd);
 	free(pwd);
 	if (nwd)
 		free(nwd);

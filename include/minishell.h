@@ -252,7 +252,7 @@ void	ft_nodedel(t_envepval *env);
 t_envepval *set_newvariable(char *args);
 
 void	envlst_add(t_envepval **lst, t_envepval *new);
-char    *get_cwd();
+char    *get_cwd(t_env *env);
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
