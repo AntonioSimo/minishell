@@ -45,10 +45,10 @@ int	check_pipes(t_token *tokens, t_env *env)
 			flag = true;
 		tokens = tokens->next;
 	}
-	if (!flag)  
+	if (!flag)
 		return (0);
-	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);	
-	return (1); 
+	ft_putstr_fd ("Incorrect pipes\n", STDERR_FILENO);
+	return (1);
 }
 
 void	lexer(char *line, t_env *my_env)
@@ -64,8 +64,6 @@ void	lexer(char *line, t_env *my_env)
 		if (tokens && !check_pipes(tokens, my_env))
 		{
 			commands = merge_tokens(tokens, my_env);
-			// if (check_assignments(commands))
-			// 	remove_assigmnets(&commands);
 			if (commands)
 				run_commands(commands, my_env);
 			tokens = destroy_tokens(tokens);
@@ -74,7 +72,8 @@ void	lexer(char *line, t_env *my_env)
 	}
 	else
 	{
-		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", STDERR_FILENO);
+		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", \
+		STDERR_FILENO);
 		my_env->exit_status = SYNTAX_ERROR;
 	}
 }

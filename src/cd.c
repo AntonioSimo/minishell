@@ -26,14 +26,6 @@ char	*get_cwd(t_env *env)
 	else
 	{
 		pwd = get_pwd(env);
-		//update_pwd(env, pwd);
-		
-		//ft_putstr_fd(pwd, 1);
-		//ft_putchar_fd('\n', 1);
-		//chdir(pwd);
-		//free (pwd);
-		//free (cwd);
-		//perror("getcwd() error");
 		return (pwd);
 	}
 }
@@ -103,7 +95,8 @@ void	ft_cd(t_env *env, t_command *cmd)
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
 	{
-		ft_print_message("mustash: cd: ", nwd, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: cd: ", nwd, \
+		": No such file or directory\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else

@@ -67,6 +67,7 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	t_token	*or_head;
 	t_token	*next_head;
 	t_token	*prev_to_append;
+	t_token	*test;
 
 	i = 0;
 	or_head = *head;
@@ -84,8 +85,9 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	while (new_nodes->next)
 		new_nodes = new_nodes->next;
 	new_nodes->next = next_head;
-	if (pos == 0) {
-		t_token *test = *head;
+	if (pos == 0)
+	{
+		*test = *head;
 		*head = or_head->next;
 		free(test->command);
 		free(test);

@@ -58,7 +58,7 @@ typedef struct s_redir_lst
 {
 	char				*file;
 	t_type				type;
-	struct	s_redir_lst	*next;
+	struct s_redir_lst	*next;
 }	t_redir_lst;
 
 typedef struct s_redir
@@ -94,9 +94,9 @@ typedef struct s_token
 
 typedef struct s_env
 {
-    struct s_envepval	*env;
+	struct s_envepval	*env;
 	int					exit_status;
-    char				**env_copy;
+	char				**env_copy;
 }	t_env;
 
 typedef struct s_expander
@@ -116,37 +116,40 @@ typedef struct s_execution
 	int			cmds_size;
 }	t_execution;
 
-extern int g_signal;
+extern int	g_signal;
+
 //expander_checkers
-int	is_double_dollar(t_token **tokens);
-int	is_single_dollar(t_token **tokens);
-int	is_error_code(t_token **tokens);
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, t_env *env);
-void	check_prev_token(t_token **tokens, t_expander *var);
+int			is_double_dollar(t_token **tokens);
+int			is_single_dollar(t_token **tokens);
+int			is_error_code(t_token **tokens);
+void		handle_error_code(t_token **tokens, t_token **head, \
+			t_expander *var, t_env *env);
+void		check_prev_token(t_token **tokens, t_expander *var);
 
 //quotes
-t_type	quotes_type(char *line, int pos);
-void	skip_quotes(char *line, int *i, t_type *quotes);
-int		strlen_quoted(char *line, int position, t_type quotes_type);
-bool	check_quotes(char *line);
+t_type		quotes_type(char *line, int pos);
+void		skip_quotes(char *line, int *i, t_type *quotes);
+int			strlen_quoted(char *line, int position, t_type quotes_type);
+bool		check_quotes(char *line);
 
 //error
-void	perror_exit(char *str);
-void	strerror_exit();
-void	*ptr_check(void *ptr);
+void		perror_exit(char *str);
+void		strerror_exit(void);
+void		*ptr_check(void *ptr);
 
-void	parse(char *line);
-void	lexer(char *line, t_env *my_env);
+void		parse(char *line);
+void		lexer(char *line, t_env *my_env);
+int			check_pipes(t_token *tokens, t_env *my_env);
 
 //executions
-void	run_commands(t_command *cmds, t_env *env);
-void    redir_out(t_command *cmd, t_env *env);
+void		run_commands(t_command *cmds, t_env *env);
+void		redir_out(t_command *cmd, t_env *env);
 
 //tokenization
-t_token	*create_token(char *string, t_type type);
-void	tokenize_space(t_token **token_lst, char *line, int *i);
-void	tokenize_symbols(t_token **token_lst, char *line, int *i);
-void	tokenize(char *line, t_token **token_lst);
+t_token		*create_token(char *string, t_type type);
+void		tokenize_space(t_token **token_lst, char *line, int *i);
+void		tokenize_symbols(t_token **token_lst, char *line, int *i);
+void		tokenize(char *line, t_token **token_lst);
 
 //utils
 t_envepval	*create_env_node(char *key, char *value);
@@ -163,103 +166,110 @@ void		*double_free(char **ptr);
 char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
 int			free_env(t_env *env);
-
-//utils2
+int			ft_strcmp(char *s1, char *s2);
+int			ft_arraysize(char **args);
 char		**push_str_2d(char **args, char *str);
+
 //parser
+int			handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
 t_command	*merge_tokens(t_token	*tokens, t_env *env);
-// void	parse_redirections(t_command *commands);
 
 //expander
 int			char_to_expand(char c);
-int	dollar_expansion(t_token *tokens, t_envepval *my_env, t_token **head, int pos);
-void	double_dollar(t_token *tokens, t_token **head, int pos);
-void	expander(t_token **tokens, t_env *my_env);
+int			dollar_expansion(t_token *tokens, t_envepval *my_env, \
+			t_token **head, int pos);
+void		double_dollar(t_token *tokens, t_token **head, int pos);
+void		expander(t_token **tokens, t_env *my_env);
 char		*find_expandable(t_envepval	*env, char	*key);
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded, t_type type);
-char	*replace_string(char *expanded, char	*str, int start, int end);
-void	connect_nodes(t_token *new_nodes, int pos, t_token **head);
+char		*replace_string(char *expanded, char	*str, int start, int end);
+void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 
 //redirections
-int	count_redir(t_redir_lst *redir, t_type type);
-int	run_redirections(t_redir *redir, t_env *env);
-void	close_redir(t_redir *redir);
-int		count_redir(t_redir_lst *redir, t_type type);
-//list utils
+int			count_redir(t_redir_lst *redir, t_type type);
+int			run_redirections(t_redir *redir, t_env *env);
+void		close_redir(t_redir *redir);
+int			count_redir(t_redir_lst *redir, t_type type);
+
+//list u	tils
 t_token		*lst_token_new(char *str, t_type type);
-// void		lst_token_back(t_token **lst, t_token *new);
+
+// void			lst_token_back(t_token **lst, t_token *new);
 void		*destroy_tokens(t_token	*tokens);
 void		push_token(t_token **lst, t_token *new);
 
-//env
-void	set_env(t_envepval	**my_env, char **env);
-void	print_my_env(t_envepval *my_env);
-t_env  *copy_env(char **env);
-// t_env  *copy_env(char **env);
-void   print_copy_env(t_env *env);
+//env	
+void		set_env(t_envepval	**my_env, char **env);
+void		print_my_env(t_envepval *my_env);
+t_env		*copy_env(char **env);
+void		envlst_add(t_envepval **lst, t_envepval *new);
+t_envepv	al	*lstenv(t_envepval *lst);
+void		print_copy_env(t_env *env);
 
-//tokens_utils2
-int		token_lst_size(t_token	*tokens);
+//tokens	_utils2
+int			token_lst_size(t_token	*tokens);
 
-//expander_utils
-t_token	*create_nodes(char *expanded, t_token *token, int start, int end);
-void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env);
+//expand	er_utils
+void		error_code_expansion(t_token *token, t_token **head, \
+			int pos, t_env *env);
+void		ft_print_message(char *command, char *str, \
+			char *error_message, int fd);
+t_token		*create_nodes(char *expanded, t_token *token, int start, int end);
 
-//tilde
-int		if_tilde(t_token **tokens, t_type prev_type);
-void	tilde_expansion(t_token *tokens, t_envepval *my_env);
-char	*find_home(t_envepval *env);
+//tilde	
+int			if_tilde(t_token **tokens, t_type prev_type);
+void		tilde_expansion(t_token *tokens, t_envepval *my_env);
+char		*find_home(t_envepval *env);
 
-//command_utils
-t_command	*lst_cmd_new(char **args, t_redir *redir);
-void	push_cmd(t_command **lst, t_command *new);
-void	print_cmds(t_command *cmd_lst);
-void	*destroy_cmds(t_command	*cmd_lst);
-void	push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
-t_redir_lst	*redir_lst_last(t_redir_lst *redir);
-t_redir_lst	*lst_redir_new(char	*file, t_type type);
-void	*destroy_redir(t_redir *redir);
-void	print_redirections(t_redir_lst	*redir);
+//comman	d_utils
+void		push_cmd(t_command **lst, t_command *new);
+void		print_cmds(t_command *cmd_lst);
+void		*destroy_cmds(t_command	*cmd_lst);
+void		push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
+t_redir_	lst	*redir_lst_last(t_redir_lst *redir);
+t_redir_	lst	*lst_redir_new(char	*file, t_type type);
+void		*destroy_redir(t_redir *redir);
+void		print_redirections(t_redir_lst	*redir);
+t_comman	d	*lst_cmd_new(char **args, t_redir *redir);
 
-//executions
-void	find_cmd(t_command	*cmd, t_env *env);
-int		count_cmds(t_command *cmds);
+//execut	ions
+void		find_cmd(t_command	*cmd, t_env *env);
+int			count_cmds(t_command *cmds);
 
-//signals
-void	ctrl_c_handler(int sig);
-void	manage_signals(int control);
+//signal	s
+void		ctrl_c_handler(int sig);
+void		manage_signals(int control);
 
+//redire	ctions
+void		execute_pipe(int **fd, t_execution *temp);
+void		add_env_variable(t_envepval **lst, t_envepval *new);
 
-//redirections
-void	execute_pipe(int **fd, t_execution *temp);
-void	add_env_variable(t_envepval **lst, t_envepval *new);
+//builti	n
+void		exe_builtin(t_command *cmd, t_env *env, int exit_status);
+int			ft_isbuiltin(char *command);
 
+//cd com	mnad
+void		ft_cd(t_env *env, t_command *cmd);
+char		*get_cwd(t_env *env);
+char		*get_pwd(t_env *env);
+void		update_pwd(t_env *env, char *pwd);
 
-void 	echo_command(char **args, t_env *env);
-void	exe_builtin(t_command *cmd, t_env *env, int exit_status);
-int 	ft_isbuiltin(char *command);
-int 	ft_arraysize(char **args);
-void	get_current_working_dir(t_env *env);
-bool    ft_isnumber(char *str);
-void 	ft_exit(char **args, t_env *env);
-int		ft_strcmp(char *s1, char *s2);
-void 	ft_export(t_env *env, char **args);
-void	ft_unset(t_env *env, char **args);
-void	*ft_ptrdel(void *ptr);
-void	ft_nodedel(t_envepval *env);
+//export	 command
+void		ft_export(t_env *env, char **args);
+t_envepval	*set_newvariable(char *args);
 
-t_envepval *set_newvariable(char *args);
+//exit c	ommand
+void		ft_exit(char **args, t_env *env);
+bool		ft_isnumber(char *str);
 
-void	envlst_add(t_envepval **lst, t_envepval *new);
-char    *get_cwd(t_env *env);
-char    *get_pwd(t_env  *env);
-void    update_pwd(t_env *env, char *pwd);
-void	ft_cd(t_env *env, t_command *cmd);
-t_envepval	*lstenv(t_envepval *lst);
-int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
-void	ft_print_message(char *command, char *str, char *error_message, int fd);
-int	check_pipes(t_token *tokens, t_env *my_env);
-int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
+//pwd co	mmand
+void		get_current_working_dir(t_env *env);
 
-#endif
+void		echo_command(char **args, t_env *env);
+//unset 	command
+void		ft_unset(t_env *env, char **args);
+void		*ft_ptrdel(void *ptr);
+void		ft_nodedel(t_envepval *env);
+
+#endif	

@@ -56,11 +56,12 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		{
 			file = ft_free_strjoin(file, (*tokens)->command);
 		}
-		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || (*tokens)->type == REDIR_INPUT
-			|| (*tokens)->type == REDIR_OUTPUT_APPEND || (*tokens)->type == HEREDOC
-			|| (*tokens)->type == REDIR_OUTPUT)
+		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || \
+		(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
+		(*tokens)->type == REDIR_OUTPUT || (*tokens)->type == REDIR_OUTPUT_APPEND)
 		{
-			if (!(redir_type == REDIR_OUTPUT && (*tokens)->type == PIPE && i == 0))
+			if (!(redir_type == REDIR_OUTPUT && \
+				(*tokens)->type == PIPE && i == 0))
 				break ;
 		}
 		i++;
@@ -131,10 +132,7 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
 		{
 			if (handle_redirections(&redir, &tokens, env))
-			{
-				// free_parsing_temp(var);	
 				return (NULL);
-			}
 		}
 		if (!tokens)
 			break ;
@@ -147,7 +145,6 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 		var->args_arr = push_str_2d(var->args_arr, var->word);
 		if (var->args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		// free_parsing_temp(var);	
 		redir = NULL;
 	}
 	return (commands);

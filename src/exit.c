@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int64_t	ft_atoint64_t(const char *str)
 {
-	int	i;
-	int	neg;
+	int		i;
+	int		neg;
 	int64_t	result;
 
 	i = 0;
@@ -52,11 +64,12 @@ bool	ft_isnumber(char *str)
 
 void	ft_exit(char **args, t_env *env)
 {
-	if (ft_arraysize(args) == 1) 
+	if (ft_arraysize(args) == 1)
 		exit(free_env(env));
 	if (!ft_isnumber(args[1]))
 	{
-		ft_print_message("mustash: exit: ", args[1], ": numeric argument required\n", STDERR_FILENO);
+		ft_print_message("mustash: exit: ", args[1], \
+		": numeric argument required\n", STDERR_FILENO);
 		free_env(env);
 		exit (255);
 	}

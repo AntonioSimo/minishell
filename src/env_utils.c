@@ -10,36 +10,4 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../include/minishell.h"
-
-//t_envepval	*lstenv(t_envepval *lst)
-//{
-//	if (lst == NULL)
-//		return (NULL);
-//	while (lst->next != NULL)
-//		lst = lst->next;
-//	return (lst);
-//}
-
-//void	envlst_add(t_envepval **lst, t_envepval *new)
-//{
-//	t_envepval	*lst_node;
-
-//	if (*lst == NULL)
-//	{
-//		*lst = new;
-//		return ;
-//	}
-//	lst_node = lstenv(*lst);
-//	lst_node->next = new;
-//}
-
-//void	print_my_env(t_envepval *my_env)
-//{
-//	while (my_env)
-//	{
-//		if (my_env->val[0])
-//			printf("%s=%s\n", my_env->key, my_env->val);
-//		my_env = my_env->next;
-//	}
-//}
+#include "../include/minishell.h"

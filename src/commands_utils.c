@@ -90,7 +90,6 @@ void	*destroy_cmds(t_command	*cmd_lst)
 	while (cmd_lst)
 	{
 		node = (cmd_lst)->next;
-		// printf("here\n");
 		while ((cmd_lst)->arguments[i])
 		{
 			free((cmd_lst)->arguments[i]);

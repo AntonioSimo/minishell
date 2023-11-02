@@ -82,18 +82,19 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 						| O_CREAT | O_APPEND, 0644);
 	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
+		ft_print_message("mustash: ", temp->file, \
+		": Permission denied\n", STDERR_FILENO);
 		return (1);
-	} 
+	}
 	if (access(temp->file, F_OK) != 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: ", temp->file, \
+		": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
 	if (redir->fileout[i] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
-	// close(redir->fileout[i]);
 	i++;
 	return (0);
 }
@@ -109,18 +110,19 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		redir->filein[j] = open(temp->file, O_RDWR);
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-			ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
-			return (1);
-	} 
+		ft_print_message("mustash: ", temp->file, \
+		": Permission denied\n", STDERR_FILENO);
+		return (1);
+	}
 	if (access(temp->file, F_OK) != 00)
 	{
-		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: ", temp->file, \
+		": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
 	if (redir->filein[j] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
-	// close(redir->filein[j]);
 	j++;
 	return (0);
 }
@@ -145,11 +147,13 @@ int	run_redirections(t_redir *redir, t_env *env)
 			}
 		}
 		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+		{
 			if (handle_redir_in(temp, redir))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
 			}
+		}
 		temp = temp->next;
 	}
 	return (SUCCESS);
