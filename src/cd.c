@@ -12,10 +12,12 @@
 
 #include "../include/minishell.h"
 
-char	*get_cwd(void)
+char	*get_cwd(t_env *env)
 {
 	char	*cwd;
+	char	*pwd;
 
+	pwd = NULL;
 	cwd = malloc(PATH_MAXSIZE);
 	if (!cwd)
 		return (NULL);
@@ -23,8 +25,10 @@ char	*get_cwd(void)
 		return (cwd);
 	else
 	{
-		perror("getcwd() error");
-		exit (EXIT_FAILURE);
+		pwd = get_pwd(env);
+		return (pwd);
+		//perror("getcwd() error");
+		//exit (EXIT_FAILURE);
 	}
 }
 
@@ -77,7 +81,7 @@ void	ft_cd(t_env *env, t_command *cmd)
 	char	*pwd;
 	char	*nwd;
 
-	pwd = get_cwd();
+	pwd = get_cwd(env);
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
@@ -93,12 +97,15 @@ void	ft_cd(t_env *env, t_command *cmd)
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
 	{
-		ft_print_message("mustash: cd: ", nwd, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: cd: ", nwd, \
+		": No such file or directory\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else
-		update_pwd(env, pwd);
-	free(pwd);
-	if (nwd)
-		free(nwd);
+		if (!nwd)
+			chdir(pwd);
+		//update_pwd(env, pwd);
+	//free(pwd);
+	//if (nwd)
+	//	free(nwd);
 }
