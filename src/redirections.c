@@ -105,8 +105,8 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
-	//__O_TMPFILE |
-		redir->filein[j] = open(temp->file, O_RDWR);
+	
+		redir->filein[j] = open(temp->file,__O_TMPFILE | O_RDWR);
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
 			ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
