@@ -7,9 +7,7 @@ t_envepval	*create_env_emptynode(char *key)
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
 	node->val = malloc(1);
-	node->val[0] = '\n';
-	// printf("This is the key: %s\n", node->key);
-	// printf("This is the val: %s\n", node->val);
+	node->val = 0;
 	node->next = NULL;
 	return (node);
 }
@@ -18,16 +16,12 @@ void	print_my_export(t_envepval *env)
 {
 	while (env)
 	{
-		if (env->key && env->val[0] == '\n')//!ft_strcmp(env->val, "-1"))//[0] == '\n')// && !ft_strchr(env->val, '='))
+		if (env->key && !env->val)
 			printf("declare -x %s\n", env->key);
 		else if (env->val && env->val[0] != '\0')
 			printf("declare -x %s='%s'\n", env->key, env->val);
-		else if (env->val && env->val[0] == 0)// && ft_strchr(env->val, '='))
+		else if (env->val && env->val[0] == 0)
 		  	printf("declare -x %s=''\n", env->key);
-		// if (env->val[0] == 0 && !strchr(env->val, '='))
-		// 	printf("declare -x %s\n", env->key);
-		// else
-		// 	printf("declare -x %s=''\n", env->key);
 		env = env->next;
 	}
 }
@@ -87,9 +81,7 @@ t_envepval	*set_newvariable(char *args)
 		return (NULL);
 	val = ft_strchr(args, '=');
 	key = ptr_check(ft_substr(args, 0, (ft_strlen(args) - ft_strlen(val))));
-//	printf("This is the val: %s\n", val);
 	val++;
-	// printf("This is the key: %s\n", key);
 	variable = create_env_node(key, val);
 	free(key);
 	return (variable);

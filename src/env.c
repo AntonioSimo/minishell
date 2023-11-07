@@ -42,9 +42,7 @@ void print_my_env(t_envepval *my_env)
 {
     while (my_env)
     {
-		if (my_env->val[0] == '\0')
-		  	printf("%s=\n", my_env->key);
-        if (my_env->val[0] != '\0' && my_env->val[0] != '\n')
+        if (my_env->val != NULL)
             printf("%s=%s\n", my_env->key, my_env->val);
         my_env = my_env->next;
     }

@@ -26,6 +26,7 @@ char	*get_cwd(t_env *env)
 	else
 	{
 		pwd = get_pwd(env);
+		free(cwd);
 		return (pwd);
 		//perror("getcwd() error");
 		//exit (EXIT_FAILURE);
@@ -67,6 +68,8 @@ static char	*get_home(t_env *env)
 {
 	char	*nwd;
 
+	if (!find_expandable(env->env, "HOME"))
+		printf("Error\n");
 	nwd = find_expandable(env->env, "HOME");
 	if (ft_strlen(nwd) == 0)
 	{
