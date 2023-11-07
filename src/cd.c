@@ -64,20 +64,21 @@ void	update_pwd(t_env *env, char *pwd)
 	}
 }
 
-static char	*get_home(t_env *env)
-{
-	char	*nwd;
+// static char	*get_home(t_env *env)
+// {
+// 	char	*nwd;
 
-	if (!find_expandable(env->env, "HOME"))
-		printf("Error\n");
-	nwd = find_expandable(env->env, "HOME");
-	if (ft_strlen(nwd) == 0)
-	{
-		free(nwd);
-		nwd = find_home(env->env);
-	}
-	return (nwd);
-}
+// 	if (!find_expandable(env->env, "HOME"))
+// 		printf("Error\n");
+// 	nwd = find_expandable(env->env, "HOME");
+// 	if (ft_strlen(nwd) == 0)
+// 	{
+// 		free(nwd);
+// 		nwd = find_home(env->env);
+// 	}
+// 	// printf("nwd: %s\n", nw);
+// 	return (nwd);
+// }
 
 void	ft_cd(t_env *env, t_command *cmd)
 {
@@ -93,7 +94,17 @@ void	ft_cd(t_env *env, t_command *cmd)
 		return ;
 	}
 	if (cmd->arguments[1] == NULL)
-		nwd = get_home(env);
+	{
+		if (chdir(find_expandable(env->env, "HOME")) == -1)
+		{
+			ft_print_message("mustash: cd: ", nwd, \
+			": HOME not set\n", STDERR_FILENO);
+			env->exit_status = ERROR;
+			return ;
+		}
+		else
+			nwd = find_expandable(env->env, "HOME");
+	}
 	else if (!ft_strcmp(cmd->arguments[1], "-"))
 		nwd = find_expandable(env->env, "OLDPWD");
 	else if (cmd->arguments[1])
