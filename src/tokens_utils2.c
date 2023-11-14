@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:46:44 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:42 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/14 18:58:34 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,15 @@ static int	empty_node(int pos, t_token **head)
 		i++;
 	}
 	next_head = (*head)->next;
+	free((*head)->command);
+	free(*head);
 	prev_to_append->next = next_head;
 	if (pos == 0)
+	{
 		*head = or_head->next;
+		free(or_head->command);
+		free(or_head);
+	}
 	else
 		*head = or_head;
 	return (1);
@@ -80,16 +86,14 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 			prev_to_append = *head;
 	}
 	next_head = (*head)->next;
+	free((*head)->command);
+	free(*head);
 	prev_to_append->next = new_nodes;
 	while (new_nodes->next)
 		new_nodes = new_nodes->next;
 	new_nodes->next = next_head;
-	if (pos == 0) {
-		t_token *test = *head;
+	if (pos == 0)
 		*head = or_head->next;
-		free(test->command);
-		free(test);
-	}
 	else
 		*head = or_head;
 }

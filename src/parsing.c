@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 17:49:56 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/14 18:22:35 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		return (1);
 	}
 	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+	free(file);
 	return (0);
 }
 
@@ -147,7 +148,9 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 		var->args_arr = push_str_2d(var->args_arr, var->word);
 		if (var->args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		// free_parsing_temp(var);	
+		if (var->word)
+			free(var->word);
+		free(var);
 		redir = NULL;
 	}
 	return (commands);

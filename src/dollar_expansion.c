@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   dollar_expansion.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/14 18:56:03 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,16 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 	expanded_nodes = create_nodes(var->expanded, tokens, \
 								var->j, var->i);
 	connect_nodes(expanded_nodes, var->pos, head);
-	ft_free(var->to_expand);
+	// ft_free(var->to_expand);
+}
+
+void	free_temp_dollar(t_dollar *var)
+{
+	if (var->to_expand)
+		free(var->to_expand);
+	if (var->expanded)
+		free(var->expanded);
+	free(var);
 }
 
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
@@ -77,7 +86,10 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 	while (var->i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[var->i] == '$' && !tokens->command[var->i + 1])
+		{
+			free_temp_dollar(var);
 			return (1);
+		}
 		if (tokens->command[var->i] && tokens->command[var->i] == '$')
 		{
 			expand_token(tokens, var, head, my_env);
@@ -91,7 +103,11 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 		}
 	}
 	if (ft_strlen(var->expanded) == 0)
+	{
+		free_temp_dollar(var);
 		return (1);
+	}
+	free_temp_dollar(var);
 	return (0);
 }
 
