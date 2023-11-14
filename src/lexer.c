@@ -37,7 +37,7 @@ int	check_pipes(t_token *tokens, t_env *env)
 			flag = false;
 		if (flag && tokens->type == PIPE)
 		{
-			ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
+			ft_putstr_fd("here2: Incorrect pipes\n", STDERR_FILENO);
 			env->exit_status = 2;
 			return (1);
 		}
@@ -47,7 +47,8 @@ int	check_pipes(t_token *tokens, t_env *env)
 	}
 	if (!flag)  
 		return (0);
-	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);	
+	//ft_putstr_fd("here1: Incorrect pipes\n", STDERR_FILENO);	I don't think we need to print the message:
+	//															Because we print also if the "command" is a space
 	return (1); 
 }
 

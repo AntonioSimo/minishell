@@ -12,6 +12,13 @@
 
 #include "../include/minishell.h"
 
+typedef enum e_signal_codes {
+	CODE1,
+	CODE2,
+	CODE3,
+	CODE4,
+}			t_signal_codes;
+
 void	ctrl_c_child(int sig)
 {
 	if (sig == SIGINT)

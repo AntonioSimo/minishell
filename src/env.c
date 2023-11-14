@@ -29,6 +29,11 @@ t_envepval	*create_env_node(char *key, char *value)
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
 	node->val = ptr_check(ft_strdup(value));
+	if (node->val == NULL)
+	{
+		node->val = malloc(1);
+		node->val[0] = '\0';
+	}
 	node->next = NULL;
 	return (node);
 }
@@ -37,7 +42,7 @@ void print_my_env(t_envepval *my_env)
 {
     while (my_env)
     {
-        if (my_env->val[0])
+        if (my_env->val != NULL)
             printf("%s=%s\n", my_env->key, my_env->val);
         my_env = my_env->next;
     }
@@ -98,6 +103,7 @@ t_env  *copy_env(char **env)
        size_t  size;
 	   t_env	*temp;
        int i;
+	   (void) env;
        char    *key;
 
        i = 0;

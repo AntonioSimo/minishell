@@ -93,7 +93,7 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	if (redir->fileout[i] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
-	// close(redir->fileout[i]);
+	close(redir->fileout[i]);
 	i++;
 	return (0);
 }
@@ -105,13 +105,17 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	else if (temp->type == HEREDOC)
-		redir->filein[j] = open(temp->file, __O_TMPFILE | O_RDWR);
+	{
+		// redir->filein[j] = open(temp->file,__O_TMPFILE | O_RDWR);
+		redir->filein[j] = heredoc(temp);
+	}
+	
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
 			ft_print_message("mustash: ", temp->file, ": Permission denied\n", STDERR_FILENO);
 			return (1);
 	} 
-	if (access(temp->file, F_OK) != 00)
+	if (access(temp->file, F_OK) != 00 && temp->type != HEREDOC)
 	{
 		ft_print_message("mustash: ", temp->file, ": No such file or directory\n", STDERR_FILENO);
 		return (1);
@@ -119,7 +123,7 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 	if (redir->filein[j] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
-	// close(redir->filein[j]);
+	close(redir->filein[j]);
 	j++;
 	return (0);
 }

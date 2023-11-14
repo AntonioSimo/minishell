@@ -57,6 +57,7 @@ typedef enum e_type
 typedef struct s_redir_lst
 {
 	char				*file;
+	int					*fd;
 	t_type				type;
 	struct	s_redir_lst	*next;
 }	t_redir_lst;
@@ -252,7 +253,7 @@ void	ft_nodedel(t_envepval *env);
 t_envepval *set_newvariable(char *args);
 
 void	envlst_add(t_envepval **lst, t_envepval *new);
-char    *get_cwd();
+char    *get_cwd(t_env *env);
 char    *get_pwd(t_env  *env);
 void    update_pwd(t_env *env, char *pwd);
 void	ft_cd(t_env *env, t_command *cmd);
@@ -261,5 +262,6 @@ int	ft_exit_status(char *msg, char *cmd, int exit_code, int return_val);
 void	ft_print_message(char *command, char *str, char *error_message, int fd);
 int	check_pipes(t_token *tokens, t_env *my_env);
 int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
+int heredoc(t_redir_lst *temp);
 
 #endif

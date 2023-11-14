@@ -66,6 +66,7 @@ char	*find_home(t_envepval *env)
 	{
 		home = ptr_check(ft_strjoin("/home/", username));
 		free(username);
+		printf("Home: %s\n", home);
 		return (home);
 	}
 	free(username);
@@ -74,11 +75,13 @@ char	*find_home(t_envepval *env)
 	{
 		home = ptr_check(ft_strjoin("/home/", username));
 		free(username);
+	//	printf("Home: %s\n", home);
 		return (home);
 	}
 	free(username);
 	username = find_expandable(env, "USERNAME");
 	home = ptr_check(ft_strjoin("/home/", username));
+	//printf("find Home: %s\n", home);
 	free(username);
 	return (home);
 }

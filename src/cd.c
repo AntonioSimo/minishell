@@ -12,10 +12,12 @@
 
 #include "../include/minishell.h"
 
-char	*get_cwd(void)
+char	*get_cwd(t_env *env)
 {
 	char	*cwd;
+	char	*pwd;
 
+	pwd = NULL;
 	cwd = malloc(PATH_MAXSIZE);
 	if (!cwd)
 		return (NULL);
@@ -23,8 +25,11 @@ char	*get_cwd(void)
 		return (cwd);
 	else
 	{
-		perror("getcwd() error");
-		exit (EXIT_FAILURE);
+		pwd = get_pwd(env);
+		free(cwd);
+		return (pwd);
+		//perror("getcwd() error");
+		//exit (EXIT_FAILURE);
 	}
 }
 
@@ -59,25 +64,28 @@ void	update_pwd(t_env *env, char *pwd)
 	}
 }
 
-static char	*get_home(t_env *env)
-{
-	char	*nwd;
+// static char	*get_home(t_env *env)
+// {
+// 	char	*nwd;
 
-	nwd = find_expandable(env->env, "HOME");
-	if (ft_strlen(nwd) == 0)
-	{
-		free(nwd);
-		nwd = find_home(env->env);
-	}
-	return (nwd);
-}
+// 	if (!find_expandable(env->env, "HOME"))
+// 		printf("Error\n");
+// 	nwd = find_expandable(env->env, "HOME");
+// 	if (ft_strlen(nwd) == 0)
+// 	{
+// 		free(nwd);
+// 		nwd = find_home(env->env);
+// 	}
+// 	// printf("nwd: %s\n", nw);
+// 	return (nwd);
+// }
 
 void	ft_cd(t_env *env, t_command *cmd)
 {
 	char	*pwd;
 	char	*nwd;
 
-	pwd = get_cwd();
+	pwd = get_cwd(env);
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
@@ -86,19 +94,32 @@ void	ft_cd(t_env *env, t_command *cmd)
 		return ;
 	}
 	if (cmd->arguments[1] == NULL)
-		nwd = get_home(env);
+	{
+		if (chdir(find_expandable(env->env, "HOME")) == -1)
+		{
+			ft_print_message("mustash: cd: ", nwd, \
+			": HOME not set\n", STDERR_FILENO);
+			env->exit_status = ERROR;
+			return ;
+		}
+		else
+			nwd = find_expandable(env->env, "HOME");
+	}
 	else if (!ft_strcmp(cmd->arguments[1], "-"))
 		nwd = find_expandable(env->env, "OLDPWD");
 	else if (cmd->arguments[1])
 		nwd = ft_strdup(cmd->arguments[1]);
 	if (chdir(nwd) != 0)
 	{
-		ft_print_message("mustash: cd: ", nwd, ": No such file or directory\n", STDERR_FILENO);
+		ft_print_message("mustash: cd: ", nwd, \
+		": No such file or directory\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 	}
 	else
-		update_pwd(env, pwd);
-	free(pwd);
-	if (nwd)
-		free(nwd);
+		if (!nwd)
+			chdir(pwd);
+		//update_pwd(env, pwd);
+	//free(pwd);
+	//if (nwd)
+	//	free(nwd);
 }
