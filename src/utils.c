@@ -54,7 +54,8 @@ char	*find_path(char *cmd, char *envp)
 				return (path);
 			else
 			{
-				ft_print_message("mustash: ", cmd, ": Permission denied\n", STDERR_FILENO);
+				ft_print_message("mustash: ", cmd, \
+				": Permission denied\n", STDERR_FILENO);
 				exit (126);
 			}
 		}
@@ -93,25 +94,4 @@ void	*double_free(char **ptr)
 		free(ptr);
 	}
 	return (NULL);
-}
-
-int	free_env(t_env *env)
-{
-	t_envepval *temp;
-	int			exit_code;
-	
-	exit_code = env->exit_status;
-	double_free(env->env_copy);
-	while (env->env)
-	{
-		temp = env->env->next;
-		if (env->env->key)
-			free(env->env->key);
-		if (env->env->val)
-			free(env->env->val);
-		free(env->env);
-		env->env = temp;
-	}
-	free(env);
-	return (exit_code);
 }

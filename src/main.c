@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int g_signal;
+int	g_signal;
 
 void	minishell(t_env *my_env)
 {
@@ -20,7 +20,6 @@ void	minishell(t_env *my_env)
 
 	while (1)
 	{
-		
 		line = readline(GREEN BOLD "mustash> "RESET);
 		// manage_signals(0);
 		if (!line)
@@ -45,7 +44,7 @@ void	minishell(t_env *my_env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env   *env_main;
+	t_env	*env_main;
 
 	(void)argv;
 	(void)argc;

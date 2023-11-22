@@ -20,7 +20,7 @@ char	*find_expandable(t_envepval	*env, char	*key)
 			&& !ft_strncmp(key, env->key, ft_strlen(key)))
 		{
 			if (env->val == NULL)
-				break;
+				break ;
 			return (ft_strdup(env->val));
 		}
 		env = env->next;

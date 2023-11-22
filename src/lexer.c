@@ -45,11 +45,11 @@ int	check_pipes(t_token *tokens, t_env *env)
 			flag = true;
 		tokens = tokens->next;
 	}
-	if (!flag)  
+	if (!flag)
 		return (0);
 	//ft_putstr_fd("here1: Incorrect pipes\n", STDERR_FILENO);	I don't think we need to print the message:
 	//															Because we print also if the "command" is a space
-	return (1); 
+	return (1);
 }
 
 void	lexer(char *line, t_env *my_env)
@@ -75,7 +75,8 @@ void	lexer(char *line, t_env *my_env)
 	}
 	else
 	{
-		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", STDERR_FILENO);
+		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", \
+		STDERR_FILENO);
 		my_env->exit_status = SYNTAX_ERROR;
 	}
 }

@@ -38,6 +38,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <stdio.h>
+#include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
@@ -165,9 +166,10 @@ void		envlst_add(t_envepval **lst, t_envepval *new);
 t_envepval	*create_env_node(char *key, char *value);
 void		print_my_env(t_envepval *my_env);
 void		set_env(t_envepval	**my_env, char **env);
+
+//env2
 size_t		env_len(t_envepval *env);
 t_env		*copy_env(char **env);
-void		print_copy_env(t_env *env);
 int			lstenv_c(t_envepval *lst);
 char		*env_str(t_envepval *current);
 char		**get_envp(t_env *env);
@@ -191,6 +193,8 @@ void		find_cmd(t_command	*cmd, t_env *env);
 void		is_executable(t_command *cmds, t_env *env);
 void		handle_child_process(int **fd, t_command *cmds, t_env *env, \
 			t_execution	*temp);
+
+//execution2
 void		close_pipes(int **fd, t_execution *temp);
 void		free_temp(t_execution *temp);
 void		run_commands(t_command *cmds, t_env *env);
@@ -244,6 +248,8 @@ void		minishell(t_env *my_env);
 //parsing
 t_parsing	*set_parsing_var(void);
 int			handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
+
+//parsing2
 int			check_if_redir(t_type type);
 void		free_parsing_temp(t_parsing *temp);
 t_command	*merge_tokens(t_token	*tokens, t_env *env);
@@ -321,10 +327,10 @@ int			find_equal(char *line);
 char		*find_path(char *cmd, char *envp);
 void		*ft_ptrdel(void *ptr);
 void		*double_free(char **ptr);
-int			free_env(t_env *env);
 
 //utils2
 char		**push_str_2d(char **args, char *str);
+int			free_env(t_env *env);
 
 //utils3
 char		*find_expandable(t_envepval	*env, char	*key);

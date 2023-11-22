@@ -28,8 +28,6 @@ char	*get_cwd(t_env *env)
 		pwd = get_pwd(env);
 		free(cwd);
 		return (pwd);
-		//perror("getcwd() error");
-		//exit (EXIT_FAILURE);
 	}
 }
 
@@ -63,22 +61,6 @@ void	update_pwd(t_env *env, char *pwd)
 		variable = variable->next;
 	}
 }
-
-// static char	*get_home(t_env *env)
-// {
-// 	char	*nwd;
-
-// 	if (!find_expandable(env->env, "HOME"))
-// 		printf("Error\n");
-// 	nwd = find_expandable(env->env, "HOME");
-// 	if (ft_strlen(nwd) == 0)
-// 	{
-// 		free(nwd);
-// 		nwd = find_home(env->env);
-// 	}
-// 	// printf("nwd: %s\n", nw);
-// 	return (nwd);
-// }
 
 void	ft_cd(t_env *env, t_command *cmd)
 {
@@ -118,8 +100,4 @@ void	ft_cd(t_env *env, t_command *cmd)
 	else
 		if (!nwd)
 			chdir(pwd);
-		//update_pwd(env, pwd);
-	//free(pwd);
-	//if (nwd)
-	//	free(nwd);
 }

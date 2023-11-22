@@ -58,7 +58,8 @@ int	char_to_expand(char c)
 	return (0);
 }
 
-void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env)
+void	error_code_expansion(t_token *token, t_token **head, \
+							int pos, t_env *env)
 {
 	char	*error_code;
 	size_t	i;
@@ -82,4 +83,3 @@ void	error_code_expansion(t_token *token, t_token **head, int pos, t_env *env)
 	env->exit_status = SUCCESS;
 	free(error_code);
 }
-

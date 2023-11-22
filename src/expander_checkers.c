@@ -45,7 +45,8 @@ int	is_error_code(t_token **tokens)
 	return (1);
 }
 
-void	handle_error_code(t_token **tokens, t_token **head, t_expander *var, t_env *env)
+void	handle_error_code(t_token **tokens, t_token **head, \
+		t_expander *var, t_env *env)
 {
 	error_code_expansion(*tokens, head, var->i, env);
 	*tokens = *head;

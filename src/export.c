@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/31 15:31:44 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 t_envepval	*create_env_emptynode(char *key)
@@ -21,7 +33,7 @@ void	print_my_export(t_envepval *env)
 		else if (env->val && env->val[0] != '\0')
 			printf("declare -x %s='%s'\n", env->key, env->val);
 		else if (env->val && env->val[0] == 0)
-		  	printf("declare -x %s=''\n", env->key);
+			printf("declare -x %s=''\n", env->key);
 		env = env->next;
 	}
 }
@@ -32,7 +44,8 @@ int	ft_isvariable(char *args)
 		return (0);
 	while (*args && *args != '=')
 	{	
-		if (!*args || ft_isdigit(*args) || *args == '=' || (*args == '$' && !*(args + 1)) || *args == ' ')
+		if (!*args || ft_isdigit(*args) || *args == '=' || \
+		(*args == '$' && !*(args + 1)) || *args == ' ')
 		{
 			return (0);
 		}
@@ -55,7 +68,8 @@ void	add_env_variable(t_envepval **lst, t_envepval *new)
 		*lst = new;
 		return ;
 	}
-	while (previous_variable && ft_strcmp(previous_variable->key, new->key) != 0)
+	while (previous_variable && ft_strcmp(previous_variable->key, \
+	new->key) != 0)
 	{
 		previous_variable = previous_variable->next;
 	}
@@ -120,7 +134,8 @@ void	ft_export(t_env *env, char **args)
 		}
 		else
 		{
-			ft_print_message("mustash: export: `", args[i], "': not a valid identifier\n", STDERR_FILENO);
+			ft_print_message("mustash: export: `", args[i], \
+			"': not a valid identifier\n", STDERR_FILENO);
 			env->exit_status = ERROR;
 		}
 		i++;

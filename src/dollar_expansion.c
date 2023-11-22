@@ -40,7 +40,8 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 	var->j = var->i;
 	if (tokens->command[var->i] && !ft_isdigit(tokens->command[var->i]))
 	{
-		while (tokens->command[var->i] && char_to_expand(tokens->command[var->i]))
+		while (tokens->command[var->i] && \
+				char_to_expand(tokens->command[var->i]))
 			var->i++;
 	}
 	else
