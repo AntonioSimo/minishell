@@ -12,12 +12,6 @@
 
 #include "../include/minishell.h"
 
-typedef struct s_parsing
-{
-	char	*word;
-	char	**args_arr;
-}	t_parsing;
-
 t_parsing	*set_parsing_var(void)
 {
 	t_parsing	*var;

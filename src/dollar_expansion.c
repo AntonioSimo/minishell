@@ -12,16 +12,6 @@
 
 #include "../include/minishell.h"
 
-typedef struct s_dollar
-{
-	char	*to_expand;
-	char	*expanded;
-	int		i;
-	int		j;
-	bool	brackets;
-	int		pos;
-}	t_dollar;
-
 t_dollar	*set_var_dollar(int pos)
 {
 	t_dollar	*var;
