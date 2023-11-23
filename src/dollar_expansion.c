@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   dollar_expansion.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:13:09 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,18 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 	expanded_nodes = create_nodes(var->expanded, tokens, \
 								var->j, var->i);
 	connect_nodes(expanded_nodes, var->pos, head);
-	ft_free(var->to_expand);
+	// var->to_expand = ft_free(var->to_expand);
+}
+
+void	free_var(t_dollar *var)
+{
+	if (var->expanded)
+		free(var->expanded);
+	if (var->to_expand)
+	{
+		free(var->to_expand);
+	}
+	free(var);	
 }
 
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
@@ -68,7 +79,10 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 	while (var->i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[var->i] == '$' && !tokens->command[var->i + 1])
+		{	
+			free_var(var);
 			return (1);
+		}
 		if (tokens->command[var->i] && tokens->command[var->i] == '$')
 		{
 			expand_token(tokens, var, head, my_env);
@@ -82,7 +96,13 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 		}
 	}
 	if (ft_strlen(var->expanded) == 0)
+	{
+		free_var(var);
+		// printf("here\n");
 		return (1);
+	}
+	free_var(var);
+	// printf("here\n");
 	return (0);
 }
 

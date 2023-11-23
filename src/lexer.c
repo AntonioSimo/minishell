@@ -6,13 +6,11 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 18:24:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 14:49:35 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-extern int	g_error_code;
 
 int	is_divider(t_type type)
 {
@@ -37,7 +35,7 @@ int	check_pipes(t_token *tokens, t_env *env)
 			flag = false;
 		if (flag && tokens->type == PIPE)
 		{
-			ft_putstr_fd("here2: Incorrect pipes\n", STDERR_FILENO);
+			ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
 			env->exit_status = 2;
 			return (1);
 		}
@@ -47,8 +45,6 @@ int	check_pipes(t_token *tokens, t_env *env)
 	}
 	if (!flag)
 		return (0);
-	//ft_putstr_fd("here1: Incorrect pipes\n", STDERR_FILENO);	I don't think we need to print the message:
-	//															Because we print also if the "command" is a space
 	return (1);
 }
 
@@ -65,8 +61,6 @@ void	lexer(char *line, t_env *my_env)
 		if (tokens && !check_pipes(tokens, my_env))
 		{
 			commands = merge_tokens(tokens, my_env);
-			// if (check_assignments(commands))
-			// 	remove_assigmnets(&commands);
 			if (commands)
 				run_commands(commands, my_env);
 			tokens = destroy_tokens(tokens);

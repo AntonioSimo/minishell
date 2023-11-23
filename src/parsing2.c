@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 17:49:56 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:30:30 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 {
 	if (is_word(tokens->type))
 	{
-		(*var)->word = ft_free_strjoin((*var)->word, tokens->command);
+		(*var)->word = ft_strjoin((*var)->word, tokens->command);
 	}
 	else if (tokens->type == SEPERATOR)
 	{
@@ -83,8 +83,8 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 		var->args_arr = push_str_2d(var->args_arr, var->word);
 		if (var->args_arr || redir)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		// free_parsing_temp(var);	
 		redir = NULL;
 	}
+	// free_parsing_temp(var);	
 	return (commands);
 }

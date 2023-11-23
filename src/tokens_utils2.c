@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:46:44 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:42 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:26:52 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,11 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	new_nodes->next = next_head;
 	if (pos == 0)
 	{
-		test = *head;
-		*head = or_head->next;
-		free(test->command);
-		free(test);
+		test = (*head)->next;
+		free(*head);
+		*head = test;
+		// free(test->command);
+		// free(test);
 	}
 	else
 		*head = or_head;
