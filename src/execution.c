@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:24:28 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	**make_pipes(t_command *cmds)
 	int	i;
 	int	**fd;
 	int	cmds_size;
-
+	
 	cmds_size = count_cmds(cmds);
 	i = 0;
 	if (cmds_size == 1)

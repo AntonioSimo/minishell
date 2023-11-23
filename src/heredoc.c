@@ -13,25 +13,36 @@
 
 #include "minishell.h"
 
-int	init_heredoc(t_execution *temp)
+int	init_heredoc(t_execution **temp)
 {
-	t_command	*cmds;
-	t_redir_lst *redir;
+	// t_command	*cmds;
+	// t_redir_lst *redir;
+	// int	j;
 
-	cmds = temp->head;
-	while (cmds)
+	// cmds = temp->head;
+	// j = 0;
+	while (*temp)
 	{
-		redir = cmds->redirections->lst;
-		while (redir)
+		if ((*temp)->head->redirections)
 		{
-			if (redir->type == HEREDOC)
+			// redir = cmds->redirections->lst;
+			while ((*temp)->head->redirections->lst)
 			{
-				redir->fd[0] = heredoc(redir);
+				if ((*temp)->head->redirections->lst->type == HEREDOC)
+				{
+					(*temp)->head->redirections->lst->fd[0] = heredoc((*temp)->head->redirections->lst);
+					// temp->head = redir;
+				}
+				// j++;
+				(*temp)->head->redirections->lst = (*temp)->head->redirections->lst->next;
 			}
-			redir = redir->next;
 		}
-		cmds = cmds->next;
+		(*temp)->head = (*temp)->head->next;
 	}
+	// if (redir->fd[j] == -1)
+	// 	perror_exit("FD error\n");
+	// dup2(redir->fd[j], STDIN_FILENO);
+	// close(redir->fd[j]);
 	return (0);
 }
 

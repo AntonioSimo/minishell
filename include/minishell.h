@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/10/31 17:57:25 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:52:58 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ void		ft_export(t_env *env, char **args);
 
 //heredoc
 int			heredoc(t_redir_lst *temp);
-int			init_heredoc(t_execution *temp);
+int			init_heredoc(t_execution **temp);
 //int			heredoc(char *file);
 
 //lexer
