@@ -38,7 +38,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <stdio.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
@@ -122,7 +122,7 @@ typedef struct s_parsing
 typedef struct s_redir_lst
 {
 	char				*file;
-	int					*fd;
+	int					fd[2];
 	t_type				type;
 	struct s_redir_lst	*next;
 }	t_redir_lst;
@@ -236,6 +236,8 @@ void		ft_export(t_env *env, char **args);
 
 //heredoc
 int			heredoc(t_redir_lst *temp);
+int			init_heredoc(t_execution *temp);
+//int			heredoc(char *file);
 
 //lexer
 int			is_divider(t_type type);

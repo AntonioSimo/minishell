@@ -53,7 +53,7 @@ void	find_cmd(t_command	*cmd, t_env *env)
 		execve(path, cmd->arguments, env->env_copy);
 	else
 	{
-		ft_print_message(NULL, cmd->command, ": command not found\n", \
+		ft_print_message("mustash: ", cmd->command, ": command not found\n", \
 		STDERR_FILENO);
 		exit (127);
 	}

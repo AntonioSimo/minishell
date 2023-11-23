@@ -124,6 +124,10 @@ void	run_commands(t_command *cmds, t_env *env)
 
 	temp = initialize_temp(cmds);
 	check = 0;
+	if (init_heredoc(temp))
+	{
+		return ;
+	}
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
