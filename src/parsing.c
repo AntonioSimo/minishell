@@ -38,6 +38,8 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
 		(*redir)->filein = NULL;
 		(*redir)->fileout = NULL;
+		(*redir)->in_count = 0;
+		(*redir)->out_count = 0;
 	}
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;
@@ -69,5 +71,6 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		return (1);
 	}
 	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+	free(file);
 	return (0);
 }

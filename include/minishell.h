@@ -59,10 +59,19 @@ typedef struct s_redir
 {
 	int					*fileout;
 	int					*filein;
+	int					out_count;
+	int					in_count;
 	int					stdin_cpy;
 	int					stdout_cpy;
 	struct s_redir_lst	*lst;
 }	t_redir;
+
+typedef struct s_redir_lst
+{
+	char				*file;
+	t_type				type;
+	struct s_redir_lst	*next;
+}	t_redir_lst;
 
 typedef struct s_command
 {
@@ -119,13 +128,6 @@ typedef struct s_parsing
 	char	**args_arr;
 }	t_parsing;
 
-typedef struct s_redir_lst
-{
-	char				*file;
-	int					fd[2];
-	t_type				type;
-	struct s_redir_lst	*next;
-}	t_redir_lst;
 
 typedef struct s_token
 {
