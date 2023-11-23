@@ -45,8 +45,7 @@ int	check_if_redir(t_type type)
 
 void	free_parsing_temp(t_parsing *temp)
 {
-	if (temp->args_arr)
-		double_free(temp->args_arr);
+	// double_free(temp->args_arr);
 	if (temp->word)
 		free(temp->word);
 	free(temp);
@@ -68,7 +67,9 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 		{
 			if (handle_redirections(&redir, &tokens, env))
 			{
-				// free_parsing_temp(var);	
+				if (var->args_arr)
+					double_free(var->args_arr);
+				free_parsing_temp(var);	
 				return (NULL);
 			}
 		}
@@ -85,6 +86,6 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
 		redir = NULL;
 	}
-	// free_parsing_temp(var);	
+	free_parsing_temp(var);	
 	return (commands);
 }

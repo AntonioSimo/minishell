@@ -27,7 +27,7 @@ void	close_redir(t_redir *redir)
 	{
 		if (temp->type == REDIR_OUTPUT)
 		{
-			if (redir->fileout[j])
+			if (j < redir->out_count)
 			{
 				close(redir->fileout[j]);
 				j++;
@@ -35,7 +35,7 @@ void	close_redir(t_redir *redir)
 		}
 		else if (temp->type == REDIR_INPUT)
 		{
-			if (redir->filein[k])
+			if (k < redir->in_count)
 			{
 				close(redir->filein[j]);
 				k++;
@@ -96,6 +96,7 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
 	close(redir->fileout[i]);
+	redir->out_count++;
 	i++;
 	return (0);
 }
@@ -129,6 +130,7 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
 	close(redir->filein[j]);
+	redir->in_count++;
 	j++;
 	return (0);
 }

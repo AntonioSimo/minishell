@@ -13,38 +13,38 @@
 
 #include "minishell.h"
 
-int	init_heredoc(t_execution **temp)
-{
-	// t_command	*cmds;
-	// t_redir_lst *redir;
-	// int	j;
+// int	init_heredoc(t_execution **temp)
+// {
+// 	// t_command	*cmds;
+// 	// t_redir_lst *redir;
+// 	// int	j;
 
-	// cmds = temp->head;
-	// j = 0;
-	while (*temp)
-	{
-		if ((*temp)->head->redirections)
-		{
-			// redir = cmds->redirections->lst;
-			while ((*temp)->head->redirections->lst)
-			{
-				if ((*temp)->head->redirections->lst->type == HEREDOC)
-				{
-					(*temp)->head->redirections->lst->fd[0] = heredoc((*temp)->head->redirections->lst);
-					// temp->head = redir;
-				}
-				// j++;
-				(*temp)->head->redirections->lst = (*temp)->head->redirections->lst->next;
-			}
-		}
-		(*temp)->head = (*temp)->head->next;
-	}
-	// if (redir->fd[j] == -1)
-	// 	perror_exit("FD error\n");
-	// dup2(redir->fd[j], STDIN_FILENO);
-	// close(redir->fd[j]);
-	return (0);
-}
+// 	// cmds = temp->head;
+// 	// j = 0;
+// 	while (*temp)
+// 	{
+// 		if ((*temp)->head->redirections)
+// 		{
+// 			// redir = cmds->redirections->lst;
+// 			while ((*temp)->head->redirections->lst)
+// 			{
+// 				if ((*temp)->head->redirections->lst->type == HEREDOC)
+// 				{
+// 					(*temp)->head->redirections->lst->fd[0] = heredoc((*temp)->head->redirections->lst);
+// 					// temp->head = redir;
+// 				}
+// 				// j++;
+// 				(*temp)->head->redirections->lst = (*temp)->head->redirections->lst->next;
+// 			}
+// 		}
+// 		(*temp)->head = (*temp)->head->next;
+// 	}
+// 	// if (redir->fd[j] == -1)
+// 	// 	perror_exit("FD error\n");
+// 	// dup2(redir->fd[j], STDIN_FILENO);
+// 	// close(redir->fd[j]);
+// 	return (0);
+// }
 
 static int child_process_here_doc(char *file)
 {
