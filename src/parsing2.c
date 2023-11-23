@@ -17,7 +17,7 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 {
 	if (is_word(tokens->type))
 	{
-		(*var)->word = ft_strjoin((*var)->word, tokens->command);
+		(*var)->word = ft_free_strjoin((*var)->word, tokens->command);
 	}
 	else if (tokens->type == SEPERATOR)
 	{

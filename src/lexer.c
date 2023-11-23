@@ -45,6 +45,7 @@ int	check_pipes(t_token *tokens, t_env *env)
 	}
 	if (!flag)
 		return (0);
+	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
 	return (1);
 }
 
@@ -61,12 +62,11 @@ void	lexer(char *line, t_env *my_env)
 		if (tokens && !check_pipes(tokens, my_env))
 		{
 			commands = merge_tokens(tokens, my_env);
-			// print_cmds(commands);
 			if (commands)
 				run_commands(commands, my_env);
-			tokens = destroy_tokens(tokens);
 			commands = destroy_cmds(commands);
 		}
+		tokens = destroy_tokens(tokens);
 	}
 	else
 	{
