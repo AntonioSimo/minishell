@@ -88,13 +88,18 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	if (pos == 0)
 	{
 		test = (*head)->next;
+		free((*head)->command);
 		free(*head);
 		*head = test;
 		// free(test->command);
 		// free(test);
 	}
 	else
+	{
+		free((*head)->command);
+		free(*head);
 		*head = or_head;
+	}
 }
 
 t_token	*create_new_nodes(char *expanded, t_type type)
