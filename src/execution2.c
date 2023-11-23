@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/23 12:46:26 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/23 15:12:36 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,8 @@ void	run_commands(t_command *cmds, t_env *env)
 
 	temp = initialize_temp(cmds);
 	check = 0;
-	if (init_heredoc(&temp))
-	{
-		return ;
-	}
+	// if (init_heredoc(&temp))
+	// 	return ;
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
