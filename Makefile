@@ -24,7 +24,7 @@ SOURCES := $(SRC_DIR)/*.c
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror -g -fsanitize=address
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  

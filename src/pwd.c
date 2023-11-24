@@ -17,20 +17,20 @@ void	get_current_working_dir(t_env *env)
 	char	*current_pwd;
 	char	*previous_pwd;
 
-	current_pwd = malloc(PATH_MAX + 1);
+	current_pwd = malloc(PATH_MAXSIZE + 1);
 	if (!current_pwd)
 	{
 		env->exit_status = ERROR;
 		return ;
 	}
-	if (getcwd(current_pwd, PATH_MAX) != NULL)
+	if (getcwd(current_pwd, PATH_MAXSIZE) != NULL)
 	{
 		ft_putstr_fd(current_pwd, 1);
 		ft_putchar_fd('\n', 1);
 	}
 	else
 	{
-		update_pwd(env, current_pwd);
+		//update_wd(env, "OLDPWD", current_pwd);
 		previous_pwd = get_pwd(env);
 		if (previous_pwd != NULL)
 		{

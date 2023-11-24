@@ -128,7 +128,6 @@ typedef struct s_parsing
 	char	**args_arr;
 }	t_parsing;
 
-
 typedef struct s_token
 {
 	char				*command;
@@ -144,8 +143,9 @@ void		exe_builtin(t_command *cmd, t_env *env, int exit_status);
 
 //cd
 char		*get_cwd(t_env *env);
+char		*get_old_pwd(t_env *env);
 char		*get_pwd(t_env *env);
-void		update_pwd(t_env *env, char *pwd);
+void		update_wd(t_env *env, char *wd, char *new_wd_value);
 void		ft_cd(t_env *env, t_command *cmd);
 
 //commands_utils
@@ -166,7 +166,7 @@ void		double_dollar(t_token *tokens, t_token **head, int pos);
 t_envepval	*lstenv(t_envepval *lst);
 void		envlst_add(t_envepval **lst, t_envepval *new);
 t_envepval	*create_env_node(char *key, char *value);
-void		print_my_env(t_envepval *my_env);
+void		print_my_env(t_env *env);
 void		set_env(t_envepval	**my_env, char **env);
 
 //env2
@@ -319,6 +319,10 @@ void		*destroy_tokens(t_token	*tokens);
 //token_utils2
 int			token_lst_size(t_token	*tokens);
 t_token		*create_token(char *string, t_type type);
+void		attach_empty_head(int pos, t_token **head, t_token *or_head);
+void		attach_head(int pos, t_token **head, t_token *or_head);
+
+//token_utils3
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded, t_type type);
 

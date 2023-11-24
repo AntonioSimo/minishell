@@ -50,13 +50,40 @@ t_envepval	*create_env_node(char *key, char *value)
 	return (node);
 }
 
-void	print_my_env(t_envepval *my_env)
+bool	check_PATH(t_env *my_env)
 {
-	while (my_env)
+	t_envepval *variable;
+	bool		found;
+
+	found = false;
+	variable = my_env->env;
+	while (variable != NULL)
 	{
-		if (my_env->val != NULL)
-			printf("%s=%s\n", my_env->key, my_env->val);
-		my_env = my_env->next;
+		if (ft_strcmp(variable->key, "PATH") == 0)
+		{
+			found = true;
+			return (found);
+		}
+		variable = variable->next;
+	}
+	ft_print_message("mustash: ", "env: ", "No such file or directory\n", STDERR_FILENO);
+	my_env->exit_status = 127;
+	return (found);
+}
+
+void	print_my_env(t_env *my_env)
+{
+	t_envepval *variable;
+
+	variable = my_env->env;
+	if (check_PATH(my_env) == true)
+	{
+		while (variable)
+		{
+			if (variable->val != NULL)
+				printf("%s=%s\n", variable->key, variable->val);
+			variable = variable->next;
+		}
 	}
 }
 
