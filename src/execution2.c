@@ -24,12 +24,11 @@ void	close_pipes(int **fd, t_execution *temp)
 	}
 }
 
-static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
+void	get_last_stat(int last_pid, t_command *cmds, t_env *env, int *last_stat)
 {
 	int	cmds_size;
-	int	wait_ret;
 	int	status;
-	int	last_status;
+	int	wait_ret;
 
 	cmds_size = count_cmds(cmds);
 	while (cmds_size > 0)
@@ -48,10 +47,18 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 			g_signal = 1;
 		}
 		if (wait_ret == last_pid)
-			last_status = status;
+			*last_stat = status;
 		if (WIFEXITED(status) || WIFSIGNALED(status))
 			cmds_size--;
 	}
+}
+
+static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
+{
+	int	last_status;
+
+	last_status = 0;	
+	get_last_stat(last_pid, cmds, env, &last_status);
 	if (WIFEXITED(last_status))
 	{
 		env->exit_status = WEXITSTATUS(last_status);

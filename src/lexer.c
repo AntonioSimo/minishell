@@ -49,6 +49,25 @@ int	check_pipes(t_token *tokens, t_env *env)
 	return (1);
 }
 
+int	if_not_space(t_token *tokens)
+{
+	int		i;
+	bool	flag;
+
+	i = 0;
+	flag = false;
+	while (tokens)
+	{
+		if (tokens->type == SEPERATOR)
+			flag = true;
+		i++;
+		tokens = tokens->next;
+	}
+	if (flag && i == 1)
+		return (1);
+	return (0);
+}
+
 void	lexer(char *line, t_env *my_env)
 {
 	t_token		*tokens;
@@ -59,7 +78,7 @@ void	lexer(char *line, t_env *my_env)
 	{
 		tokenize(line, &tokens);
 		expander(&tokens, my_env);
-		if (tokens && !check_pipes(tokens, my_env))
+		if (tokens && !if_not_space(tokens) && !check_pipes(tokens, my_env))
 		{
 			commands = merge_tokens(tokens, my_env);
 			if (commands)

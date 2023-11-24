@@ -12,61 +12,20 @@
 
 #include "../include/minishell.h"
 
-void	close_redir(t_redir *redir)
+int	check_access_out(t_redir_lst *temp)
 {
-	int			j;
-	int			k;
-	t_redir_lst	*temp;
-
-	temp = redir->lst;
-	j = 0;
-	k = 0;
-	dup2(redir->stdout_cpy, STDOUT_FILENO);
-	dup2(redir->stdin_cpy, STDIN_FILENO);
-	while (temp)
+	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
-		if (temp->type == REDIR_OUTPUT)
-		{
-			if (j < redir->out_count)
-			{
-				close(redir->fileout[j]);
-				j++;
-			}
-		}
-		else if (temp->type == REDIR_INPUT)
-		{
-			if (k < redir->in_count)
-			{
-				close(redir->filein[j]);
-				k++;
-			}
-		}
-		temp = temp->next;
+		ft_print_message("mustash: ", temp->file, \
+		": Permission denied\n", STDERR_FILENO);
+		return (1);
 	}
-}
-
-int	count_redir(t_redir_lst *redir, t_type type)
-{
-	int	in;
-	int	out;
-
-	in = 0;
-	out = 0;
-	while (redir)
+	if (access(temp->file, F_OK) != 00)
 	{
-		if ((type == REDIR_INPUT && redir->type == REDIR_INPUT)
-			|| (type == REDIR_INPUT && redir->type == HEREDOC))
-			in++;
-		if ((type == REDIR_OUTPUT && redir->type == REDIR_OUTPUT)
-			|| (type == REDIR_OUTPUT
-				&& redir->type == REDIR_OUTPUT_APPEND))
-			out++;
-		redir = redir->next;
+		ft_print_message("mustash: ", temp->file, \
+		": No such file or directory\n", STDERR_FILENO);
+		return (1);
 	}
-	if (type == REDIR_INPUT)
-		return (in);
-	if (type == REDIR_OUTPUT)
-		return (out);
 	return (0);
 }
 
@@ -80,18 +39,8 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	else if (temp->type == REDIR_OUTPUT_APPEND)
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_APPEND, 0644);
-	if (access(temp->file, W_OK) == -1 && access(temp->file, F_OK) == 00)
-	{
-		ft_print_message("mustash: ", temp->file, \
-		": Permission denied\n", STDERR_FILENO);
+	if (check_access_out(temp))
 		return (1);
-	}
-	if (access(temp->file, F_OK) != 00)
-	{
-		ft_print_message("mustash: ", temp->file, \
-		": No such file or directory\n", STDERR_FILENO);
-		return (1);
-	}
 	if (redir->fileout[i] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->fileout[i], STDOUT_FILENO);
@@ -101,19 +50,8 @@ static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
 	return (0);
 }
 
-static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
+int	check_access_in(t_redir_lst *temp)
 {
-	static int	j = 0;
-
-	if (temp->type == REDIR_INPUT)
-		redir->filein[j] = open(temp->file, O_RDONLY);
-	else if (temp->type == HEREDOC)
-	{
-		dup2(redir->filein[j], STDIN_FILENO);
-		close(redir->filein[j]);
-		// redir->filein[j] = open(temp->file,__O_TMPFILE | O_RDWR);
-		// redir->filein[j] = heredoc(temp);
-	}
 	if (access(temp->file, R_OK) == -1 && access(temp->file, F_OK) == 00)
 	{
 		ft_print_message("mustash: ", temp->file, \
@@ -126,6 +64,22 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 		": No such file or directory\n", STDERR_FILENO);
 		return (1);
 	}
+	return (0);
+}
+
+static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
+{
+	static int	j = 0;
+
+	if (temp->type == REDIR_INPUT)
+		redir->filein[j] = open(temp->file, O_RDONLY);
+	else if (temp->type == HEREDOC)
+	{
+		// dup2(redir->filein[j], STDIN_FILENO);
+		// close(redir->filein[j]);
+	}
+	if (check_access_in(temp))
+		return (1);
 	if (redir->filein[j] == -1)
 		perror_exit("FD error\n");
 	dup2(redir->filein[j], STDIN_FILENO);
@@ -140,10 +94,7 @@ int	run_redirections(t_redir *redir, t_env *env)
 	t_redir_lst	*temp;
 
 	temp = redir->lst;
-	redir->fileout = ptr_check(malloc(sizeof(int) \
-					* count_redir(temp, REDIR_OUTPUT)));
-	redir->filein = ptr_check((malloc(sizeof(int) \
-					* count_redir(temp, REDIR_INPUT))));
+	alloc_in_n_out(&redir);
 	while (temp)
 	{
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)

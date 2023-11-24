@@ -47,6 +47,30 @@ void	single_dollar(t_token **tokens, t_envepval *my_env, \
 	}
 }
 
+void	double_dollar(t_token *tokens, t_token **head, int pos)
+{
+	char	*pid;
+	size_t	i;
+	t_token	*new_node;
+
+	i = 0;
+	pid = ft_itoa((int)getpid());
+	while (i < ft_strlen(tokens->command))
+	{
+		if (ft_strlen(tokens->command + i) > 1 && tokens->command[i] == '$'
+			&& tokens->command[i + 1] == '$')
+		{
+			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr \
+				(tokens->command, "$$", ft_strlen(tokens->command)));
+			new_node = create_nodes(pid, tokens, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;
+		}
+		i++;
+	}
+	free(pid);
+}
+
 void	handle_double_dollar(t_token **tokens, t_token **head, t_expander *var)
 {
 	double_dollar(*tokens, head, var->i);

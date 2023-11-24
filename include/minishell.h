@@ -277,6 +277,7 @@ void		push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
 void		*destroy_redir_lst(t_redir_lst *redir);
 void		*destroy_redir(t_redir *redir);
 void		execute_pipe(int **fd, t_execution *temp);
+void		alloc_in_n_out(t_redir **redir);
 
 //redirections
 void		close_redir(t_redir *redir);

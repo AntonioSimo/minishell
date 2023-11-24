@@ -67,7 +67,6 @@ void	ft_cd(t_env *env, t_command *cmd)
 	char	*pwd;
 	char	*nwd;
 
-	pwd = get_cwd(env);
 	nwd = NULL;
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
@@ -75,17 +74,24 @@ void	ft_cd(t_env *env, t_command *cmd)
 		env->exit_status = ERROR;
 		return ;
 	}
+	pwd = get_cwd(env);
 	if (cmd->arguments[1] == NULL)
 	{
-		if (chdir(find_expandable(env->env, "HOME")) == -1)
+		nwd = find_expandable(env->env, "HOME");
+		if (chdir(nwd) == -1)
 		{
 			ft_print_message("mustash: cd: ", nwd, \
 			": HOME not set\n", STDERR_FILENO);
 			env->exit_status = ERROR;
+			free(nwd);
 			return ;
 		}
 		else
+		{
+			if (nwd)
+				free(nwd);
 			nwd = find_expandable(env->env, "HOME");
+		}
 	}
 	else if (!ft_strcmp(cmd->arguments[1], "-"))
 		nwd = find_expandable(env->env, "OLDPWD");
@@ -100,4 +106,6 @@ void	ft_cd(t_env *env, t_command *cmd)
 	else
 		if (!nwd)
 			chdir(pwd);
+	free(pwd);
+	free(nwd);
 }

@@ -60,14 +60,24 @@ void	print_my_env(t_envepval *my_env)
 	}
 }
 
+char	*handle_shlvl(char *value)
+{
+	char		*shlvl;
+	char		*ret;
+
+	shlvl = ft_itoa(ft_atoi(value) + 1);
+	ret = ft_strdup(shlvl);
+	free(shlvl);
+	free(value);
+	return (ret);
+}
+
 void	set_env(t_envepval	**my_env, char **env)
 {
 	int			i;
 	char		*key;
 	char		*value;
 	int			equal_pos;
-	char		*shlvl;
-	t_envepval	*new_variable;
 
 	i = 0;
 	while (env[i])
@@ -77,18 +87,7 @@ void	set_env(t_envepval	**my_env, char **env)
 		value = ptr_check(ft_substr(env[i], equal_pos + 1, \
 				ft_strlen(env[i]) - equal_pos));
 		if (!ft_strncmp(key, "SHLVL", 5))
-		{
-			shlvl = ft_itoa(ft_atoi(value) + 1);
-			free(value);
-			value = ft_strdup(shlvl);
-			free(shlvl);
-		}
-		else
-		{
-			new_variable = set_newvariable("SHLVL=1");
-			if (new_variable != NULL)
-				add_env_variable(my_env, new_variable);
-		}
+			value = handle_shlvl(value);
 		envlst_add(my_env, create_env_node(key, value));
 		ft_free(key);
 		ft_free(value);

@@ -17,7 +17,7 @@ static int	**make_pipes(t_command *cmds)
 	int	i;
 	int	**fd;
 	int	cmds_size;
-	
+
 	cmds_size = count_cmds(cmds);
 	i = 0;
 	if (cmds_size == 1)
@@ -76,23 +76,13 @@ void	is_executable(t_command *cmds, t_env *env)
 		exit (127);
 	}
 	if (stat(cmds->command, &file_info) == 0 && S_ISDIR(file_info.st_mode))
-	{
 		ft_print_message("mustash: ", cmds->command, \
 		": Is a directory\n", STDERR_FILENO);
-		exit (126);
-	}
 	else
-	{
 		ft_print_message("mustash: ", cmds->command, \
 		": Permission denied\n", STDERR_FILENO);
-		exit (126);
-	}
+	exit (126);
 }
-
-// void	assign_variable()
-// {
-// 	if (ft_strchr(command, '=') && !ft_isdigit(command[0]))
-// }
 
 void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 							t_execution	*temp)
@@ -111,7 +101,5 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 		|| ft_strnstr(cmds->command, "./", ft_strlen(cmds->command))
 		|| ft_strchr(cmds->command, '/'))
 		is_executable(cmds, env);
-	// if (ft_strchr(cmds->command, '=') && !ft_isdigit(cmds->command[0]))
-	// 	assign_variable(cmds, env);
 	find_cmd(cmds, env);
 }

@@ -26,6 +26,18 @@ t_dollar	*set_var_dollar(int pos)
 	return (var);
 }
 
+void	calc_len(t_token *tokens, t_dollar *var)
+{
+	if (tokens->command[var->i] && !ft_isdigit(tokens->command[var->i]))
+	{
+		while (tokens->command[var->i] && \
+				char_to_expand(tokens->command[var->i]))
+			var->i++;
+	}
+	else
+		var->i++;
+}
+
 void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 					t_envepval *my_env)
 {
@@ -38,14 +50,7 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 		var->i++;
 	}
 	var->j = var->i;
-	if (tokens->command[var->i] && !ft_isdigit(tokens->command[var->i]))
-	{
-		while (tokens->command[var->i] && \
-				char_to_expand(tokens->command[var->i]))
-			var->i++;
-	}
-	else
-		var->i++;
+	calc_len(tokens, var);
 	var->to_expand = ft_substr(tokens->command, var->j, var->i - var->j);
 	var->expanded = find_expandable(my_env, var->to_expand);
 	if (var->brackets)
@@ -56,10 +61,9 @@ void	expand_token(t_token *tokens, t_dollar *var, t_token **head, \
 	expanded_nodes = create_nodes(var->expanded, tokens, \
 								var->j, var->i);
 	connect_nodes(expanded_nodes, var->pos, head);
-	// var->to_expand = ft_free(var->to_expand);
 }
 
-void	free_var(t_dollar *var)
+int	free_var(t_dollar *var)
 {
 	if (var->expanded)
 		free(var->expanded);
@@ -67,7 +71,8 @@ void	free_var(t_dollar *var)
 	{
 		free(var->to_expand);
 	}
-	free(var);	
+	free(var);
+	return (1);
 }
 
 int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
@@ -79,10 +84,7 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 	while (var->i < (int)ft_strlen(tokens->command))
 	{
 		if (tokens->command[var->i] == '$' && !tokens->command[var->i + 1])
-		{	
-			free_var(var);
-			return (1);
-		}
+			return (free_var(var));
 		if (tokens->command[var->i] && tokens->command[var->i] == '$')
 		{
 			expand_token(tokens, var, head, my_env);
@@ -96,36 +98,7 @@ int	dollar_expansion(t_token *tokens, t_envepval *my_env, \
 		}
 	}
 	if (ft_strlen(var->expanded) == 0)
-	{
-		free_var(var);
-		// printf("here\n");
-		return (1);
-	}
+		return (free_var(var));
 	free_var(var);
-	// printf("here\n");
 	return (0);
-}
-
-void	double_dollar(t_token *tokens, t_token **head, int pos)
-{
-	char	*pid;
-	size_t	i;
-	t_token	*new_node;
-
-	i = 0;
-	pid = ft_itoa((int)getpid());
-	while (i < ft_strlen(tokens->command))
-	{
-		if (ft_strlen(tokens->command + i) > 1 && tokens->command[i] == '$'
-			&& tokens->command[i + 1] == '$')
-		{
-			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr \
-				(tokens->command, "$$", ft_strlen(tokens->command)));
-			new_node = create_nodes(pid, tokens, i + 1, i + 2);
-			connect_nodes(new_node, pos, head);
-			break ;
-		}
-		i++;
-	}
-	free(pid);
 }
