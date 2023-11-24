@@ -57,6 +57,7 @@ void	tokenize_quotted(t_token **token_lst, char *line, int *pos, \
 	quotes_len = strlen_quoted(line, *pos, quotes);
 	quotted_sentence = ptr_check(ft_substr(line, *pos + 1, quotes_len));
 	push_token(token_lst, lst_token_new(quotted_sentence, quotes));
+	free(quotted_sentence);
 	*pos += quotes_len + 2;
 }
 

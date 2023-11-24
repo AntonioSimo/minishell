@@ -21,7 +21,6 @@ void	minishell(t_env *my_env)
 	while (1)
 	{
 		line = readline(GREEN BOLD "mustash> "RESET);
-		// manage_signals(0);
 		if (!line)
 		{
 			if (g_signal == 1)

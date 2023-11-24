@@ -67,3 +67,11 @@ void	execute_pipe(int **fd, t_execution *temp)
 		close(fd[temp->i][1]);
 	}
 }
+
+void	alloc_in_n_out(t_redir **redir)
+{
+	(*redir)->fileout = ptr_check(malloc(sizeof(int) \
+					* count_redir((*redir)->lst, REDIR_OUTPUT)));
+	(*redir)->filein = ptr_check((malloc(sizeof(int) \
+					* count_redir((*redir)->lst, REDIR_INPUT))));
+}

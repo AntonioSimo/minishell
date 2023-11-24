@@ -35,6 +35,26 @@ t_token	*create_token(char *string, t_type type)
 	return (token);
 }
 
+void	attach_empty_head(int pos, t_token **head, t_token *or_head)
+{
+	t_token	*temp;
+
+	if (pos == 0)
+	{
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
+		*head = temp;
+	}
+	else
+	{
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
+		*head = or_head;
+	}
+}
+
 static int	empty_node(int pos, t_token **head)
 {
 	int		i;
@@ -54,11 +74,28 @@ static int	empty_node(int pos, t_token **head)
 	}
 	next_head = (*head)->next;
 	prev_to_append->next = next_head;
-	if (pos == 0)
-		*head = or_head->next;
-	else
-		*head = or_head;
+	attach_empty_head(pos, head, or_head);
 	return (1);
+}
+
+void	attach_head(int pos, t_token **head, t_token *or_head)
+{
+	t_token	*temp;
+
+
+	if (pos == 0)
+	{
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
+		*head = temp;
+	}
+	else
+	{
+		free((*head)->command);
+		free(*head);
+		*head = or_head;
+	}
 }
 
 void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
@@ -67,7 +104,6 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	t_token	*or_head;
 	t_token	*next_head;
 	t_token	*prev_to_append;
-	t_token	*test;
 
 	i = 0;
 	or_head = *head;
@@ -85,16 +121,7 @@ void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
 	while (new_nodes->next)
 		new_nodes = new_nodes->next;
 	new_nodes->next = next_head;
-	if (pos == 0)
-	{
-		test = (*head)->next;
-		free(*head);
-		*head = test;
-		// free(test->command);
-		// free(test);
-	}
-	else
-		*head = or_head;
+	attach_head(pos, head, or_head);
 }
 
 t_token	*create_new_nodes(char *expanded, t_type type)
