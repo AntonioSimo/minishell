@@ -12,52 +12,6 @@
 
 #include "../include/minishell.h"
 
-t_envepval	*create_env_emptynode(char *key)
-{
-	t_envepval	*node;
-
-	node = ptr_check(malloc(sizeof(t_envepval)));
-	node->key = ptr_check(ft_strdup(key));
-	node->val = malloc(1);
-	node->val = 0;
-	node->next = NULL;
-	return (node);
-}
-
-void	print_my_export(t_envepval *env)
-{
-	while (env)
-	{
-		if (env->key && !env->val)
-			printf("declare -x %s\n", env->key);
-		else if (env->val && env->val[0] != '\0')
-			printf("declare -x %s='%s'\n", env->key, env->val);
-		else if (env->val && env->val[0] == 0)
-			printf("declare -x %s=''\n", env->key);
-		env = env->next;
-	}
-}
-
-int	ft_isvariable(char *args)
-{
-	if (*args == '=')
-		return (0);
-	while (*args && *args != '=')
-	{	
-		if (!*args || ft_isdigit(*args) || *args == '=' || \
-		(*args == '$' && !*(args + 1)) || *args == ' ')
-		{
-			return (0);
-		}
-		if (*args == ' ' || *args == '+' || *args == '-')
-		{
-			return (0);
-		}
-		args++;
-	}
-	return (1);
-}
-
 void	add_env_variable(t_envepval **lst, t_envepval *new)
 {
 	t_envepval	*previous_variable;
@@ -101,11 +55,36 @@ t_envepval	*set_newvariable(char *args)
 	return (variable);
 }
 
-void	ft_export(t_env *env, char **args)
+static void	check_export_variable(char **args, t_env *env)
 {
 	t_envepval	*new_variable;
 	t_envepval	*empty_variable;
 	int			i;
+
+	i = 1;
+	while (args[i] != NULL)
+	{
+		if (!ft_strchr(args[i], '='))
+		{
+			if (!ft_strcmp(find_expandable(env->env, args[i]), ""))
+			{
+				empty_variable = create_env_emptynode(args[i]);
+				add_env_variable(&(env->env), empty_variable);
+			}
+		}
+		else
+		{
+			new_variable = set_newvariable(args[i]);
+			if (new_variable != NULL)
+				add_env_variable(&(env->env), new_variable);
+		}
+		i++;
+	}
+}
+
+void	ft_export(t_env *env, char **args)
+{
+	int	i;
 
 	i = 1;
 	if (!args[i])
@@ -117,20 +96,7 @@ void	ft_export(t_env *env, char **args)
 	{
 		if (ft_isvariable(args[i]) == 1)
 		{
-			if (!ft_strchr(args[i], '='))
-			{
-				if (!ft_strcmp(find_expandable(env->env, args[i]), ""))
-				{
-					empty_variable = create_env_emptynode(args[i]);
-					add_env_variable(&(env->env), empty_variable);
-				}
-			}
-			else
-			{
-				new_variable = set_newvariable(args[i]);
-				if (new_variable != NULL)
-					add_env_variable(&(env->env), new_variable);
-			}
+			check_export_variable(args, env);
 		}
 		else
 		{

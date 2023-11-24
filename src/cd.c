@@ -12,6 +12,23 @@
 
 #include "../include/minishell.h"
 
+void	update_wd(t_env *env, char *wd, char *new_wd_value)
+{
+	t_envepval	*variable;
+
+	variable = env->env;
+	while (variable != NULL)
+	{
+		if (ft_strcmp(variable->key, wd) == 0)
+		{
+			free(variable->val);
+			variable->val = ft_strdup(new_wd_value);
+			return ;
+		}
+		variable = variable->next;
+	}
+}
+
 char	*get_cwd(t_env *env)
 {
 	char	*cwd;
@@ -24,7 +41,7 @@ char	*get_cwd(t_env *env)
 	cwd = getcwd(cwd, PATH_MAXSIZE);
 	if (cwd)
 	{
-		update_wd(env, "OLDPWD",cwd);
+		update_wd (env, "OLDPWD",cwd);
 		return (cwd);
 	}
 	else
@@ -61,23 +78,6 @@ char	*get_pwd(t_env *env)
 		variable = variable->next;
 	}
 	return (NULL);
-}
-
-void	update_wd(t_env *env, char *wd, char *new_wd_value)
-{
-	t_envepval	*variable;
-
-	variable = env->env;
-	while (variable != NULL)
-	{
-		if (ft_strcmp(variable->key, wd) == 0)
-		{
-			free(variable->val);
-			variable->val = ft_strdup(new_wd_value);
-			return ;
-		}
-		variable = variable->next;
-	}
 }
 
 void	ft_cd(t_env *env, t_command *cmd)
@@ -130,6 +130,4 @@ void	ft_cd(t_env *env, t_command *cmd)
 	}
 	getcwd(up_pwd, PATH_MAXSIZE);
 	update_wd(env, "PWD", up_pwd);
-	//free(old_pwd);
-	//free(nwd);
 }

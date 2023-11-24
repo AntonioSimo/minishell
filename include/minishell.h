@@ -163,18 +163,20 @@ int			dollar_expansion(t_token *tokens, t_envepval *my_env, \
 void		double_dollar(t_token *tokens, t_token **head, int pos);
 
 //env
-t_envepval	*lstenv(t_envepval *lst);
-void		envlst_add(t_envepval **lst, t_envepval *new);
 t_envepval	*create_env_node(char *key, char *value);
 void		print_my_env(t_env *env);
 void		set_env(t_envepval	**my_env, char **env);
 
 //env2
-size_t		env_len(t_envepval *env);
 t_env		*copy_env(char **env);
 int			lstenv_c(t_envepval *lst);
 char		*env_str(t_envepval *current);
 char		**get_envp(t_env *env);
+
+//env3
+t_envepval	*lstenv(t_envepval *lst);
+void		envlst_add(t_envepval **lst, t_envepval *new);
+size_t		env_len(t_envepval *env);
 
 //echo
 int			ft_arraysize(char **args);
@@ -228,12 +230,14 @@ void		handle_double_dollar(t_token **tokens, t_token **head, \
 			t_expander *var);
 void		expander(t_token **tokens, t_env *my_env);
 
-//export
+//export_utils
 t_envepval	*create_env_emptynode(char *key);
 void		print_my_export(t_envepval *env);
 int			ft_isvariable(char *args);
-void		add_env_variable(t_envepval **lst, t_envepval *new);
+
+//export
 t_envepval	*set_newvariable(char *args);
+void		add_env_variable(t_envepval **lst, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc

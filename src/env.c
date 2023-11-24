@@ -12,47 +12,9 @@
 
 #include "../include/minishell.h"
 
-t_envepval	*lstenv(t_envepval *lst)
+static bool	check_path(t_env *my_env)
 {
-	if (lst == NULL)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
-
-void	envlst_add(t_envepval **lst, t_envepval *new)
-{
-	t_envepval	*lst_node;
-
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	lst_node = lstenv(*lst);
-	lst_node->next = new;
-}
-
-t_envepval	*create_env_node(char *key, char *value)
-{
-	t_envepval	*node;
-
-	node = ptr_check(malloc(sizeof(t_envepval)));
-	node->key = ptr_check(ft_strdup(key));
-	node->val = ptr_check(ft_strdup(value));
-	if (node->val == NULL)
-	{
-		node->val = malloc(1);
-		node->val[0] = '\0';
-	}
-	node->next = NULL;
-	return (node);
-}
-
-bool	check_PATH(t_env *my_env)
-{
-	t_envepval *variable;
+	t_envepval	*variable;
 	bool		found;
 
 	found = false;
@@ -66,22 +28,25 @@ bool	check_PATH(t_env *my_env)
 		}
 		variable = variable->next;
 	}
-	ft_print_message("mustash: ", "env: ", "No such file or directory\n", STDERR_FILENO);
+	ft_print_message("mustash: ", "env: ", "No such file or directory\n", \
+					STDERR_FILENO);
 	my_env->exit_status = 127;
 	return (found);
 }
 
 void	print_my_env(t_env *my_env)
 {
-	t_envepval *variable;
+	t_envepval	*variable;
 
 	variable = my_env->env;
-	if (check_PATH(my_env) == true)
+	if (check_path(my_env) == true)
 	{
 		while (variable)
 		{
-			if (variable->val != NULL)
+			if (variable->val)
+			{
 				printf("%s=%s\n", variable->key, variable->val);
+			}
 			variable = variable->next;
 		}
 	}

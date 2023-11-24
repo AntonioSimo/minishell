@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -27,6 +28,12 @@ void	ft_nodedel(t_envepval *env)
 	}
 	ft_ptrdel(env);
 }
+
+//static bool	check_(t_envepval *current_node, t_envepval *previous_node, char **args)
+//{
+//	int	i;
+	
+//}
 
 void	ft_unset(t_env *env, char **args)
 {
