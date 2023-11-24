@@ -80,6 +80,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 	file = get_redir_name(tokens, redir_type);
 	if (!file)
 	{
+		free(*redir);
 		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
 		env->exit_status = 2;
 		return (1);
