@@ -52,7 +52,7 @@ char	*ft_itoa(int n)
 	neg = 0;
 	ptr[i] = '\0';
 	if (n < 0)
-	{	
+	{
 		neg = 1;
 		n *= -1;
 		ptr[0] = '-';
@@ -62,7 +62,7 @@ char	*ft_itoa(int n)
 		i--;
 		ptr[i] = n % 10 + '0';
 		n /= 10;
-	}	
+	}
 	return (ptr);
 }
 

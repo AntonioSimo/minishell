@@ -89,3 +89,25 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 	free(file);
 	return (0);
 }
+
+void	handle_cmds(t_token *tokens, t_command **commands, \
+						t_redir **redir, t_parsing **var)
+{
+	if (is_word(tokens->type))
+	{
+		(*var)->word = ft_free_strjoin((*var)->word, tokens->command);
+	}
+	else if (tokens->type == SEPERATOR)
+	{
+		(*var)->args_arr = push_str_2d((*var)->args_arr, (*var)->word);
+		(*var)->word = ft_free((*var)->word);
+	}
+	else if (tokens->type == PIPE)
+	{
+		(*var)->args_arr = push_str_2d((*var)->args_arr, (*var)->word);
+		push_cmd(commands, lst_cmd_new((*var)->args_arr, *redir));
+		*redir = NULL;
+		(*var)->word = ft_free((*var)->word);
+		(*var)->args_arr = NULL;
+	}
+}
