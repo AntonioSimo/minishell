@@ -197,6 +197,7 @@ void		find_cmd(t_command	*cmd, t_env *env);
 void		is_executable(t_command *cmds, t_env *env);
 void		handle_child_process(int **fd, t_command *cmds, t_env *env, \
 			t_execution	*temp);
+void		wait_last_child(t_command *cmds, int last_pid, t_env *env);
 
 //execution2
 void		close_pipes(int **fd, t_execution *temp);
@@ -256,10 +257,12 @@ void		minishell(t_env *my_env);
 //parsing
 t_parsing	*set_parsing_var(void);
 int			handle_redirections(t_redir **redir, t_token **tokens, t_env *env);
+void		handle_cmds(t_token *tokens, t_command **commands, \
+						t_redir **redir, t_parsing **var);
 
 //parsing2
 int			check_if_redir(t_type type);
-void		free_parsing_temp(t_parsing *temp);
+int			free_parsing_temp(t_parsing *temp, int check);
 t_command	*merge_tokens(t_token	*tokens, t_env *env);
 
 //pwd
