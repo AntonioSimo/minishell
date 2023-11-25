@@ -1,0 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/31 15:31:44 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/minishell.h"
+
+t_envepval	*create_env_emptynode(char *key)
+{
+	t_envepval	*node;
+
+	node = ptr_check(malloc(sizeof(t_envepval)));
+	node->key = ptr_check(ft_strdup(key));
+	node->val = malloc(1);
+	node->val = 0;
+	node->next = NULL;
+	return (node);
+}
+
+void	print_my_export(t_envepval *env)
+{
+	while (env)
+	{
+		if (env->key && !env->val)
+			printf("declare -x %s\n", env->key);
+		else if (env->val && env->val[0] != '\0')
+			printf("declare -x %s='%s'\n", env->key, env->val);
+		else if (env->val && env->val[0] == 0)
+			printf("declare -x %s=''\n", env->key);
+		env = env->next;
+	}
+}
+
+int	ft_isvariable(char *args)
+{
+	if (*args == '=')
+		return (0);
+	while (*args && *args != '=')
+	{	
+		if (!*args || ft_isdigit(*args) || *args == '=' || \
+		(*args == '$' && !*(args + 1)) || *args == ' ')
+		{
+			return (0);
+		}
+		if (*args == ' ' || *args == '+' || *args == '-')
+		{
+			return (0);
+		}
+		args++;
+	}
+	return (1);
+}

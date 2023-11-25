@@ -44,7 +44,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 	else if (ft_strcmp(cmd->command, "export") == 0)
 		ft_export(env, cmd->arguments);
 	else if (ft_strcmp(cmd->command, "env") == 0)
-		print_my_env(env->env);
+		print_my_env(env);
 	else if (ft_strcmp(cmd->command, "unset") == 0)
 		ft_unset(env, cmd->arguments);
 	if (exit_status)

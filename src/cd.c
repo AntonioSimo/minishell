@@ -12,6 +12,23 @@
 
 #include "../include/minishell.h"
 
+void	update_wd(t_env *env, char *wd, char *new_wd_value)
+{
+	t_envepval	*variable;
+
+	variable = env->env;
+	while (variable != NULL)
+	{
+		if (ft_strcmp(variable->key, wd) == 0)
+		{
+			free(variable->val);
+			variable->val = ft_strdup(new_wd_value);
+			return ;
+		}
+		variable = variable->next;
+	}
+}
+
 char	*get_cwd(t_env *env)
 {
 	char	*cwd;
@@ -21,17 +38,21 @@ char	*get_cwd(t_env *env)
 	cwd = malloc(PATH_MAXSIZE);
 	if (!cwd)
 		return (NULL);
-	if (getcwd(cwd, PATH_MAXSIZE))
+	cwd = getcwd(cwd, PATH_MAXSIZE);
+	if (cwd)
+	{
+		update_wd (env, "OLDPWD",cwd);
 		return (cwd);
+	}
 	else
 	{
-		pwd = get_pwd(env);
+		pwd = get_old_pwd(env);
 		free(cwd);
 		return (pwd);
 	}
 }
 
-char	*get_pwd(t_env *env)
+char	*get_old_pwd(t_env *env)
 {
 	t_envepval	*variable;
 
@@ -45,36 +66,35 @@ char	*get_pwd(t_env *env)
 	return (NULL);
 }
 
-void	update_pwd(t_env *env, char *pwd)
+char	*get_pwd(t_env *env)
 {
 	t_envepval	*variable;
 
 	variable = env->env;
 	while (variable != NULL)
 	{
-		if (ft_strcmp(variable->key, "OLDPWD") == 0)
-		{
-			free(variable->val);
-			variable->val = ft_strdup(pwd);
-			return ;
-		}
+		if (ft_strcmp(variable->key, "PWD") == 0)
+			return (variable->val);
 		variable = variable->next;
 	}
+	return (NULL);
 }
 
 void	ft_cd(t_env *env, t_command *cmd)
 {
-	char	*pwd;
+	char	*old_pwd;
 	char	*nwd;
+	char	*up_pwd;
 
 	nwd = NULL;
+	up_pwd = malloc(PATH_MAXSIZE);
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
 		ft_putstr_fd("mustash: cd: too many arguments\n", STDERR_FILENO);
 		env->exit_status = ERROR;
 		return ;
 	}
-	pwd = get_cwd(env);
+	old_pwd = get_cwd(env);
 	if (cmd->arguments[1] == NULL)
 	{
 		nwd = find_expandable(env->env, "HOME");
@@ -104,8 +124,10 @@ void	ft_cd(t_env *env, t_command *cmd)
 		env->exit_status = ERROR;
 	}
 	else
+	{
 		if (!nwd)
-			chdir(pwd);
-	free(pwd);
-	free(nwd);
+			chdir(old_pwd);
+	}
+	getcwd(up_pwd, PATH_MAXSIZE);
+	update_wd(env, "PWD", up_pwd);
 }

@@ -12,51 +12,43 @@
 
 #include "../include/minishell.h"
 
-t_envepval	*lstenv(t_envepval *lst)
+static bool	check_path(t_env *my_env)
 {
-	if (lst == NULL)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
+	t_envepval	*variable;
+	bool		found;
 
-void	envlst_add(t_envepval **lst, t_envepval *new)
-{
-	t_envepval	*lst_node;
-
-	if (*lst == NULL)
+	found = false;
+	variable = my_env->env;
+	while (variable != NULL)
 	{
-		*lst = new;
-		return ;
+		if (ft_strcmp(variable->key, "PATH") == 0)
+		{
+			found = true;
+			return (found);
+		}
+		variable = variable->next;
 	}
-	lst_node = lstenv(*lst);
-	lst_node->next = new;
+	ft_print_message("mustash: ", "env: ", "No such file or directory\n", \
+					STDERR_FILENO);
+	my_env->exit_status = 127;
+	return (found);
 }
 
-t_envepval	*create_env_node(char *key, char *value)
+void	print_my_env(t_env *my_env)
 {
-	t_envepval	*node;
+	t_envepval	*variable;
 
-	node = ptr_check(malloc(sizeof(t_envepval)));
-	node->key = ptr_check(ft_strdup(key));
-	node->val = ptr_check(ft_strdup(value));
-	if (node->val == NULL)
+	variable = my_env->env;
+	if (check_path(my_env) == true)
 	{
-		node->val = malloc(1);
-		node->val[0] = '\0';
-	}
-	node->next = NULL;
-	return (node);
-}
-
-void	print_my_env(t_envepval *my_env)
-{
-	while (my_env)
-	{
-		if (my_env->val != NULL)
-			printf("%s=%s\n", my_env->key, my_env->val);
-		my_env = my_env->next;
+		while (variable)
+		{
+			if (variable->val)
+			{
+				printf("%s=%s\n", variable->key, variable->val);
+			}
+			variable = variable->next;
+		}
 	}
 }
 

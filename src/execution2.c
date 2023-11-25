@@ -57,7 +57,7 @@ static void	wait_last_child(t_command *cmds, int last_pid, t_env *env)
 {
 	int	last_status;
 
-	last_status = 0;	
+	last_status = 0;
 	get_last_stat(last_pid, cmds, env, &last_status);
 	if (WIFEXITED(last_status))
 	{

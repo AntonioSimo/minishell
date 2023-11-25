@@ -12,21 +12,6 @@
 
 #include "../include/minishell.h"
 
-size_t	env_len(t_envepval *env)
-{
-	size_t	i;
-
-	i = 0;
-	if (!env)
-		return (0);
-	while (env)
-	{
-		i++;
-		env = env->next;
-	}
-	return (i);
-}
-
 t_env	*copy_env(char **env)
 {
 	t_envepval	*env_lst;
