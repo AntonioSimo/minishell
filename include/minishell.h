@@ -249,7 +249,7 @@ int			init_heredoc(t_execution **temp);
 //lexer
 int			is_divider(t_type type);
 int			check_pipes(t_token *tokens, t_env *env);
-void		lexer(char *line, t_env *my_env);
+int			lexer(char *line, t_env *my_env);
 
 //main
 void		minishell(t_env *my_env);
@@ -308,7 +308,7 @@ void		tokenize_symbols(t_token **token_lst, char *line, int *i);
 void		tokenize_word(t_token **token_lst, char *line, int *position);
 void		tokenize_quotted(t_token **token_lst, char *line, int *pos, \
 			t_type quotes);
-void		tokenize(char *line, t_token **token_lst);
+t_token		*tokenize(char *line);
 
 //token_symbols
 void		tokenize_pipe(t_token **token_lst, int *i);
