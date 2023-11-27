@@ -15,11 +15,12 @@
 t_envepval	*create_env_emptynode(char *key)
 {
 	t_envepval	*node;
+	//char		empty[1];
 
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
-	node->val = malloc(1);
-	node->val = 0;
+	//node->val = malloc(1);
+	//node->val = empty;
 	node->next = NULL;
 	return (node);
 }
@@ -57,3 +58,4 @@ int	ft_isvariable(char *args)
 	}
 	return (1);
 }
+// export a b c

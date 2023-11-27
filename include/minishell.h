@@ -238,7 +238,7 @@ int			ft_isvariable(char *args);
 
 //export
 t_envepval	*set_newvariable(char *args);
-void		add_env_variable(t_envepval **lst, t_envepval *new);
+void		add_env_variable(t_envepval *lst, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc

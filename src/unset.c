@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -29,12 +28,6 @@ void	ft_nodedel(t_envepval *env)
 	ft_ptrdel(env);
 }
 
-//static bool	check_(t_envepval *current_node, t_envepval *previous_node, char **args)
-//{
-//	int	i;
-	
-//}
-
 void	ft_unset(t_env *env, char **args)
 {
 	int			i;
@@ -56,11 +49,14 @@ void	ft_unset(t_env *env, char **args)
 		{
 			if (ft_strcmp(args[i], current_node->key) == 0)
 			{
-				if (previous_node == NULL)
-					env->env = current_node->next;
-				else
+				//if (previous_node == NULL)
+				//	env->env = current_node->next;
+				//else
 					previous_node->next = current_node->next;
 				ft_nodedel(current_node);
+				free(current_node->key);
+				free(current_node->val);
+				//free(current_node);
 				break ;
 			}
 			previous_node = current_node;
