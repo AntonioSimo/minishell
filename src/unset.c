@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/27 15:58:54 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/27 16:47:49 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,19 @@ extern int	g_signal;
 
 void	ft_nodedel(t_envepval *env)
 {
-	if (env && env->next == NULL)
-	{
-		ft_ptrdel(env->key);
-		ft_ptrdel(env->val);
-		env->key = NULL;
-		env->val = NULL;
-		env->next = NULL;
-		return ;
-	}
+	// t_envepval *env;
+	
+	// env = *head;
+	// if (env && env->next == NULL)
+	// {
+	// 	ft_ptrdel(env->key);
+	// 	ft_ptrdel(env->val);
+	// 	ft_ptrdel(env);
+	// 	// env->key = NULL;
+	// 	// env->val = NULL;
+	// 	// env->next = NULL;
+	// 	return ;
+	// }
 	ft_ptrdel(env->key);
 	ft_ptrdel(env->val);
 	ft_ptrdel(env);
@@ -56,9 +60,6 @@ void	ft_unset(t_env *env, char **args)
 				else
 					previous_node->next = current_node->next;
 				ft_nodedel(current_node);
-				// free(current_node->key);
-				// free(current_node->val);
-				//free(current_node);
 				break ;
 			}
 			previous_node = current_node;
