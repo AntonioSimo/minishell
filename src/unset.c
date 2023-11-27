@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/23 14:49:59 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/27 14:20:56 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	ft_unset(t_env *env, char **args)
 				//else
 					previous_node->next = current_node->next;
 				ft_nodedel(current_node);
-				free(current_node->key);
-				free(current_node->val);
+				// free(current_node->key);
+				// free(current_node->val);
 				//free(current_node);
 				break ;
 			}
