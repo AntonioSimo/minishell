@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/27 16:47:49 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/27 16:48:16 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ void	ft_nodedel(t_envepval *env)
 	// t_envepval *env;
 	
 	// env = *head;
-	// if (env && env->next == NULL)
-	// {
-	// 	ft_ptrdel(env->key);
-	// 	ft_ptrdel(env->val);
-	// 	ft_ptrdel(env);
+	if (env && env->next == NULL)
+	{
+		ft_ptrdel(env->key);
+		ft_ptrdel(env->val);
+		ft_ptrdel(env);
 	// 	// env->key = NULL;
 	// 	// env->val = NULL;
 	// 	// env->next = NULL;
 	// 	return ;
-	// }
+	}
 	ft_ptrdel(env->key);
 	ft_ptrdel(env->val);
 	ft_ptrdel(env);
