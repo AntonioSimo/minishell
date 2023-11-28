@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:09:40 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:11:09 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 12:55:28 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,3 +87,4 @@ void	ft_cd(t_env *env, t_command *cmd)
 	update_wd(env, "PWD", up_pwd);
 	free(nwd);
 }
+

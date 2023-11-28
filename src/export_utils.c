@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/27 16:33:50 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/28 12:36:43 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_isvariable(char *args)
 	if (*args == '=')
 		return (0);
 	while (*args && *args != '=')
-	{	
+	{
 		if (!*args || ft_isdigit(*args) || *args == '=' || \
 		(*args == '$' && !*(args + 1)) || *args == ' ')
 		{
