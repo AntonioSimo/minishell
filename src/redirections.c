@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 14:51:26 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/28 17:06:13 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,6 @@ static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
 
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
-	else if (temp->type == HEREDOC)
-	{
-		// dup2(redir->filein[j], STDIN_FILENO);
-		// close(redir->filein[j]);
-	}
 	if (check_access_in(temp))
 		return (1);
 	if (redir->filein[j] == -1)
@@ -105,7 +100,7 @@ int	run_redirections(t_redir *redir, t_env *env)
 				return (ERROR);
 			}
 		}
-		else if (temp->type == REDIR_INPUT || temp->type == HEREDOC)
+		else if (temp->type == REDIR_INPUT)
 		{
 			if (handle_redir_in(temp, redir))
 			{

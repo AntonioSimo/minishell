@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 17:57:02 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:42:50 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ int	main(int argc, char **argv, char **env)
 	manage_signals(1);
 	env_main = copy_env(env);
 	minishell(env_main);
-	exit (free_env(env_main));
+	return (free_env(env_main));
 }

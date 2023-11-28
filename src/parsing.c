@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:00:05 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:35:58 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,82 +20,6 @@ t_parsing	*set_parsing_var(void)
 	var->args_arr = NULL;
 	var->word = NULL;
 	return (var);
-}
-
-void	init_redir(t_redir **redir)
-{
-	if (!*redir)
-	{
-		(*redir) = ptr_check(malloc(sizeof(t_redir)));
-		(*redir)->lst = NULL;
-		(*redir)->stdin_cpy = dup(STDIN_FILENO);
-		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
-		(*redir)->filein = NULL;
-		(*redir)->fileout = NULL;
-		(*redir)->in_count = 0;
-		(*redir)->out_count = 0;
-	}
-}
-
-char	*get_redir_name(t_token **tokens, t_type redir_type)
-{
-	int		i;
-	char	*file;
-
-	file = NULL;
-	i = 0;
-	while (*tokens)
-	{
-		if ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED
-			|| (*tokens)->type == SINGLE_QUOTED)
-		{
-			file = ft_free_strjoin(file, (*tokens)->command);
-		}
-		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || \
-				(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
-				(*tokens)->type == REDIR_OUTPUT || \
-				(*tokens)->type == REDIR_OUTPUT_APPEND)
-		{
-			if (!(redir_type == REDIR_OUTPUT && \
-			(*tokens)->type == PIPE && i == 0))
-				break ;
-		}
-		i++;
-		*tokens = (*tokens)->next;
-	}
-	return (file);
-}
-
-void free_redir(t_redir **redir)
-{
-	if (*redir)
-	{
-		
-	}
-}
-
-int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
-{
-	t_type	redir_type;
-	char	*file;
-
-	file = NULL;
-	init_redir(redir);
-	redir_type = (*tokens)->type;
-	*tokens = (*tokens)->next;
-	if (*tokens && (*tokens)->type == SEPERATOR)
-		*tokens = (*tokens)->next;
-	file = get_redir_name(tokens, redir_type);
-	if (!file)
-	{
-		destroy_redir((*redir));
-		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
-		env->exit_status = 2;
-		return (1);
-	}
-	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
-	free(file);
-	return (0);
 }
 
 void	handle_cmds(t_token *tokens, t_command **commands, \

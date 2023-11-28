@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:39:33 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 15:18:29 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:54:47 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,12 @@ int	find_equal(char *line)
 	return (-1);
 }
 
-char	*find_path(char *cmd, char *envp)
+char	*access_path(char *cmd, char **paths)
 {
-	char	**paths;
-	char	*path;
-	int		i;
 	char	*part_path;
+	int		i;
+	char	*path;
 
-	paths = ft_split(envp, ':');
-	free(envp);
 	i = 0;
 	while (paths[i])
 	{
@@ -62,21 +59,19 @@ char	*find_path(char *cmd, char *envp)
 		free(path);
 		i++;
 	}
-	i = -1;
-	while (paths[++i])
-		free(paths[i]);
-	free(paths);
 	return (NULL);
 }
 
-void	*ft_ptrdel(void *ptr)
+char	*find_path(char *cmd, char *envp)
 {
-	if (ptr)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (NULL);
+	char	**paths;
+	char	*path;
+
+	paths = ft_split(envp, ':');
+	free(envp);
+	path = access_path(cmd, paths);
+	double_free(paths);
+	return (path);
 }
 
 void	*double_free(char **ptr)

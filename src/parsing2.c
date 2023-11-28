@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 16:06:59 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:35:02 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,15 @@ int	if_redir(t_type type)
 	return (1);
 }
 
-void	handle_leftover(t_parsing *var, t_redir *redir, t_command **commands)
+t_command	*handle_leftover(t_parsing *var, t_redir *redir, \
+			t_command **commands)
 {
 	var->args_arr = push_str_2d(var->args_arr, var->word);
 	if (var->args_arr || redir)
 		push_cmd(commands, lst_cmd_new(var->args_arr, redir));
 	free_parsing_temp(var, 0);
+	return (*commands);
 }
-
-
 
 t_command	*merge_tokens(t_token	*tokens, t_env *env)
 {
@@ -76,6 +76,7 @@ t_command	*merge_tokens(t_token	*tokens, t_env *env)
 			tokens = tokens->next;
 	}
 	if (var->word || var->args_arr || redir)
-		handle_leftover(var, redir, &commands);
+		return (handle_leftover(var, redir, &commands));
+	free(var);
 	return (commands);
 }
