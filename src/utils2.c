@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:38:48 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,14 @@ char	**push_str_2d(char **args, char *str)
 		new_args = malloc(sizeof(char *) * (i + 1));
 	second_part(args, new_args, str);
 	return (new_args);
+}
+
+void	*ft_ptrdel(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+	return (NULL);
 }

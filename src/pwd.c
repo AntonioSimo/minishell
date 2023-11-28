@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 16:46:26 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,11 @@ char	*get_cwd(t_env *env)
 	cwd = getcwd(cwd, PATH_MAXSIZE);
 	if (cwd)
 	{
-		printf("I'M HERE!\n");
 		update_wd (env, "OLDPWD", cwd);
 		return (cwd);
 	}
 	else
 	{
-		printf("SONO QUI!\n");
 		pwd = get_old_pwd(env);
 		free(cwd);
 		return (pwd);
