@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 15:31:44 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 12:36:43 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_envepval	*create_env_emptynode(char *key)
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
 	//node->val = malloc(1);
-	//node->val = empty;
+	node->val = NULL;
 	node->next = NULL;
 	return (node);
 }
@@ -44,7 +44,7 @@ int	ft_isvariable(char *args)
 	if (*args == '=')
 		return (0);
 	while (*args && *args != '=')
-	{	
+	{
 		if (!*args || ft_isdigit(*args) || *args == '=' || \
 		(*args == '$' && !*(args + 1)) || *args == ' ')
 		{

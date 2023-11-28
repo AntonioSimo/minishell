@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:51:34 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 14:49:03 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:08:23 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,5 @@ void	error_code_expansion(t_token *token, t_token **head, \
 		}
 		i++;
 	}
-	env->exit_status = SUCCESS;
 	free(error_code);
 }
