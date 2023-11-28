@@ -12,41 +12,45 @@
 
 #include "../include/minishell.h"
 
-int	is_divider(t_type type)
+int	scann_for_pipes(t_token *tokens, int *flag, t_env *env)
 {
-	if (type == PIPE || type == REDIR_INPUT || type == REDIR_OUTPUT
-		|| type == REDIR_OUTPUT_APPEND || type == HEREDOC)
-		return (1);
-	return (0);
-}
-
-int	check_pipes(t_token *tokens, t_env *env)
-{
-	bool	flag;
-
-	flag = true;
 	while (tokens)
 	{
-		if (tokens->type == DEFAULT || tokens->type == DOUBLE_QUOTED
-			|| tokens->type == SINGLE_QUOTED || tokens->type == REDIR_INPUT
-			|| tokens->type == REDIR_OUTPUT
-			|| tokens->type == REDIR_OUTPUT_APPEND
-			|| tokens->type == HEREDOC)
-			flag = false;
-		if (flag && tokens->type == PIPE)
+		if (!not_pipe(tokens->type))
+			*flag = 0;
+		if (*flag && tokens->type == PIPE)
 		{
 			ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
 			env->exit_status = 2;
 			return (1);
 		}
 		if (tokens->type == PIPE)
-			flag = true;
+			*flag = 1;
 		tokens = tokens->next;
 	}
+	return (0);
+}
+
+int	check_pipes(t_token **tokens, t_env *env, char **line)
+{
+	int		flag;
+	t_token	*head;
+
+	flag = 1;
+	head = *tokens;
+	if (scann_for_pipes(*tokens, &flag, env))
+		return (1);
+	*tokens = head;
 	if (!flag)
 		return (0);
-	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
-	return (1);
+	if (cat_line(tokens, env, line))
+	{
+		destroy_tokens(*tokens);
+		free(*line);
+		exit (free_env(env));
+	}
+	check_pipes(tokens, env, line);
+	return (0);
 }
 
 int	if_not_space(t_token *tokens)
@@ -68,16 +72,16 @@ int	if_not_space(t_token *tokens)
 	return (0);
 }
 
-int	parse_line(char *line, t_env *env)
+int	parse_line(char **line, t_env *env)
 {
 	t_command	*commands;
 	t_token		*tokens;
 	bool		flag;
 
 	flag = true;
-	tokens = tokenize(line);
+	tokens = tokenize(*line);
 	expander(&tokens, env);
-	if (tokens && !if_not_space(tokens) && !check_pipes(tokens, env))
+	if (tokens && !if_not_space(tokens) && !check_pipes(&tokens, env, line))
 	{
 		commands = merge_tokens(tokens, env);
 		if (commands)
@@ -93,9 +97,9 @@ int	parse_line(char *line, t_env *env)
 	return (0);
 }
 
-int	lexer(char *line, t_env *my_env)
+int	lexer(char **line, t_env *my_env)
 {
-	if (check_quotes(line))
+	if (check_quotes(*line))
 	{
 		if (!parse_line(line, my_env))
 			return (0);

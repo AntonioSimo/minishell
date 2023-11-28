@@ -248,8 +248,9 @@ int			init_heredoc(t_execution **temp);
 
 //lexer
 int			is_divider(t_type type);
-int			check_pipes(t_token *tokens, t_env *env);
-int			lexer(char *line, t_env *my_env);
+int			check_pipes(t_token **tokens, t_env *env, char **line);
+int			lexer(char **line, t_env *my_env);
+int			cat_line(t_token **tokens, t_env *env, char **line);
 
 //main
 void		minishell(t_env *my_env);
@@ -261,6 +262,7 @@ void		handle_cmds(t_token *tokens, t_command **commands, \
 						t_redir **redir, t_parsing **var);
 
 //parsing2
+int			not_pipe(t_type type);
 int			check_if_redir(t_type type);
 int			free_parsing_temp(t_parsing *temp, int check);
 t_command	*merge_tokens(t_token	*tokens, t_env *env);

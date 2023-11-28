@@ -35,7 +35,7 @@ void	minishell(t_env *my_env)
 		}
 		if (ft_strlen(line) > 0)
 		{
-			if (!lexer(line, my_env))
+			if (!lexer(&line, my_env))
 				add_history(line);
 		}
 		ft_free(line);
