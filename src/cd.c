@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:09:40 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 16:46:15 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 19:26:01 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,12 @@ void	ft_cd(t_env *env, t_command *cmd)
 		ft_print_message("mustash: cd: ", nwd, \
 		": No such file or directory\n", STDERR_FILENO);
 		env->exit_status = ERROR;
-	}
+	}	
 	up_pwd = getcwd(up_pwd, PATH_MAXSIZE);
-	update_wd(env, "PWD", up_pwd);
+	if (up_pwd == NULL)
+		ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", STDERR_FILENO);
+	else
+		update_wd(env, "PWD", up_pwd);
 	free(nwd);
 }
 
