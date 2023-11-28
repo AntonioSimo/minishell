@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:30 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 17:49:56 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:00:05 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@ char	*get_redir_name(t_token **tokens, t_type redir_type)
 	return (file);
 }
 
+void free_redir(t_redir **redir)
+{
+	if (*redir)
+	{
+		
+	}
+}
+
 int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 {
 	t_type	redir_type;
@@ -80,7 +88,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 	file = get_redir_name(tokens, redir_type);
 	if (!file)
 	{
-		free(*redir);
+		destroy_redir((*redir));
 		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
 		env->exit_status = 2;
 		return (1);
