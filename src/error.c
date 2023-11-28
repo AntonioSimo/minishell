@@ -5,18 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
+/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/**
-* @brief	This function will display an error message corresponding to 
-* the errno value
-* @return 	EXIT_FAILURE	
-*/
 void	strerror_exit(void)
 {
 	FILE	*fp;
@@ -27,12 +22,6 @@ void	strerror_exit(void)
 	exit(EXIT_FAILURE);
 }
 
-/**
-* @brief	This function will display an error message corresponding to 
-* the errno value
-* @param	str custom error message
-* @return 	EXIT_FAILURE	
-*/
 void	perror_exit(char *str)
 {
 	perror(str);

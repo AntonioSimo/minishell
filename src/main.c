@@ -28,14 +28,16 @@ void	minishell(t_env *my_env)
 			ft_putstr_fd("exit\n", STDERR_FILENO);
 			break ;
 		}
-		add_history(line);
 		if (g_signal)
 		{
 			my_env->exit_status = TERMINATION_SIGINT;
 			g_signal = 0;
 		}
 		if (ft_strlen(line) > 0)
-			lexer(line, my_env);
+		{
+			if (!lexer(line, my_env))
+				add_history(line);
+		}
 		ft_free(line);
 		rl_on_new_line();
 	}

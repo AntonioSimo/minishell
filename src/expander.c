@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 15:31:44 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 15:43:19 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,30 @@ void	single_dollar(t_token **tokens, t_envepval *my_env, \
 			*tokens = (*tokens)->next;
 		var->i = var->old_pos;
 	}
+}
+
+void	double_dollar(t_token *tokens, t_token **head, int pos)
+{
+	char	*pid;
+	size_t	i;
+	t_token	*new_node;
+
+	i = 0;
+	pid = ft_itoa((int)getpid());
+	while (i < ft_strlen(tokens->command))
+	{
+		if (ft_strlen(tokens->command + i) > 1 && tokens->command[i] == '$'
+			&& tokens->command[i + 1] == '$')
+		{
+			i = ft_strlen(tokens->command) - ft_strlen(ft_strnstr \
+				(tokens->command, "$$", ft_strlen(tokens->command)));
+			new_node = create_nodes(pid, tokens, i + 1, i + 2);
+			connect_nodes(new_node, pos, head);
+			break ;
+		}
+		i++;
+	}
+	free(pid);
 }
 
 void	handle_double_dollar(t_token **tokens, t_token **head, t_expander *var)

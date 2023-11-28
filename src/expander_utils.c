@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:51:34 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 14:49:03 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:08:23 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	char_to_expand(char c)
 }
 
 void	error_code_expansion(t_token *token, t_token **head, \
-		int pos, t_env *env)
+							int pos, t_env *env)
 {
 	char	*error_code;
 	size_t	i;
@@ -80,6 +80,5 @@ void	error_code_expansion(t_token *token, t_token **head, \
 		}
 		i++;
 	}
-	env->exit_status = SUCCESS;
 	free(error_code);
 }

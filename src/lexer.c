@@ -6,13 +6,11 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 18:24:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 14:49:35 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-extern int	g_error_code;
 
 int	is_divider(t_type type)
 {
@@ -47,28 +45,60 @@ int	check_pipes(t_token *tokens, t_env *env)
 	}
 	if (!flag)
 		return (0);
-	ft_putstr_fd ("Incorrect pipes\n", STDERR_FILENO);
+	ft_putstr_fd("Incorrect pipes\n", STDERR_FILENO);
 	return (1);
 }
 
-void	lexer(char *line, t_env *my_env)
+int	if_not_space(t_token *tokens)
 {
-	t_token		*tokens;
-	t_command	*commands;
+	int		i;
+	bool	flag;
 
-	tokens = NULL;
+	i = 0;
+	flag = false;
+	while (tokens)
+	{
+		if (tokens->type == SEPERATOR)
+			flag = true;
+		i++;
+		tokens = tokens->next;
+	}
+	if (flag && i == 1)
+		return (1);
+	return (0);
+}
+
+int	parse_line(char *line, t_env *env)
+{
+	t_command	*commands;
+	t_token		*tokens;
+	bool		flag;
+
+	flag = true;
+	tokens = tokenize(line);
+	expander(&tokens, env);
+	if (tokens && !if_not_space(tokens) && !check_pipes(tokens, env))
+	{
+		commands = merge_tokens(tokens, env);
+		if (commands)
+		{
+			flag = false;
+			run_commands(commands, env);
+		}
+		commands = destroy_cmds(commands);
+	}
+	tokens = destroy_tokens(tokens);
+	if (flag)
+		return (1);
+	return (0);
+}
+
+int	lexer(char *line, t_env *my_env)
+{
 	if (check_quotes(line))
 	{
-		tokenize(line, &tokens);
-		expander(&tokens, my_env);
-		if (tokens && !check_pipes(tokens, my_env))
-		{
-			commands = merge_tokens(tokens, my_env);
-			if (commands)
-				run_commands(commands, my_env);
-			tokens = destroy_tokens(tokens);
-			commands = destroy_cmds(commands);
-		}
+		if (!parse_line(line, my_env))
+			return (0);
 	}
 	else
 	{
@@ -76,4 +106,5 @@ void	lexer(char *line, t_env *my_env)
 		STDERR_FILENO);
 		my_env->exit_status = SYNTAX_ERROR;
 	}
+	return (1);
 }

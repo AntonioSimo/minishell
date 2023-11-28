@@ -57,31 +57,35 @@ void	tokenize_quotted(t_token **token_lst, char *line, int *pos, \
 	quotes_len = strlen_quoted(line, *pos, quotes);
 	quotted_sentence = ptr_check(ft_substr(line, *pos + 1, quotes_len));
 	push_token(token_lst, lst_token_new(quotted_sentence, quotes));
+	free(quotted_sentence);
 	*pos += quotes_len + 2;
 }
 
-void	tokenize(char *line, t_token **token_lst)
+t_token	*tokenize(char *line)
 {
 	int		i;
 	t_type	quotes;
+	t_token	*tokens;
 
 	i = 0;
+	tokens = NULL;
 	while (line[i])
 	{
 		quotes = quotes_type(line, i);
 		if (quotes == SINGLE_QUOTED || quotes == DOUBLE_QUOTED)
-			tokenize_quotted(token_lst, line, &i, quotes);
+			tokenize_quotted(&tokens, line, &i, quotes);
 		if (quotes == DEFAULT)
 		{
 			if (ft_isspace(line[i]))
-				tokenize_space(token_lst, line, &i);
+				tokenize_space(&tokens, line, &i);
 			else
 			{
 				if (ft_strchr("|<>", line[i]))
-					tokenize_symbols(token_lst, line, &i);
+					tokenize_symbols(&tokens, line, &i);
 				else
-					tokenize_word(token_lst, line, &i);
+					tokenize_word(&tokens, line, &i);
 			}
 		}
 	}
+	return (tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:46:44 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:42 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:26:52 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,91 +35,41 @@ t_token	*create_token(char *string, t_type type)
 	return (token);
 }
 
-static int	empty_node(int pos, t_token **head)
+void	attach_empty_head(int pos, t_token **head, t_token *or_head)
 {
-	int		i;
-	t_token	*or_head;
-	t_token	*next_head;
-	t_token	*prev_to_append;
+	t_token	*temp;
 
-	i = 0;
-	or_head = *head;
-	prev_to_append = *head;
-	while (i < pos)
-	{
-		*head = (*(head))->next;
-		if (i == pos - 2)
-			prev_to_append = *head;
-		i++;
-	}
-	next_head = (*head)->next;
-	prev_to_append->next = next_head;
-	if (pos == 0)
-		*head = or_head->next;
-	else
-		*head = or_head;
-	return (1);
-}
-
-void	connect_nodes(t_token *new_nodes, int pos, t_token **head)
-{
-	int		i;
-	t_token	*or_head;
-	t_token	*next_head;
-	t_token	*prev_to_append;
-	t_token	*test;
-
-	i = 0;
-	or_head = *head;
-	prev_to_append = *head;
-	if (!new_nodes && empty_node(pos, head))
-		return ;
-	while (i++ < pos)
-	{
-		*head = (*(head))->next;
-		if (i == pos - 1)
-			prev_to_append = *head;
-	}
-	next_head = (*head)->next;
-	prev_to_append->next = new_nodes;
-	while (new_nodes->next)
-		new_nodes = new_nodes->next;
-	new_nodes->next = next_head;
 	if (pos == 0)
 	{
-		*test = *head;
-		*head = or_head->next;
-		free(test->command);
-		free(test);
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
+		*head = temp;
 	}
 	else
+	{
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
 		*head = or_head;
+	}
 }
 
-t_token	*create_new_nodes(char *expanded, t_type type)
+void	attach_head(int pos, t_token **head, t_token *or_head)
 {
-	char	**temp_arr;
-	t_token	*new_nodes;
-	int		i;
-	char	*token;
+	t_token	*temp;
 
-	i = 0;
-	new_nodes = NULL;
-	if (ft_strlen(expanded) == 0)
+	if (pos == 0)
 	{
-		push_token(&new_nodes, lst_token_new("", type));
-		return (new_nodes);
+		temp = (*head)->next;
+		free((*head)->command);
+		free(*head);
+		*head = temp;
 	}
-	temp_arr = ptr_check(ft_split(expanded, ' '));
-	while (temp_arr[i])
+	else
 	{
-		token = ptr_check(ft_strdup(temp_arr[i]));
-		push_token(&new_nodes, lst_token_new(token, type));
-		if (temp_arr[i + 1])
-			push_token(&new_nodes, lst_token_new(" ", SEPERATOR));
-		free(token);
-		i++;
+		free((*head)->command);
+		free(*head);
+		*head = or_head;
 	}
-	temp_arr = double_free(temp_arr);
-	return (new_nodes);
 }

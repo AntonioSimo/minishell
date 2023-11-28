@@ -18,7 +18,11 @@ char	*find_expandable(t_envepval	*env, char	*key)
 	{
 		if (!ft_strncmp(env->key, key, ft_strlen(env->key))
 			&& !ft_strncmp(key, env->key, ft_strlen(key)))
+		{
+			if (env->val == NULL)
+				break ;
 			return (ft_strdup(env->val));
+		}
 		env = env->next;
 	}
 	return (ft_strdup(""));

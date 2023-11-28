@@ -66,6 +66,7 @@ char	*find_home(t_envepval *env)
 	{
 		home = ptr_check(ft_strjoin("/home/", username));
 		free(username);
+		printf("Home: %s\n", home);
 		return (home);
 	}
 	free(username);

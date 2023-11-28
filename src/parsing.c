@@ -12,12 +12,6 @@
 
 #include "../include/minishell.h"
 
-typedef struct s_parsing
-{
-	char	*word;
-	char	**args_arr;
-}	t_parsing;
-
 t_parsing	*set_parsing_var(void)
 {
 	t_parsing	*var;
@@ -28,14 +22,8 @@ t_parsing	*set_parsing_var(void)
 	return (var);
 }
 
-int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
+void	init_redir(t_redir **redir)
 {
-	t_type	redir_type;
-	char	*file;
-	int		i;
-
-	i = 0;
-	file = NULL;
 	if (!*redir)
 	{
 		(*redir) = ptr_check(malloc(sizeof(t_redir)));
@@ -44,11 +32,18 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
 		(*redir)->filein = NULL;
 		(*redir)->fileout = NULL;
+		(*redir)->in_count = 0;
+		(*redir)->out_count = 0;
 	}
-	redir_type = (*tokens)->type;
-	*tokens = (*tokens)->next;
-	if (*tokens && (*tokens)->type == SEPERATOR)
-		*tokens = (*tokens)->next;
+}
+
+char	*get_redir_name(t_token **tokens, t_type redir_type)
+{
+	int		i;
+	char	*file;
+
+	file = NULL;
+	i = 0;
 	while (*tokens)
 	{
 		if ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED
@@ -57,27 +52,45 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 			file = ft_free_strjoin(file, (*tokens)->command);
 		}
 		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || \
-		(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
-		(*tokens)->type == REDIR_OUTPUT || (*tokens)->type == REDIR_OUTPUT_APPEND)
+				(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
+				(*tokens)->type == REDIR_OUTPUT || \
+				(*tokens)->type == REDIR_OUTPUT_APPEND)
 		{
 			if (!(redir_type == REDIR_OUTPUT && \
-				(*tokens)->type == PIPE && i == 0))
+			(*tokens)->type == PIPE && i == 0))
 				break ;
 		}
 		i++;
 		*tokens = (*tokens)->next;
 	}
+	return (file);
+}
+
+int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
+{
+	t_type	redir_type;
+	char	*file;
+
+	file = NULL;
+	init_redir(redir);
+	redir_type = (*tokens)->type;
+	*tokens = (*tokens)->next;
+	if (*tokens && (*tokens)->type == SEPERATOR)
+		*tokens = (*tokens)->next;
+	file = get_redir_name(tokens, redir_type);
 	if (!file)
 	{
+		free(*redir);
 		ft_putstr_fd("Redirection error\n", STDERR_FILENO);
 		env->exit_status = 2;
 		return (1);
 	}
 	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+	free(file);
 	return (0);
 }
 
-static void	handle_cmds(t_token *tokens, t_command **commands, \
+void	handle_cmds(t_token *tokens, t_command **commands, \
 						t_redir **redir, t_parsing **var)
 {
 	if (is_word(tokens->type))
@@ -97,55 +110,4 @@ static void	handle_cmds(t_token *tokens, t_command **commands, \
 		(*var)->word = ft_free((*var)->word);
 		(*var)->args_arr = NULL;
 	}
-}
-
-int	check_if_redir(t_type type)
-{
-	if (type == DEFAULT || type == SEPERATOR
-		|| type == PIPE || type == SINGLE_QUOTED
-		|| type == DOUBLE_QUOTED)
-		return (0);
-	return (1);
-}
-
-void	free_parsing_temp(t_parsing *temp)
-{
-	if (temp->args_arr)
-		double_free(temp->args_arr);
-	if (temp->word)
-		free(temp->word);
-	free(temp);
-}
-
-t_command	*merge_tokens(t_token	*tokens, t_env *env)
-{
-	t_command	*commands;
-	t_redir		*redir;
-	t_parsing	*var;
-
-	var = set_parsing_var();
-	commands = NULL;
-	redir = NULL;
-	while (tokens)
-	{
-		if (tokens->type == REDIR_INPUT || tokens->type == REDIR_OUTPUT
-			|| tokens->type == REDIR_OUTPUT_APPEND || tokens->type == HEREDOC)
-		{
-			if (handle_redirections(&redir, &tokens, env))
-				return (NULL);
-		}
-		if (!tokens)
-			break ;
-		handle_cmds(tokens, &commands, &redir, &var);
-		if (!check_if_redir(tokens->type))
-			tokens = tokens->next;
-	}
-	if (var->word || var->args_arr || redir)
-	{
-		var->args_arr = push_str_2d(var->args_arr, var->word);
-		if (var->args_arr || redir)
-			push_cmd(&commands, lst_cmd_new(var->args_arr, redir));
-		redir = NULL;
-	}
-	return (commands);
 }

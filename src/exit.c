@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 17:57:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/10/26 17:28:50 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_exit(char **args, t_env *env)
 		ft_print_message("mustash: exit: ", args[1], \
 		": numeric argument required\n", STDERR_FILENO);
 		free_env(env);
-		exit (255);
+		exit (2);
 	}
 	if (ft_arraysize(args) > 2)
 	{
