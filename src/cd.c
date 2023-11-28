@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:09:40 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 12:55:28 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/28 18:02:05 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,23 @@ static char	*move_home(t_env *env)
 	return (NULL);
 }
 
+static char	*move_to_oldpwd(t_env *env)
+{
+	char	*nwd;
+
+	nwd = find_expandable(env->env, "OLDPWD");
+	if (chdir(nwd) != 0)
+	{
+		ft_print_message("mustash: cd: ", nwd, \
+		"OLDPWD not set\n", STDERR_FILENO);
+		env->exit_status = ERROR;
+		free(nwd);
+		return (NULL);
+	}
+	free(nwd);
+	return (NULL);
+}
+
 void	ft_cd(t_env *env, t_command *cmd)
 {
 	char	*nwd;
@@ -73,6 +90,11 @@ void	ft_cd(t_env *env, t_command *cmd)
 	if (cmd->arguments[1] == NULL)
 	{
 		nwd = move_home(env);
+		return ;
+	}
+	else if (!ft_strcmp(cmd->arguments[1], "-"))
+	{
+		nwd = move_to_oldpwd(env);
 		return ;
 	}
 	else if (cmd->arguments[1])
