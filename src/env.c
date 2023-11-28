@@ -6,40 +6,40 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 15:55:09 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/27 15:56:42 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// static bool	check_path(t_env *my_env)
-// {
-// 	t_envepval	*variable;
-// 	bool		found;
+static bool	check_path(t_env *my_env)
+{
+	t_envepval	*variable;
+	bool		found;
 
-// 	found = false;
-// 	variable = my_env->env;
-// 	while (variable != NULL)
-// 	{
-// 		if (ft_strcmp(variable->key, "PATH") == 0)
-// 		{
-// 			found = true;
-// 			return (found);
-// 		}
-// 		variable = variable->next;
-// 	}
-// 	ft_print_message("mustash: ", "env: ", "No such file or directory\n", \
-// 					STDERR_FILENO);
-// 	my_env->exit_status = 127;
-// 	return (found);
-// }
+	found = false;
+	variable = my_env->env;
+	while (variable != NULL)
+	{
+		if (ft_strcmp(variable->key, "PATH") == 0)
+		{
+			found = true;
+			return (found);
+		}
+		variable = variable->next;
+	}
+	ft_print_message("mustash: ", "env: ", "No such file or directory\n", \
+					STDERR_FILENO);
+	my_env->exit_status = 127;
+	return (found);
+}
 
 void	print_my_env(t_env *my_env)
 {
 	t_envepval	*variable;
 
 	variable = my_env->env;
-	if (my_env)// == true)
+	if (check_path(my_env) == true)
 	{
 		while (variable)
 		{

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/23 14:49:35 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:56:58 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	parse_line(char *line, t_env *env)
 	if (tokens && !if_not_space(tokens) && !check_pipes(tokens, env))
 	{
 		commands = merge_tokens(tokens, env);
+		// print_cmds(commands);
 		if (commands)
 		{
 			flag = false;

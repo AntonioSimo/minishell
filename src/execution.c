@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/23 12:24:28 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/28 15:54:43 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 {
 	int	check;
 
+	if (ft_strlen(cmds->command) == 0)
+		exit(0);
 	check = 0;
 	execute_pipe(fd, temp);
 	if (cmds->redirections)
