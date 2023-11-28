@@ -54,7 +54,7 @@ static int	check_and_append(char *extra_line, t_token **tokens, t_env *env, \
 	return (1);
 }
 
-int	cat_line(t_token **tokens, t_env *env, char **line) //here should be child process i think
+int	cat_line(t_token **tokens, t_env *env, char **line) //here should be child process i think to exit from input by pressing ctrl + c
 {
 	char	*extra_line;
 
