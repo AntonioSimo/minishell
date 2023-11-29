@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:09:40 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 16:46:15 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:19:01 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,32 @@ static char	*move_home(t_env *env)
 	return (NULL);
 }
 
-void	ft_cd(t_env *env, t_command *cmd)
+void	change_dir(char *nwd, t_env *env)
 {
-	char	*nwd;
 	char	*up_pwd;
 
 	up_pwd = NULL;
+	if (chdir(nwd) != 0)
+	{
+		ft_print_message("mustash: cd: ", nwd, \
+		": No such file or directory\n", STDERR_FILENO);
+		env->exit_status = ERROR;
+	}
+	up_pwd = getcwd(up_pwd, PATH_MAXSIZE);
+	if (up_pwd == NULL)
+	{
+		ft_putstr_fd("cd: error retrieving current directory: ", STDERR_FILENO);
+		ft_putstr_fd("getcwd: cannotaccess parent directories:", STDERR_FILENO);
+		ft_putstr_fd(" No such file or directory\n", STDERR_FILENO);
+	}
+	else
+		update_wd(env, "PWD", up_pwd);
+}
+
+void	ft_cd(t_env *env, t_command *cmd)
+{
+	char	*nwd;
+
 	nwd = get_cwd(env);
 	if (ft_arraysize(cmd->arguments) > 2)
 	{
@@ -77,14 +97,6 @@ void	ft_cd(t_env *env, t_command *cmd)
 	}
 	else if (cmd->arguments[1])
 		nwd = ft_strdup(cmd->arguments[1]);
-	if (chdir(nwd) != 0)
-	{
-		ft_print_message("mustash: cd: ", nwd, \
-		": No such file or directory\n", STDERR_FILENO);
-		env->exit_status = ERROR;
-	}
-	up_pwd = getcwd(up_pwd, PATH_MAXSIZE);
-	update_wd(env, "PWD", up_pwd);
+	change_dir(nwd, env);
 	free(nwd);
 }
-

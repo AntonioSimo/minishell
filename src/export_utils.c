@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 12:36:43 by asimone          ###   ########.fr       */
+/*   Updated: 2023/11/28 19:29:22 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 t_envepval	*create_env_emptynode(char *key)
 {
 	t_envepval	*node;
-	//char		empty[1];
 
 	node = ptr_check(malloc(sizeof(t_envepval)));
 	node->key = ptr_check(ft_strdup(key));
-	//node->val = malloc(1);
 	node->val = NULL;
 	node->next = NULL;
 	return (node);

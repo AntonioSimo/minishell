@@ -24,7 +24,7 @@ void	strerror_exit(void)
 
 void	perror_exit(char *str)
 {
-	perror(str);
+	ft_putstr_fd(str, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
 
