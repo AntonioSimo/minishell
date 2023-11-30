@@ -35,7 +35,9 @@ int	check_pipes(t_token **tokens, t_env *env, char **line)
 {
 	int		flag;
 	t_token	*head;
+	int		ctrl_c;
 
+	ctrl_c = 0;
 	flag = 1;
 	head = *tokens;
 	if (scann_for_pipes(*tokens, &flag, env))
@@ -43,8 +45,10 @@ int	check_pipes(t_token **tokens, t_env *env, char **line)
 	*tokens = head;
 	if (!flag)
 		return (0);
-	if (cat_line(tokens, env, line))
+	if (cat_line(tokens, env, line, &ctrl_c))
 	{
+		if (ctrl_c)
+			return (1);
 		destroy_tokens(*tokens);
 		free(*line);
 		exit (free_env(env));
@@ -83,13 +87,18 @@ int	parse_line(char **line, t_env *env)
 	expander(&tokens, env);
 	if (tokens && !if_not_space(tokens) && !check_pipes(&tokens, env, line))
 	{
-		commands = merge_tokens(tokens, env);
-		if (commands)
+		if (tokens)
 		{
-			flag = false;
-			run_commands(commands, env);
+			commands = merge_tokens(tokens, env);
+			if (commands)
+			{
+				flag = false;
+				run_commands(commands, env);
+			}
+			commands = destroy_cmds(commands);
 		}
-		commands = destroy_cmds(commands);
+		else
+			return (1);
 	}
 	tokens = destroy_tokens(tokens);
 	if (flag)

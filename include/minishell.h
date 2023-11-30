@@ -250,7 +250,7 @@ int			init_heredoc(t_execution **temp);
 int			is_divider(t_type type);
 int			check_pipes(t_token **tokens, t_env *env, char **line);
 int			lexer(char **line, t_env *my_env);
-int			cat_line(t_token **tokens, t_env *env, char **line);
+int			cat_line(t_token **tokens, t_env *env, char **line, int *ctrl_c);
 
 //main
 void		minishell(t_env *my_env);
