@@ -108,14 +108,12 @@ char *process_extra_line(int *fd)
 	return (line);
 }
 
-int	cat_line(t_token **tokens, t_env *env, char **line, int *ctrl_c) //here should be child process i think to exit from input by pressing ctrl + c
+int	cat_line(t_token **tokens, t_env *env, char **line, int *ctrl_c)
 {
 	int		fd[2];
 	int		pid;
 	char	*extra_line;
-	static	int	counter = 0;
 
-	counter++;
 	rl_on_new_line();
 	if (pipe(fd) == -1)
 		perror_exit("Pipe creation failed\n");
@@ -135,11 +133,8 @@ int	cat_line(t_token **tokens, t_env *env, char **line, int *ctrl_c) //here shou
 	manage_signals(1);
 	if (!extra_line)
 	{
-		if (counter == 1)
-		{
-			ft_putstr_fd("\n", STDIN_FILENO);
-			rl_replace_line("", 0);
-		}
+		ft_putstr_fd("\n", STDIN_FILENO);
+		rl_replace_line("", 0);
 		*ctrl_c = 1;
 		return (1);
 	}
