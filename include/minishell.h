@@ -202,7 +202,7 @@ void		wait_last_child(t_command *cmds, int last_pid, t_env *env);
 //execution2
 void		close_pipes(int **fd, t_execution *temp);
 void		free_temp(t_execution *temp);
-void		run_commands(t_command *cmds, t_env *env);
+int			run_commands(t_command *cmds, t_env *env);
 
 //exit
 int64_t		ft_atoint64_t(const char *str);
@@ -309,7 +309,7 @@ void		tokenize_space(t_token **token_lst, char *line, int *i);
 void		tokenize_symbols(t_token **token_lst, char *line, int *i);
 void		tokenize_word(t_token **token_lst, char *line, int *position);
 void		tokenize_quotted(t_token **token_lst, char *line, int *pos, \
-			t_type quotes);
+							t_type quotes);
 t_token		*tokenize(char *line);
 
 //token_symbols
@@ -330,10 +330,13 @@ int			token_lst_size(t_token	*tokens);
 t_token		*create_token(char *string, t_type type);
 void		attach_empty_head(int pos, t_token **head, t_token *or_head);
 void		attach_head(int pos, t_token **head, t_token *or_head);
+int			not_pipe(t_type type);
 
 //token_utils3
 void		connect_nodes(t_token *new_nodes, int pos, t_token **head);
 t_token		*create_new_nodes(char *expanded, t_type type);
+int			check_and_append(char *extra_line, t_token **tokens, t_env *env, \
+							char **line);
 
 //unset
 void		ft_nodedel(t_envepval *env);
@@ -356,5 +359,9 @@ int			ft_strcmp(char *s1, char *s2);
 char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
 int			count_cmds(t_command *cmds);
+
+//lexer3
+int			is_divider(t_type type);
+int			if_not_space(t_token *tokens);
 
 #endif

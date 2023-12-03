@@ -65,7 +65,10 @@ bool	ft_isnumber(char *str)
 void	ft_exit(char **args, t_env *env)
 {
 	if (ft_arraysize(args) == 1)
+	{
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 		exit(free_env(env));
+	}
 	if (!ft_isnumber(args[1]))
 	{
 		ft_print_message("mustash: exit: ", args[1], \

@@ -88,3 +88,46 @@ t_token	*create_new_nodes(char *expanded, t_type type)
 	temp_arr = double_free(temp_arr);
 	return (new_nodes);
 }
+
+static void	append_tokens(t_token **tokens, char *line)
+{
+	int		i;
+	t_type	quotes;
+
+	i = 0;
+	while (line[i])
+	{
+		quotes = quotes_type(line, i);
+		if (quotes == SINGLE_QUOTED || quotes == DOUBLE_QUOTED)
+			tokenize_quotted(tokens, line, &i, quotes);
+		if (quotes == DEFAULT)
+		{
+			if (ft_isspace(line[i]))
+				tokenize_space(tokens, line, &i);
+			else
+			{
+				if (ft_strchr("|<>", line[i]))
+					tokenize_symbols(tokens, line, &i);
+				else
+					tokenize_word(tokens, line, &i);
+			}
+		}
+	}
+}
+
+int	check_and_append(char *extra_line, t_token **tokens, t_env *env, \
+					char **line)
+{
+	if (check_quotes(extra_line))
+	{
+		append_tokens(tokens, extra_line);
+		expander(tokens, env);
+		*line = ft_free_strjoin(*line, extra_line);
+		free(extra_line);
+		return (0);
+	}
+	else
+		ft_putstr_fd("mustash: syntax error: unexpected end of file\n", \
+			STDERR_FILENO);
+	return (1);
+}
