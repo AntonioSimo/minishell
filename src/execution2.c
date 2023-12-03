@@ -62,7 +62,7 @@ void	free_temp(t_execution *temp)
 	temp = NULL;
 }
 
-void	run_commands(t_command *cmds, t_env *env)
+int	run_commands(t_command *cmds, t_env *env)
 {
 	t_execution	*temp;
 	int			check;
@@ -78,8 +78,9 @@ void	run_commands(t_command *cmds, t_env *env)
 		if (cmds->redirections)
 			close_redir(cmds->redirections);
 		free_temp(temp);
-		return ;
+		return (0);
 	}
 	handle_multiple_cmds(cmds, env, temp);
 	free_temp(temp);
+	return (0);
 }

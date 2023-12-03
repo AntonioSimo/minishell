@@ -55,5 +55,5 @@ int	main(int argc, char **argv, char **env)
 	manage_signals(1);
 	env_main = copy_env(env);
 	minishell(env_main);
-	return (free_env(env_main));
+	exit (free_env(env_main));
 }

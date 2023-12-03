@@ -86,7 +86,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 //                        write(1, "NULL", 4);
 //                write(1, "\n", 1);
 //                if (elem2)
-//                        _result(elem2);
+//                        ft_print_result(elem2);
 //                else
 //                        write(1, "NULL", 4);
 //                write(1, "\n", 1);

@@ -58,25 +58,6 @@ int	check_pipes(t_token **tokens, t_env *env, char **line)
 	return (0);
 }
 
-int	if_not_space(t_token *tokens)
-{
-	int		i;
-	bool	flag;
-
-	i = 0;
-	flag = false;
-	while (tokens)
-	{
-		if (tokens->type == SEPERATOR)
-			flag = true;
-		i++;
-		tokens = tokens->next;
-	}
-	if (flag && i == 1)
-		return (1);
-	return (0);
-}
-
 int	parse_line(char **line, t_env *env)
 {
 	t_command	*commands;
@@ -91,11 +72,8 @@ int	parse_line(char **line, t_env *env)
 		if (tokens)
 		{
 			commands = merge_tokens(tokens, env);
-			if (commands)
-			{
+			if (commands && !run_commands(commands, env))
 				flag = false;
-				run_commands(commands, env);
-			}
 			commands = destroy_cmds(commands);
 		}
 		else

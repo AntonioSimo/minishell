@@ -26,6 +26,5 @@
 char	*get_next_line(int fd);
 char	*ft_find_leftover(char *str);
 char	*ft_read_file(int fd, char *buffer);
-char	*ft_free_strjoin(char *s1, char *s2);
 
 #endif

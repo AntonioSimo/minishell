@@ -73,3 +73,14 @@ void	attach_head(int pos, t_token **head, t_token *or_head)
 		*head = or_head;
 	}
 }
+
+int	not_pipe(t_type type)
+{
+	if (type == DEFAULT || type == DOUBLE_QUOTED
+		|| type == SINGLE_QUOTED || type == REDIR_INPUT
+		|| type == REDIR_OUTPUT
+		|| type == REDIR_OUTPUT_APPEND
+		|| type == HEREDOC)
+		return (0);
+	return (1);
+}

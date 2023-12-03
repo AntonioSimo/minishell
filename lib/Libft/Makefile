@@ -58,7 +58,8 @@ SRC =	src/ft_atoi.c \
 		src/ft_substr.c \
 		src/ft_tolower.c \
 		src/ft_toupper.c \
-		src/get_next_line.c
+		src/get_next_line.c \
+		src/ft_free_strjoin.c
 
 SRC_DIR = src
 OBJ_DIR := obj_files
