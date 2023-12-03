@@ -53,7 +53,8 @@ int	check_pipes(t_token **tokens, t_env *env, char **line)
 		free(*line);
 		exit (free_env(env));
 	}
-	check_pipes(tokens, env, line);
+	if (check_pipes(tokens, env, line))
+		return (1);
 	return (0);
 }
 
