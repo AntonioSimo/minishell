@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 13:19:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 16:14:31 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:29:10 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_command	*lst_cmd_new(char **args, t_redir *redir)
 	else
 	{
 		new_node->arguments = push_str_2d(args, "");
-		new_node->command = ft_strdup("");
+		new_node->command = ptr_check(ft_strdup(""));
 	}
 	new_node->redirections = redir;
 	new_node->next = NULL;

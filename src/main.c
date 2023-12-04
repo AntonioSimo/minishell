@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:14 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:42:50 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:48:35 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argv;
 	(void)argc;
-	rl_outstream = stderr;
-	env_main = NULL;
 	g_signal = 0;
 	manage_signals(1);
 	env_main = copy_env(env);

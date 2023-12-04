@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/12/04 12:17:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:45:01 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define MINISHELL_H
 
 # define GREEN "\x1b[32;01m"
-# define RED "\x1b[31;01m"
-# define YELLOW "\033[33;1m"
 # define BOLD "\033[1m"
 # define RESET  "\x1b[0m"
 # define PATH_MAXSIZE 1024
@@ -357,7 +355,6 @@ int			free_env(t_env *env);
 //utils3
 char		*find_expandable(t_envepval	*env, char	*key);
 int			ft_strcmp(char *s1, char *s2);
-char		*make_str_from_2d(char **args);
 int			is_word(t_type type);
 int			count_cmds(t_command *cmds);
 

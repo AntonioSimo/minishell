@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:46:44 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/23 16:26:52 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:40:51 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int	check_and_append(char *extra_line, t_token **tokens, t_env *env, \
 	{
 		append_tokens(tokens, extra_line);
 		expander(tokens, env);
-		*line = ft_free_strjoin(*line, extra_line);
+		*line = ptr_check(ft_free_strjoin(*line, extra_line));
 		free(extra_line);
 		return (0);
 	}

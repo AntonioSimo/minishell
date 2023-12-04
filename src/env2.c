@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/04 12:33:46 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:57:51 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_env	*copy_env(char **env)
 	int			i;
 	char		*key;
 
-	(void) env;
 	i = 0;
 	env_lst = NULL;
 	set_env(&env_lst, env);
@@ -60,14 +59,14 @@ char	*env_str(t_envepval *current)
 {
 	char	*str;
 
-	str = ft_strdup(current->key);
+	str = ptr_check(ft_strdup(current->key));
 	if (!str)
 		return (NULL);
-	str = ft_strjoin(str, "=");
+	str = ptr_check(ft_strjoin(str, "="));
 	if (!str)
 		return (NULL);
 	if (current->val)
-		str = ft_strjoin(str, current->val);
+		str = ptr_check(ft_strjoin(str, current->val));
 	return (str);
 }
 
@@ -80,9 +79,8 @@ char	**get_envp(t_env *env)
 
 	current = env->env;
 	i = 0;
-	envp = (char **) malloc(((lstenv_c(current) + 1) * sizeof(char *)));
-	if (!envp)
-		return (printf("Malloc error"), NULL);
+	envp = ptr_check((char **) \
+			malloc(((lstenv_c(current) + 1) * sizeof(char *))));
 	while (current)
 	{
 		temp = env_str(current);
