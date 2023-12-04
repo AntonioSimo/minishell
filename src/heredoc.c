@@ -76,37 +76,37 @@
 // 	return (fd2);
 // }
 
-// int heredoc(t_command *cmds)
-// {
-// 	int		status;
-// 	pid_t	child_pid;
-// 	int		pipe_fd[2];
+int heredoc(t_command *cmds)
+{
+	int		status;
+	pid_t	child_pid;
+	int		pipe_fd[2];
 
-// 	if (pipe(pipe_fd) < 0)
-// 		return (write(2, "HEREDOC ERROR\n", 15));
-// 	manage_signals(0);
-// 	child_pid = fork();
-// 	if (child_pid < 0)
-// 		return (write(2, "HEREDOC FORK ERROR\n", 20));
-// 	if (child_pid == 0)
-// 	{
-// 		manage_signals(2);
-// 		pipe_fd[0] = child_process_here_doc(temp->file);
-// 		exit (EXIT_SUCCESS);
-// 	}
-// 	else if (child_pid > 0)
-// 	{
-// 		close(pipe_fd[1]);
-// 		waitpid(child_pid, &status, 0);
-// 	}
-// 	else
-// 	{
-// 		//close(pipe_fd[0]);
-// 		perror("fork");
-// 	}
-// 	manage_signals(3);
-// 	return (pipe_fd[0]);
-// }
+	if (pipe(pipe_fd) < 0)
+		return (write(2, "HEREDOC ERROR\n", 15));
+	manage_signals(0);
+	child_pid = fork();
+	if (child_pid < 0)
+		return (write(2, "HEREDOC FORK ERROR\n", 20));
+	if (child_pid == 0)
+	{
+		manage_signals(2);
+		pipe_fd[0] = child_process_here_doc(temp->file);
+		exit (EXIT_SUCCESS);
+	}
+	else if (child_pid > 0)
+	{
+		close(pipe_fd[1]);
+		waitpid(child_pid, &status, 0);
+	}
+	else
+	{
+		//close(pipe_fd[0]);
+		perror("fork");
+	}
+	manage_signals(3);
+	return (pipe_fd[0]);
+}
 
 
 //static void	st_child_process(int pipe_fd[2], char *file)

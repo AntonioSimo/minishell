@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:30:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:36:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 18:11:31 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 	char	*file;
 
 	file = NULL;
-	if (!skip_heredoc(tokens))
-		return (0);
+	// if (!skip_heredoc(tokens))
+	// 	return (0);
 	init_redir(redir);
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;
