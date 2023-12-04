@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:06:13 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 16:58:39 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,15 @@ int	check_access_out(t_redir_lst *temp)
 	return (0);
 }
 
-static int	handle_redir_out(t_redir_lst *temp, t_redir *redir)
+int	handle_redir_out(t_redir_lst *temp, t_redir *redir, int control)
 {
 	static int	i = 0;
 
+	if (control == 1)
+	{
+		i = 0;
+		return (0);
+	}
 	if (temp->type == REDIR_OUTPUT)
 		redir->fileout[i] = open(temp->file, O_WRONLY \
 						| O_CREAT | O_TRUNC, 0644);
@@ -67,10 +72,15 @@ int	check_access_in(t_redir_lst *temp)
 	return (0);
 }
 
-static int	handle_redir_in(t_redir_lst *temp, t_redir *redir)
+int	handle_redir_in(t_redir_lst *temp, t_redir *redir, int control)
 {
 	static int	j = 0;
 
+	if (control == 1)
+	{
+		j = 0;
+		return (0);
+	}
 	if (temp->type == REDIR_INPUT)
 		redir->filein[j] = open(temp->file, O_RDONLY);
 	if (check_access_in(temp))
@@ -94,7 +104,7 @@ int	run_redirections(t_redir *redir, t_env *env)
 	{
 		if (temp->type == REDIR_OUTPUT || temp->type == REDIR_OUTPUT_APPEND)
 		{
-			if (handle_redir_out(temp, redir))
+			if (handle_redir_out(temp, redir, 0))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
@@ -102,7 +112,7 @@ int	run_redirections(t_redir *redir, t_env *env)
 		}
 		else if (temp->type == REDIR_INPUT)
 		{
-			if (handle_redir_in(temp, redir))
+			if (handle_redir_in(temp, redir, 0))
 			{
 				env->exit_status = ERROR;
 				return (ERROR);
