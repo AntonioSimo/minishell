@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 16:21:14 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 16:58:51 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ void	handle_child_process(int **fd, t_command *cmds, t_env *env, \
 	check = 0;
 	execute_pipe(fd, temp);
 	if (cmds->redirections)
+	{
 		check = run_redirections(cmds->redirections, env);
+		clean_redir_counter();
+	}
 	if (ft_strlen(cmds->command) == 0)
 		exit(0);
 	if (check)

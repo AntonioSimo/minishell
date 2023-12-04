@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:39:33 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:41:03 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 16:54:02 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ char	*find_expandable(t_envepval	*env, char	*key)
 		{
 			if (env->val == NULL)
 				break ;
-			return (ft_strdup(env->val));
+			return (ptr_check(ft_strdup(env->val)));
 		}
 		env = env->next;
 	}
-	return (ft_strdup(""));
+	return (ptr_check(ft_strdup("")));
 }
 
 int	ft_strcmp(char *s1, char *s2)
@@ -36,26 +36,6 @@ int	ft_strcmp(char *s1, char *s2)
 	while (s1[i] && s2[i] && s1[i] == s2[i])
 		++i;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
-
-char	*make_str_from_2d(char **args)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	str = NULL;
-	if (args)
-	{
-		while (args[i])
-		{
-			str = ft_free_strjoin(str, args[i]);
-			if (args[i + 1])
-				str = ft_free_strjoin(str, " ");
-			i++;
-		}
-	}
-	return (str);
 }
 
 int	is_word(t_type type)
@@ -77,4 +57,10 @@ int	count_cmds(t_command *cmds)
 		i++;
 	}
 	return (i);
+}
+
+void	clean_redir_counter(void)
+{
+	handle_redir_in(NULL, NULL, 1);
+	handle_redir_out(NULL, NULL, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:31:26 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 12:52:13 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,28 @@ t_envepval	*create_env_node(char *key, char *value)
 	node->val = ptr_check(ft_strdup(value));
 	node->next = NULL;
 	return (node);
+}
+
+void	replace_env_copy(t_env **env)
+{
+	size_t		size;
+	t_envepval	*head;
+	int			i;
+	char		*key;
+
+	i = 0;
+	head = (*env)->env;
+	size = env_len((*env)->env);
+	(*env)->env_copy = double_free((*env)->env_copy);
+	(*env)->env_copy = ptr_check(malloc(sizeof(char *) * (size + 1)));
+	while ((*env)->env)
+	{
+		key = ptr_check(ft_strjoin((*env)->env->key, "="));
+		(*env)->env_copy[i] = ptr_check(ft_strjoin(key, (*env)->env->val));
+		free(key);
+		(*env)->env = (*env)->env->next;
+		i++;
+	}
+	(*env)->env_copy[i] = NULL;
+	(*env)->env = head;
 }

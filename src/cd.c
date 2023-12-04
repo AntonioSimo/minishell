@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:09:40 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/29 12:19:01 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:28:49 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	ft_cd(t_env *env, t_command *cmd)
 		return ;
 	}
 	else if (cmd->arguments[1])
-		nwd = ft_strdup(cmd->arguments[1]);
+		nwd = ptr_check(ft_strdup(cmd->arguments[1]));
 	change_dir(nwd, env);
 	free(nwd);
 }

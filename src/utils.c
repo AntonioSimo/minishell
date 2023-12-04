@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:39:33 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:54:47 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:43:21 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ char	*access_path(char *cmd, char **paths)
 	i = 0;
 	while (paths[i])
 	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
+		part_path = ptr_check(ft_strjoin(paths[i], "/"));
+		path = ptr_check(ft_strjoin(part_path, cmd));
 		free(part_path);
 		if (access(path, F_OK) == 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:30:46 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 18:07:04 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,14 @@ int	run_commands(t_command *cmds, t_env *env)
 
 	temp = initialize_temp(cmds);
 	check = 0;
+	// heredoc(cmds);
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
+		{
 			check = run_redirections(cmds->redirections, env);
+			clean_redir_counter();
+		}
 		if (!check)
 			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)

@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/27 15:56:42 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:30:04 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ char	*handle_shlvl(char *value)
 	char		*shlvl;
 	char		*ret;
 
-	shlvl = ft_itoa(ft_atoi(value) + 1);
-	ret = ft_strdup(shlvl);
+	shlvl = ptr_check(ft_itoa(ft_atoi(value) + 1));
+	ret = ptr_check(ft_strdup(shlvl));
 	free(shlvl);
 	free(value);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 15:50:06 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 12:24:11 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ void	ft_unset(t_env *env, char **args)
 		return ;
 	}
 	delete_node(current_node, previous_node, env, args);
+	replace_env_copy(&env);
 	env->exit_status = SUCCESS;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tilde.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:33:56 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:35:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:38:12 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ char	*replace_string(char *expanded, char	*str, int start, int end)
 	char	*temp;
 	char	*new_line;
 
-	before = ft_substr(str, 0, start - 1);
-	after = ft_substr(str, end, ft_strlen(str) - end);
-	temp = ft_strjoin(before, expanded);
-	new_line = ft_strjoin(temp, after);
+	before = ptr_check(ft_substr(str, 0, start - 1));
+	after = ptr_check(ft_substr(str, end, ft_strlen(str) - end));
+	temp = ptr_check(ft_strjoin(before, expanded));
+	new_line = ptr_check(ft_strjoin(temp, after));
 	free(temp);
 	free(before);
 	free(after);
@@ -51,7 +51,7 @@ void	tilde_expansion(t_token *tokens, t_envepval *my_env)
 	}
 	new_command = replace_string(home, tokens->command, 1, 1);
 	free(tokens->command);
-	tokens->command = ft_strdup(new_command);
+	tokens->command = ptr_check(ft_strdup(new_command));
 	free(new_command);
 	free(home);
 }

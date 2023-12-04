@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 18:49:49 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:31:01 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	update_wd(t_env *env, char *wd, char *new_wd_value)
 		if (ft_strcmp(variable->key, wd) == 0)
 		{
 			free(variable->val);
-			variable->val = ft_strdup(new_wd_value);
+			variable->val = ptr_check(ft_strdup(new_wd_value));
 			break ;
 		}
 		variable = variable->next;
@@ -72,7 +72,7 @@ void	get_current_working_dir(t_env *env)
 {
 	char	*current_pwd;
 
-	current_pwd = malloc(PATH_MAXSIZE);
+	current_pwd = ptr_check(malloc(PATH_MAXSIZE));
 	if (!current_pwd)
 	{
 		env->exit_status = ERROR;

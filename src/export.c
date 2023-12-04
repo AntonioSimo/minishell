@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/27 16:27:14 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/04 12:51:33 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,15 @@ void	ft_export(t_env *env, char **args)
 	while (args[i] != NULL)
 	{
 		if (ft_isvariable(args[i]) == 1)
-		{
 			check_export_variable(args, env);
-		}
 		else
 		{
 			ft_print_message("mustash: export: `", args[i], \
 			"': not a valid identifier\n", STDERR_FILENO);
 			env->exit_status = ERROR;
+			return ;
 		}
 		i++;
 	}
+	replace_env_copy(&env);
 }

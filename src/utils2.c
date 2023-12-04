@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:38:48 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 13:27:46 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ char	**push_str_2d(char **args, char *str)
 			i++;
 	}
 	if (str)
-		new_args = malloc(sizeof(char *) * (i + 2));
+		new_args = ptr_check(malloc(sizeof(char *) * (i + 2)));
 	else
-		new_args = malloc(sizeof(char *) * (i + 1));
+		new_args = ptr_check(malloc(sizeof(char *) * (i + 1)));
 	second_part(args, new_args, str);
 	return (new_args);
 }

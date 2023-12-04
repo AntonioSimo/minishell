@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: asimone <asimone@student.42.fr>              +#+                      #
-#                                                    +#+                       #
-#    Created: 2022/10/12 14:58:37 by asimone       #+#    #+#                  #
-#    Updated: 2023/07/18 18:03:49 by asimone       ########   odam.nl          #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: asimone <asimone@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/10/12 14:58:37 by asimone           #+#    #+#              #
+#    Updated: 2023/12/04 13:28:00 by asimone          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,13 +63,14 @@ SRC =	src/ft_atoi.c \
 
 SRC_DIR = src
 OBJ_DIR := obj_files
-OBJ := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC:.c=.o)) #you convert the .c files in .o files
+OBJ := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC:.c=.o))
 
 GREEN = \x1b[32;01m
-RED = \x1b[31;01m
+RED = \033[91m
+YELLOW = \033[33m
 BOLD = \033[1m
-YELLOW = \033[33;1m
-RESET = \x1b[0m
+RESET = \033[0m
+RM = /bin/rm -f
 
 AR = ar
 CC = gcc
@@ -99,7 +100,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
-# $@ calling the target
-# $< calling the first element in the target (prerequisite)
-# $^ calling all the element in the target 
