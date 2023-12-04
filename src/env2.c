@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 12:33:46 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_env	*copy_env(char **env)
 	temp->exit_status = SUCCESS;
 	temp->env = env_lst;
 	size = env_len(env_lst);
-	temp->env_copy = malloc(sizeof(char *) * (size + 1));
+	temp->env_copy = ptr_check(malloc(sizeof(char *) * (size + 1)));
 	while (env_lst)
 	{
 		key = ptr_check(ft_strjoin(env_lst->key, "="));

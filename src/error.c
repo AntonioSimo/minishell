@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/04 12:35:12 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void	*ptr_check(void *ptr)
 	if (ptr != NULL)
 		return (ptr);
 	else
-	{
-		perror("Error");
-		exit(EXIT_FAILURE);
-	}
+		perror_exit("Error");
+	return (NULL);
 }
 
 void	ft_print_message(char *command, char *str, char *error_message, int fd)

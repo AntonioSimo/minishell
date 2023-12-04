@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/11/28 12:38:38 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/04 12:17:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ char		**get_envp(t_env *env);
 t_envepval	*lstenv(t_envepval *lst);
 void		envlst_add(t_envepval **lst, t_envepval *new);
 size_t		env_len(t_envepval *env);
+void		replace_env_copy(t_env **env);
 
 //echo
 int			ft_arraysize(char **args);
