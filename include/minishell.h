@@ -241,7 +241,7 @@ void		add_env_variable(t_envepval *lst, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc
-int 		heredoc(t_command *cmds);
+int 		heredoc(t_redir_lst *temp);
 int			init_heredoc(t_execution **temp);
 //int			heredoc(char *file);
 
