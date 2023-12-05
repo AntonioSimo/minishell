@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/05 17:36:55 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/05 18:00:38 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,24 +82,31 @@ void	child_process_here_doc(char *file, int *pipe_fd)
 	close(pipe_fd[1]);
 }
 
+static int	handle_parent_heredoc(t_redir_lst *redir, int child_pid, \
+			int *pipe_fd)
+{
+	int	status;
+
+	close(pipe_fd[1]);
+	redir->fd = pipe_fd[0];
+	waitpid(child_pid, &status, 0);
+	manage_signals(3);
+	if (WIFSIGNALED(status))
+		return (1);
+	return (0);
+}
+
 int	heredoc(t_redir_lst *redir)
 {
-	int		status;
 	pid_t	child_pid;
 	int		pipe_fd[2];
 
 	if (pipe(pipe_fd) < 0)
-	{
-		write(2, "HEREDOC ERROR\n", 15);
-		return (1);
-	}
+		return (write(2, "HEREDOC ERROR\n", 15));
 	manage_signals(0);
 	child_pid = fork();
 	if (child_pid < 0)
-	{
-		write(2, "HEREDOC FORK ERROR\n", 20);
-		return (1);
-	}
+		return (write(2, "HEREDOC FORK ERROR\n", 20));
 	if (child_pid == 0)
 	{
 		manage_signals(2);
@@ -108,12 +115,8 @@ int	heredoc(t_redir_lst *redir)
 	}
 	else if (child_pid > 0)
 	{
-		close(pipe_fd[1]);
-		redir->fd = pipe_fd[0];
-		waitpid(child_pid, &status, 0);
-		manage_signals(3);
-		if (WIFSIGNALED(status))
-			return (1);
+		if (handle_parent_heredoc(redir, child_pid, pipe_fd) == 0)
+			return (0);
 	}
 	else
 		perror("fork");
