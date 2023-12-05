@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/04 18:12:24 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:21:01 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,20 @@ int	run_commands(t_command *cmds, t_env *env)
 
 	temp = initialize_temp(cmds);
 	check = 0;
+	if (init_heredoc(temp) == 1)
+	{
+		clear_redir_lst(temp);
+		free_temp(temp);
+		return (0);
+	}
 	if (count_cmds(cmds) == 1 && ft_isbuiltin(cmds->command))
 	{
 		if (cmds->redirections)
-		{
 			check = run_redirections(cmds->redirections, env);
-			clean_redir_counter();
-		}
 		if (!check)
 			exe_builtin(cmds, env, 0);
 		if (cmds->redirections)
-			close_redir(cmds->redirections);
+			reset_stdout_stdin(cmds->redirections);
 		free_temp(temp);
 		return (0);
 	}

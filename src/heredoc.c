@@ -1,122 +1,121 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/31 18:02:04 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:36:55 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-// int	init_heredoc(t_execution **temp)
-// {
-// 	// t_command	*cmds;
-// 	// t_redir_lst *redir;
-// 	// int	j;
+void	clear_redir_lst(t_execution *temp)
+{
+	t_command	*cmds;
+	t_redir_lst	*redir;
 
-// 	// cmds = temp->head;
-// 	// j = 0;
-// 	while (*temp)
-// 	{
-// 		if ((*temp)->head->redirections)
-// 		{
-// 			// redir = cmds->redirections->lst;
-// 			while ((*temp)->head->redirections->lst)
-// 			{
-// 				if ((*temp)->head->redirections->lst->type == HEREDOC)
-// 				{
-// 					(*temp)->head->redirections->lst->fd[0] = heredoc((*temp)->head->redirections->lst);
-// 					// temp->head = redir;
-// 				}
-// 				// j++;
-// 				(*temp)->head->redirections->lst = (*temp)->head->redirections->lst->next;
-// 			}
-// 		}
-// 		(*temp)->head = (*temp)->head->next;
-// 	}
-// 	// if (redir->fd[j] == -1)
-// 	// 	perror_exit("FD error\n");
-// 	// dup2(redir->fd[j], STDIN_FILENO);
-// 	// close(redir->fd[j]);
-// 	return (0);
-// }
+	cmds = temp->head;
+	while (cmds)
+	{
+		if (cmds->redirections)
+		{
+			redir = cmds->redirections->lst;
+			while (redir)
+			{
+				if (redir->type == HEREDOC)
+					if (redir->fd != -1)
+						close(redir->fd);
+				redir = redir->next;
+			}
+		}
+		cmds = cmds->next;
+	}
+}
 
-static int child_process_here_doc(char *file)
+int	init_heredoc(t_execution *temp)
+{
+	t_command	*cmds;
+	t_redir_lst	*redir;
+
+	cmds = temp->head;
+	while (cmds)
+	{
+		if (cmds->redirections)
+		{
+			redir = cmds->redirections->lst;
+			while (redir)
+			{
+				if (redir->type == HEREDOC)
+					if (heredoc(redir) == 1)
+						return (1);
+				redir = redir->next;
+			}
+		}
+		cmds = cmds->next;
+	}
+	return (0);
+}
+
+void	child_process_here_doc(char *file, int *pipe_fd)
 {
 	char	*line;
-	char	*end_of_file = file;
-	int		fd1;
-	int		fd2;
+	char	*end_of_file;
 
- 	fd1 = (open("/tmp/file", O_CREAT | O_RDWR | O_TRUNC, 0644));
-	if (fd1 == -1) 
-	{
-		perror("Error pipe\n");
-		exit(1);
-	}
+	end_of_file = file;
+	close(pipe_fd[0]);
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL || ft_strncmp(end_of_file, line, ft_strlen(end_of_file)) == 0)
+		if (line == NULL || ft_strncmp(end_of_file, line, \
+				ft_strlen(end_of_file)) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(fd1, line, ft_strlen(line));
-		write(fd1, "\n", 1);
+		write(pipe_fd[1], line, ft_strlen(line));
+		write(pipe_fd[1], "\n", 1);
 		free(line);
 	}
-	fd2 = open("/tmp/file", O_RDONLY, 0644);
-	close(fd1);
-	return (fd2);
+	close(pipe_fd[1]);
 }
 
-int heredoc(t_redir_lst *temp)
+int	heredoc(t_redir_lst *redir)
 {
 	int		status;
 	pid_t	child_pid;
 	int		pipe_fd[2];
 
 	if (pipe(pipe_fd) < 0)
-		return (write(2, "HEREDOC ERROR\n", 15));
+	{
+		write(2, "HEREDOC ERROR\n", 15);
+		return (1);
+	}
 	manage_signals(0);
 	child_pid = fork();
 	if (child_pid < 0)
-		return (write(2, "HEREDOC FORK ERROR\n", 20));
+	{
+		write(2, "HEREDOC FORK ERROR\n", 20);
+		return (1);
+	}
 	if (child_pid == 0)
 	{
 		manage_signals(2);
-		pipe_fd[0] = child_process_here_doc(temp->file);
+		child_process_here_doc(redir->file, pipe_fd);
 		exit (EXIT_SUCCESS);
 	}
 	else if (child_pid > 0)
 	{
 		close(pipe_fd[1]);
+		redir->fd = pipe_fd[0];
 		waitpid(child_pid, &status, 0);
+		manage_signals(3);
+		if (WIFSIGNALED(status))
+			return (1);
 	}
 	else
-	{
-		//close(pipe_fd[0]);
 		perror("fork");
-	}
-	manage_signals(3);
-	return (pipe_fd[0]);
+	return (0);
 }
-
-
-//static void	st_child_process(int pipe_fd[2], char *file)
-//{
-//	char	*text;
-
-//	signal(SIGINT, SIG_DFL);
-//	text = child_process_here_doc(file);
-//	ft_putstr_fd(text, pipe_fd[1]);
-//	free(text);
-//	close(pipe_fd[1]);
-//	exit(EXIT_SUCCESS);
-//}

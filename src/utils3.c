@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:39:33 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/04 16:54:02 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:46:17 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int	count_cmds(t_command *cmds)
 	return (i);
 }
 
-void	clean_redir_counter(void)
-{
-	handle_redir_in(NULL, NULL, 1);
-	handle_redir_out(NULL, NULL, 1);
-}
+// void	clean_redir_counter(void)
+// {
+// 	handle_redir_in(NULL, NULL, 1);
+// 	handle_redir_out(NULL, NULL, 1);
+// }
