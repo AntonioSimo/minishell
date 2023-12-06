@@ -84,8 +84,6 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 	if (*tokens && (*tokens)->type == SEPERATOR)
 		*tokens = (*tokens)->next;
 	file = get_redir_name(tokens, redir_type, &quotes);
-	if (quotes)
-		printf("quotes\n");
 	if (!file)
 	{
 		destroy_redir((*redir));

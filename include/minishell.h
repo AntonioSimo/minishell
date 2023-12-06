@@ -243,7 +243,8 @@ void		ft_export(t_env *env, char **args);
 
 //heredoc
 int			heredoc(t_redir_lst *redir, t_env *env);
-void		child_process_here_doc(t_redir_lst *redir, int *pipe_fd, t_env *env);
+void		child_process_here_doc(t_redir_lst *redir, int *pipe_fd, \
+			t_env *env);
 int			init_heredoc(t_execution *temp, t_env *env);
 void		clear_redir_lst(t_execution *temp);
 
