@@ -35,7 +35,7 @@ void	clear_redir_lst(t_execution *temp)
 	}
 }
 
-int	init_heredoc(t_execution *temp)
+int	init_heredoc(t_execution *temp, t_env *env)
 {
 	t_command	*cmds;
 	t_redir_lst	*redir;
@@ -49,7 +49,7 @@ int	init_heredoc(t_execution *temp)
 			while (redir)
 			{
 				if (redir->type == HEREDOC)
-					if (heredoc(redir) == 1)
+					if (heredoc(redir, env) == 1)
 						return (1);
 				redir = redir->next;
 			}
@@ -59,12 +59,12 @@ int	init_heredoc(t_execution *temp)
 	return (0);
 }
 
-void	child_process_here_doc(char *file, int *pipe_fd)
+void	child_process_here_doc(t_redir_lst *redir, int *pipe_fd, t_env *env)
 {
 	char	*line;
 	char	*end_of_file;
 
-	end_of_file = file;
+	end_of_file = redir->file;
 	close(pipe_fd[0]);
 	while (1)
 	{
@@ -74,6 +74,8 @@ void	child_process_here_doc(char *file, int *pipe_fd)
 			free(line);
 			break ;
 		}
+		if (!redir->quotes)
+			expand_heredoc(&line, env);
 		write(pipe_fd[1], line, ft_strlen(line));
 		write(pipe_fd[1], "\n", 1);
 		free(line);
@@ -95,7 +97,7 @@ static int	handle_parent_heredoc(t_redir_lst *redir, int child_pid, \
 	return (0);
 }
 
-int	heredoc(t_redir_lst *redir)
+int	heredoc(t_redir_lst *redir, t_env *env)
 {
 	pid_t	child_pid;
 	int		pipe_fd[2];
@@ -109,7 +111,7 @@ int	heredoc(t_redir_lst *redir)
 	if (child_pid == 0)
 	{
 		manage_signals(2);
-		child_process_here_doc(redir->file, pipe_fd);
+		child_process_here_doc(redir, pipe_fd, env);
 		exit (EXIT_SUCCESS);
 	}
 	else if (child_pid > 0)

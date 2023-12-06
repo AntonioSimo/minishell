@@ -12,7 +12,17 @@
 
 #include "../include/minishell.h"
 
-char	*get_redir_name(t_token **tokens, t_type redir_type)
+static int	if_redir_or_space(t_token **tokens)
+{
+	if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || \
+				(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
+				(*tokens)->type == REDIR_OUTPUT || \
+				(*tokens)->type == REDIR_OUTPUT_APPEND)
+		return (1);
+	return (0);
+}
+
+char	*get_redir_name(t_token **tokens, t_type redir_type, bool *quotes)
 {
 	int		i;
 	char	*file;
@@ -24,12 +34,12 @@ char	*get_redir_name(t_token **tokens, t_type redir_type)
 		if ((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED
 			|| (*tokens)->type == SINGLE_QUOTED)
 		{
+			if ((*tokens)->type == DOUBLE_QUOTED
+				|| (*tokens)->type == SINGLE_QUOTED)
+				*quotes = true;
 			file = ft_free_strjoin(file, (*tokens)->command);
 		}
-		else if ((*tokens)->type == SEPERATOR || (*tokens)->type == PIPE || \
-				(*tokens)->type == REDIR_INPUT || (*tokens)->type == HEREDOC || \
-				(*tokens)->type == REDIR_OUTPUT || \
-				(*tokens)->type == REDIR_OUTPUT_APPEND)
+		else if (if_redir_or_space(tokens))
 		{
 			if (!(redir_type == REDIR_OUTPUT && \
 			(*tokens)->type == PIPE && i == 0))
@@ -64,14 +74,18 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 {
 	t_type	redir_type;
 	char	*file;
+	bool	quotes;
 
 	file = NULL;
+	quotes = false;
 	init_redir(redir);
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == SEPERATOR)
 		*tokens = (*tokens)->next;
-	file = get_redir_name(tokens, redir_type);
+	file = get_redir_name(tokens, redir_type, &quotes);
+	if (quotes)
+		printf("quotes\n");
 	if (!file)
 	{
 		destroy_redir((*redir));
@@ -79,7 +93,7 @@ int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 		env->exit_status = 2;
 		return (1);
 	}
-	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type));
+	push_redir(&(*redir)->lst, lst_redir_new(file, redir_type, quotes));
 	free(file);
 	return (0);
 }

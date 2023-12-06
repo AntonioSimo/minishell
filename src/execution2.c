@@ -69,7 +69,7 @@ int	run_commands(t_command *cmds, t_env *env)
 
 	temp = initialize_temp(cmds);
 	check = 0;
-	if (init_heredoc(temp) == 1)
+	if (init_heredoc(temp, env) == 1)
 	{
 		clear_redir_lst(temp);
 		free_temp(temp);

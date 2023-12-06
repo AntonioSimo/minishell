@@ -12,68 +12,26 @@
 
 #include "../include/minishell.h"
 
-int	ft_arraysize(char **args)
+int	is_error_code(char *line)
 {
-	int	i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	return (i);
+	if (ft_strnstr(line, "$?", ft_strlen(line)))
+		return (0);
+	return (1);
 }
 
-void	check_nl(char **args, bool *is_nl, int j, bool *if_print)
+void	expand_heredoc(char **line, t_env *env)
 {
-	int	i;
+	char	*temp;
 
-	i = 0;
-	i++;
-	if (!args[j])
-		*is_nl = true;
-	if (args[j][i] && args[j][i] == 'n')
+
+	temp = ft_strchr(*line, '$');
+	if (ft_strnstr(*line, "$?", ft_strlen(*line)))
+		handle_error_code_heredoc(tokens, &(var->head), var, my_env);
+	if (ft_strnstr(*line, "$$", ft_strlen(*line)))
+		handle_double_dollar(tokens, &(var->head), var);
+	if (ft_strlen(temp) > 1 && (char_to_expand(temp[1]) || temp[1] == '{'))
 	{
-		while (args[j][i] && args[j][i] == 'n')
-			i++;
-		if (!args[j][i])
-		{
-			*is_nl = false;
-			*if_print = false;
-		}
+		if (ft_strchr(*line, '$') && ft_strlen(*line) != 1)
+		single_dollar(tokens, my_env->env, &(var->head), var);
 	}
-}
-
-void	echo_token(bool *valid, char **args, int j)
-{
-	*valid = false;
-	ft_putstr_fd(args[j], 1);
-	if (j < ft_arraysize(args) - 1)
-		write(1, " ", 1);
-}
-
-void	echo_command(char **args, t_env *env)
-{
-	int		j;
-	bool	is_nl;
-	bool	if_print;
-	bool	valid;
-
-	j = 1;
-	valid = true;
-	is_nl = true;
-	if (ft_arraysize(args) > 1)
-	{
-		while (args[j])
-		{
-			if_print = true;
-			if (valid && args[j][0] == '-')
-				check_nl(args, &is_nl, j, &if_print);
-			if (if_print)
-				echo_token(&valid, args, j);
-			j++;
-		}
-	}
-	if (is_nl)
-		write(1, "\n", 1);
-	env->exit_status = SUCCESS;
-	g_signal = 0;
 }

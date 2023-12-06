@@ -63,6 +63,7 @@ typedef struct s_redir
 typedef struct s_redir_lst
 {
 	char				*file;
+	bool				quotes;
 	t_type				type;
 	int					fd;
 	struct s_redir_lst	*next;
@@ -220,6 +221,7 @@ t_token		*create_nodes(char *expanded, t_token *token, int start, int end);
 int			char_to_expand(char c);
 void		error_code_expansion(t_token *token, t_token **head, \
 			int pos, t_env *env);
+void		check_if_expand(t_expander *var, t_type type);
 
 //expander
 t_expander	*set_var(t_token **tokens);
@@ -240,9 +242,9 @@ void		add_env_variable(t_envepval *lst, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc
-int			heredoc(t_redir_lst *redir);
-void		child_process_here_doc(char *file, int *pipe_fd);
-int			init_heredoc(t_execution *temp);
+int			heredoc(t_redir_lst *redir, t_env *env);
+void		child_process_here_doc(t_redir_lst *redir, int *pipe_fd, t_env *env);
+int			init_heredoc(t_execution *temp, t_env *env);
 void		clear_redir_lst(t_execution *temp);
 
 //lexer
@@ -277,7 +279,7 @@ bool		check_quotes(char *line);
 
 //redirections_utils
 void		print_redirections(t_redir_lst	*redir);
-t_redir_lst	*lst_redir_new(char	*file, t_type type);
+t_redir_lst	*lst_redir_new(char	*file, t_type type, bool quotes);
 t_redir_lst	*redir_lst_last(t_redir_lst *redir);
 void		push_redir(t_redir_lst **redir_lst, t_redir_lst *redir);
 
@@ -363,5 +365,8 @@ int			count_cmds(t_command *cmds);
 //lexer3
 int			is_divider(t_type type);
 int			if_not_space(t_token *tokens);
+
+//heredoc_expander
+void		expand_heredoc(char **line, t_env *env);
 
 #endif

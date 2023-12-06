@@ -72,7 +72,6 @@ int	parse_line(char **line, t_env *env)
 		if (tokens)
 		{
 			commands = merge_tokens(tokens, env);
-			print_cmds(commands);
 			if (commands && !run_commands(commands, env))
 				flag = false;
 			commands = destroy_cmds(commands);

@@ -29,13 +29,14 @@ void	print_redirections(t_redir_lst	*redir)
 	}
 }
 
-t_redir_lst	*lst_redir_new(char	*file, t_type type)
+t_redir_lst	*lst_redir_new(char	*file, t_type type, bool quotes)
 {
 	t_redir_lst	*redir;
 
 	redir = ptr_check(malloc(sizeof(t_redir_lst)));
 	redir->file = ptr_check(ft_strdup(file));
 	redir->type = type;
+	redir->quotes = quotes;
 	redir->fd = -1;
 	redir->next = NULL;
 	return (redir);
