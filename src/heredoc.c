@@ -69,8 +69,7 @@ void	child_process_here_doc(char *file, int *pipe_fd)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL || ft_strncmp(end_of_file, line, \
-				ft_strlen(end_of_file)) == 0)
+		if (line == NULL || ft_strcmp(end_of_file, line) == 0)
 		{
 			free(line);
 			break ;
