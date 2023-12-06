@@ -109,12 +109,21 @@ typedef struct s_execution
 	int					cmds_size;
 }	t_execution;
 
+typedef struct s_token
+{
+	char				*command;
+	t_type				type;
+	struct s_token		*next;
+}	t_token;
+
 typedef struct s_expander
 {
 	int					i;
+	t_token				*head;
 	int					old_pos;
 	t_type				prev_type;
 	bool				move_ptr;
+	bool				if_expand;
 }	t_expander;
 
 typedef struct s_parsing
@@ -122,13 +131,6 @@ typedef struct s_parsing
 	char	*word;
 	char	**args_arr;
 }	t_parsing;
-
-typedef struct s_token
-{
-	char				*command;
-	t_type				type;
-	struct s_token		*next;
-}	t_token;
 
 extern int	g_signal;
 
@@ -206,9 +208,9 @@ bool		ft_isnumber(char *str);
 void		ft_exit(char **args, t_env *env);
 
 //expander_checkers
-int			is_double_dollar(t_token **tokens);
-int			is_single_dollar(t_token **tokens);
-int			is_error_code(t_token **tokens);
+int			is_double_dollar(t_token **tokens, bool check);
+int			is_single_dollar(t_token **tokens, bool check);
+int			is_error_code(t_token **tokens, bool if_expand);
 void		handle_error_code(t_token **tokens, t_token **head, \
 			t_expander *var, t_env *env);
 void		check_prev_token(t_token **tokens, t_expander *var);
@@ -218,9 +220,10 @@ t_token		*create_nodes(char *expanded, t_token *token, int start, int end);
 int			char_to_expand(char c);
 void		error_code_expansion(t_token *token, t_token **head, \
 			int pos, t_env *env);
+void		check_if_expand(t_expander *var, t_type type);
 
 //expander
-t_expander	*set_var(void);
+t_expander	*set_var(t_token **tokens);
 void		single_dollar(t_token **tokens, t_envepval *my_env, \
 			t_token **head, t_expander *var);
 void		handle_double_dollar(t_token **tokens, t_token **head, \
@@ -298,7 +301,7 @@ void		manage_signals(int control);
 void		ctrl_c_handler(int sig);
 
 //tilde
-int			if_tilde(t_token **tokens, t_type prev_type);
+int			if_tilde(t_token **tokens, t_expander	*var);
 char		*replace_string(char *expanded, char	*str, int start, int end);
 void		tilde_expansion(t_token *tokens, t_envepval *my_env);
 char		*find_home(t_envepval *env);

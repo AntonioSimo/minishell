@@ -12,8 +12,10 @@
 
 #include "../include/minishell.h"
 
-int	is_double_dollar(t_token **tokens)
+int	is_double_dollar(t_token **tokens, bool check)
 {
+	if (!check)
+		return (1);
 	if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 		&& ft_strnstr((*tokens)->command, "$$", \
 		ft_strlen((*tokens)->command)))
@@ -21,10 +23,12 @@ int	is_double_dollar(t_token **tokens)
 	return (1);
 }
 
-int	is_single_dollar(t_token **tokens)
+int	is_single_dollar(t_token **tokens, bool check)
 {
 	char	*temp;
 
+	if (!check)
+		return (1);
 	temp = ft_strchr((*tokens)->command, '$');
 	if (ft_strlen(temp) > 1 && (char_to_expand(temp[1]) || temp[1] == '{'))
 	{
@@ -36,8 +40,10 @@ int	is_single_dollar(t_token **tokens)
 	return (1);
 }
 
-int	is_error_code(t_token **tokens)
+int	is_error_code(t_token **tokens, bool if_expand)
 {
+	if (!if_expand)
+		return (1);
 	if (((*tokens)->type == DEFAULT || (*tokens)->type == DOUBLE_QUOTED)
 		&& ft_strnstr((*tokens)->command, "$?", \
 		ft_strlen((*tokens)->command)))
