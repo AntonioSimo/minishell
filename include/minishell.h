@@ -369,5 +369,6 @@ int			if_not_space(t_token *tokens);
 
 //heredoc_expander
 void		expand_heredoc(char **line, t_env *env);
+void		handle_error_code_heredoc(char **line, t_env *env);
 
 #endif
