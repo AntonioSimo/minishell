@@ -82,3 +82,12 @@ void	error_code_expansion(t_token *token, t_token **head, \
 	}
 	free(error_code);
 }
+
+void	check_if_expand(t_expander *var, t_type type)
+{
+	if (type == SEPERATOR || type == PIPE || type == REDIR_INPUT
+		|| type == REDIR_OUTPUT_APPEND || type == REDIR_OUTPUT)
+		var->if_expand = true;
+	else if (type == HEREDOC)
+		var->if_expand = false;
+}

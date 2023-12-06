@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:30:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/04 18:11:31 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:35:12 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,6 @@ void	init_redir(t_redir **redir)
 		(*redir)->lst = NULL;
 		(*redir)->stdin_cpy = dup(STDIN_FILENO);
 		(*redir)->stdout_cpy = dup(STDOUT_FILENO);
-		(*redir)->filein = NULL;
-		(*redir)->fileout = NULL;
-		(*redir)->in_count = 0;
-		(*redir)->out_count = 0;
 	}
 }
 
@@ -64,30 +60,12 @@ int	if_redir_no_heredoc(t_type type)
 	return (1);
 }
 
-int	skip_heredoc(t_token **tokens)
-{
-	if ((*tokens)->type == HEREDOC)
-	{
-		*tokens = (*tokens)->next;
-		while (*tokens)
-		{
-			if (!if_redir_no_heredoc((*tokens)->type))
-				break ;
-			*tokens = (*tokens)->next;
-		}
-		return (0);
-	}
-	return (1);
-}
-
 int	handle_redirections(t_redir **redir, t_token **tokens, t_env *env)
 {
 	t_type	redir_type;
 	char	*file;
 
 	file = NULL;
-	// if (!skip_heredoc(tokens))
-	// 	return (0);
 	init_redir(redir);
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;

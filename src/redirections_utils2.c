@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/26 17:39:25 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:53:05 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ void	*destroy_redir(t_redir *redir)
 {
 	if (!redir)
 		return (NULL);
-	if (redir->filein)
-		free(redir->filein);
-	if (redir->fileout)
-		free(redir->fileout);
 	destroy_redir_lst(redir->lst);
 	close(redir->stdin_cpy);
 	close(redir->stdout_cpy);
@@ -66,12 +62,4 @@ void	execute_pipe(int **fd, t_execution *temp)
 		close(fd[temp->i - 1][0]);
 		close(fd[temp->i][1]);
 	}
-}
-
-void	alloc_in_n_out(t_redir **redir)
-{
-	(*redir)->fileout = ptr_check(malloc(sizeof(int) \
-					* count_redir((*redir)->lst, REDIR_OUTPUT)));
-	(*redir)->filein = ptr_check((malloc(sizeof(int) \
-					* count_redir((*redir)->lst, REDIR_INPUT))));
 }

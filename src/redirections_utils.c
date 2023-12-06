@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   redirections_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/05 16:45:01 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:23:52 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ t_redir_lst	*lst_redir_new(char	*file, t_type type)
 {
 	t_redir_lst	*redir;
 
-	redir = ptr_check(malloc(sizeof(t_redir)));
+	redir = ptr_check(malloc(sizeof(t_redir_lst)));
 	redir->file = ptr_check(ft_strdup(file));
 	redir->type = type;
+	redir->fd = -1;
 	redir->next = NULL;
 	return (redir);
 }

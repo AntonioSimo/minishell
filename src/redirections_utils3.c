@@ -3,52 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_utils3.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:40:39 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/11/28 17:06:50 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:17:34 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	close_out(int *j, t_redir *redir)
+void	reset_stdout_stdin(t_redir *redir)
 {
-	if (*j < redir->out_count)
-	{
-		close(redir->fileout[*j]);
-		j++;
-	}
-}
-
-static void	close_in(int *k, t_redir *redir)
-{
-	if (*k < redir->in_count)
-	{
-		close(redir->filein[*k]);
-		k++;
-	}
-}
-
-void	close_redir(t_redir *redir)
-{
-	int			j;
-	int			k;
-	t_redir_lst	*temp;
-
-	temp = redir->lst;
-	j = 0;
-	k = 0;
 	dup2(redir->stdout_cpy, STDOUT_FILENO);
 	dup2(redir->stdin_cpy, STDIN_FILENO);
-	while (temp)
-	{
-		if (temp->type == REDIR_OUTPUT)
-			close_out(&j, redir);
-		else if (temp->type == REDIR_INPUT)
-			close_in(&k, redir);
-		temp = temp->next;
-	}
 }
 
 int	count_redir(t_redir_lst *redir, t_type type)

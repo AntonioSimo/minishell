@@ -12,9 +12,11 @@
 
 #include "../include/minishell.h"
 
-int	if_tilde(t_token **tokens, t_type prev_type)
+int	if_tilde(t_token **tokens, t_expander	*var)
 {
-	if (((*tokens)->type == DEFAULT && prev_type == SEPERATOR \
+	if (!var->if_expand)
+		return (1);
+	if (((*tokens)->type == DEFAULT && var->prev_type == SEPERATOR \
 		&& !ft_strcmp((*tokens)->command, "~")) \
 		|| !ft_strncmp((*tokens)->command, "~/", 2))
 		return (0);

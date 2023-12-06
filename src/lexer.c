@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 15:57:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/04 18:12:18 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:01:35 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	parse_line(char **line, t_env *env)
 		if (tokens)
 		{
 			commands = merge_tokens(tokens, env);
+			print_cmds(commands);
 			if (commands && !run_commands(commands, env))
 				flag = false;
 			commands = destroy_cmds(commands);

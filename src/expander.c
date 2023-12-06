@@ -12,15 +12,17 @@
 
 #include "../include/minishell.h"
 
-t_expander	*set_var(void)
+t_expander	*set_var(t_token **tokens)
 {
 	t_expander	*var;
 
 	var = ptr_check(malloc(sizeof(t_expander)));
+	var->head = *tokens;
 	var->i = 0;
 	var->prev_type = SEPERATOR;
 	var->old_pos = 0;
 	var->move_ptr = true;
+	var->if_expand = true;
 	return (var);
 }
 
@@ -84,21 +86,20 @@ void	handle_double_dollar(t_token **tokens, t_token **head, t_expander *var)
 void	expander(t_token **tokens, t_env *my_env)
 {
 	t_expander	*var;
-	t_token		*head;
 
-	head = *tokens;
-	var = set_var();
+	var = set_var(tokens);
 	while (*tokens)
 	{
+		check_if_expand(var, (*tokens)->type);
 		var->move_ptr = true;
-		if (!if_tilde(tokens, var->prev_type))
+		if (!if_tilde(tokens, var))
 			tilde_expansion((*tokens), my_env->env);
-		if (!is_error_code(tokens))
-			handle_error_code(tokens, &head, var, my_env);
-		if (!is_double_dollar(tokens))
-			handle_double_dollar(tokens, &head, var);
-		if (!is_single_dollar(tokens))
-			single_dollar(tokens, my_env->env, &head, var);
+		if (!is_error_code(tokens, var->if_expand))
+			handle_error_code(tokens, &(var->head), var, my_env);
+		if (!is_double_dollar(tokens, var->if_expand))
+			handle_double_dollar(tokens, &(var->head), var);
+		if (!is_single_dollar(tokens, var->if_expand))
+			single_dollar(tokens, my_env->env, &(var->head), var);
 		check_prev_token(tokens, var);
 		if (var->move_ptr)
 		{
@@ -106,6 +107,6 @@ void	expander(t_token **tokens, t_env *my_env)
 			var->i++;
 		}
 	}
-	*tokens = head;
+	*tokens = var->head;
 	free(var);
 }

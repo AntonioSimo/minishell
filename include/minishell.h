@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/12/04 18:07:23 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:25:47 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,6 @@ typedef enum e_type
 
 typedef struct s_redir
 {
-	int					*fileout;
-	int					*filein;
-	int					out_count;
-	int					in_count;
 	int					stdin_cpy;
 	int					stdout_cpy;
 	struct s_redir_lst	*lst;
@@ -68,6 +64,7 @@ typedef struct s_redir_lst
 {
 	char				*file;
 	t_type				type;
+	int					fd;
 	struct s_redir_lst	*next;
 }	t_redir_lst;
 
@@ -112,12 +109,21 @@ typedef struct s_execution
 	int					cmds_size;
 }	t_execution;
 
+typedef struct s_token
+{
+	char				*command;
+	t_type				type;
+	struct s_token		*next;
+}	t_token;
+
 typedef struct s_expander
 {
 	int					i;
+	t_token				*head;
 	int					old_pos;
 	t_type				prev_type;
 	bool				move_ptr;
+	bool				if_expand;
 }	t_expander;
 
 typedef struct s_parsing
@@ -125,13 +131,6 @@ typedef struct s_parsing
 	char	*word;
 	char	**args_arr;
 }	t_parsing;
-
-typedef struct s_token
-{
-	char				*command;
-	t_type				type;
-	struct s_token		*next;
-}	t_token;
 
 extern int	g_signal;
 
@@ -209,9 +208,9 @@ bool		ft_isnumber(char *str);
 void		ft_exit(char **args, t_env *env);
 
 //expander_checkers
-int			is_double_dollar(t_token **tokens);
-int			is_single_dollar(t_token **tokens);
-int			is_error_code(t_token **tokens);
+int			is_double_dollar(t_token **tokens, bool check);
+int			is_single_dollar(t_token **tokens, bool check);
+int			is_error_code(t_token **tokens, bool if_expand);
 void		handle_error_code(t_token **tokens, t_token **head, \
 			t_expander *var, t_env *env);
 void		check_prev_token(t_token **tokens, t_expander *var);
@@ -223,7 +222,7 @@ void		error_code_expansion(t_token *token, t_token **head, \
 			int pos, t_env *env);
 
 //expander
-t_expander	*set_var(void);
+t_expander	*set_var(t_token **tokens);
 void		single_dollar(t_token **tokens, t_envepval *my_env, \
 			t_token **head, t_expander *var);
 void		handle_double_dollar(t_token **tokens, t_token **head, \
@@ -241,9 +240,10 @@ void		add_env_variable(t_envepval *lst, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc
-int 		heredoc(t_command *cmds);
-int			init_heredoc(t_execution **temp);
-//int			heredoc(char *file);
+int			heredoc(t_redir_lst *redir);
+void		child_process_here_doc(char *file, int *pipe_fd);
+int			init_heredoc(t_execution *temp);
+void		clear_redir_lst(t_execution *temp);
 
 //lexer
 int			is_divider(t_type type);
@@ -288,11 +288,11 @@ void		execute_pipe(int **fd, t_execution *temp);
 void		alloc_in_n_out(t_redir **redir);
 
 //redirections
-void		close_redir(t_redir *redir);
+void		reset_stdout_stdin(t_redir *redir);
 int			count_redir(t_redir_lst *redir, t_type type);
 int			run_redirections(t_redir *redir, t_env *env);
-int			handle_redir_out(t_redir_lst *temp, t_redir *redir, int control);
-int			handle_redir_in(t_redir_lst *temp, t_redir *redir, int control);
+int			handle_redir_in(t_redir_lst *temp);
+int			handle_redir_out(t_redir_lst *temp);
 
 //signals
 void		ctrl_c_child(int sig);
@@ -300,7 +300,7 @@ void		manage_signals(int control);
 void		ctrl_c_handler(int sig);
 
 //tilde
-int			if_tilde(t_token **tokens, t_type prev_type);
+int			if_tilde(t_token **tokens, t_expander	*var);
 char		*replace_string(char *expanded, char	*str, int start, int end);
 void		tilde_expansion(t_token *tokens, t_envepval *my_env);
 char		*find_home(t_envepval *env);
@@ -359,7 +359,6 @@ char		*find_expandable(t_envepval	*env, char	*key);
 int			ft_strcmp(char *s1, char *s2);
 int			is_word(t_type type);
 int			count_cmds(t_command *cmds);
-void		clean_redir_counter(void);
 
 //lexer3
 int			is_divider(t_type type);
