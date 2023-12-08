@@ -12,103 +12,125 @@
 
 #include "../include/minishell.h"
 
-void	here_double_dollar(char **line)
+char	**here_double_dollar(char **line)
 {
-	char	*new_command;
+	char	**new_command;
 	char	*pid;
 	size_t	i;
-	char	*temp;
+	int		j;
 
-	temp = ptr_check(ft_strdup(*line));
-	free(*line);
-	i = 0;
+	j = 0;
 	pid = ft_itoa((int)getpid());
-	while (ft_strnstr(temp, "$$", ft_strlen(temp)))
+	while (line[j])
 	{
-		i = ft_strlen(temp) - \
-			ft_strlen(ft_strnstr(temp, "$$", ft_strlen(temp)));
-		new_command = replace_string(pid, temp, i + 1, i + 2);
-		free(temp);
-		temp = ptr_check(ft_strdup(new_command));
-		free(new_command);
+		i = 0;
+		while (i < ft_strlen(line[j]))
+		{
+			if (ft_strlen(line[j] + i) > 1 && line[j][i] == '$'
+				&& line[j][i + 1] == '$')
+			{
+				i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
+					(line[j], "$$", ft_strlen(line[j])));
+				new_command = make_2d_expanded(pid, line[j], i + 1, i + 2);
+				line = append_strings(line, new_command, j);
+				double_free(new_command);
+				j = 0;
+				break ;
+			}
+			i++;
+		}
+		j++;
 	}
-	*line = ptr_check(ft_strdup(temp));
-	free(temp);
-	free(pid);
+	return (line);
 }
 
-static void	expand_here_dollar(int i, char **line, t_envepval *my_env)
+char	**expand_here_dollar(int i, char **line, t_envepval *my_env, int pos)
 {
-	char	*new_command;
+	char	**new_command;
 	char	*to_expand;
 	char	*expanded;
 	int		j;
-	char	*temp;
 
 	i++;
-	temp = ptr_check(ft_strdup(*line));
-	free(*line);
 	j = i;
-	while (temp[i] && char_to_expand(temp[i]))
+	while (line[pos][i] && char_to_expand(line[pos][i]))
 		i++;
-	to_expand = ft_substr(temp, j, i - j);
+	to_expand = ft_substr(line[pos], j, i - j);
 	expanded = find_expandable(my_env, to_expand);
-	new_command = replace_string(expanded, temp, j, i);
-	ft_free(temp);
-	temp = ft_strdup(new_command);
-	ft_free(new_command);
+	new_command = make_2d_expanded(expanded, line[pos], j, i);
+	line = append_strings(line, new_command, pos);
+	double_free(new_command);
 	ft_free(to_expand);
 	ft_free(expanded);
-	i = 0;
-	*line = ptr_check(ft_strdup(temp));
-	free(temp);
+	return (line);
 }
 
-static void	here_dollar(char **line, t_envepval *my_env)
+char	**here_dollar(char **line, t_envepval *my_env)
 {
 	int		i;
-	char	*temp;
+	int		j;
 
-	temp = ptr_check(ft_strdup(*line));
-	free(*line);
-	i = 0;
-	while (i < (int)ft_strlen(temp))
+	j = 0;
+	while (line[j])
 	{
-		if (temp[i] == '$' && !temp[i + 1])
-			break ;
-		if (temp[i] && temp[i] == '$')
+		i = 0;
+		while (i < (int)ft_strlen(line[j]))
 		{
-			expand_here_dollar(i, &temp, my_env);
-			i = 0;
-		}
-		else
-		{
-			i++;
-			while (temp[i] && temp[i] != '$')
+			if (line[j][i] == '$' && !line[j][i + 1])
+				break ;
+			if (line[j][i] && line[j][i] == '$')
+			{
+				line = expand_here_dollar(i, line, my_env, j);
+				j = 0;
+			}
+			else
+			{
 				i++;
+				while (line[j][i] && line[j][i] != '$')
+					i++;
+			}
 		}
+		j++;
 	}
-	*line = ptr_check(ft_strdup(temp));
-	free(temp);
+	return (line);
+}
+
+char	*concat_input(char **str)
+{
+	char	*new_line;
+	int		i;
+
+	i = 0;
+	new_line = NULL;
+	while (str[i])
+	{
+		new_line = ft_free_strjoin(new_line, str[i]);
+		free(str[i]);
+		i++;
+	}
+	free(str);
+	return (new_line);
 }
 
 void	expand_heredoc(char **line, t_env *env)
 {
-	char	*temp;
+	char	*dollar_ptr;
+	char	**temp;
 
-	while (ft_strnstr(*line, "$?", ft_strlen(*line)) \
-		|| ft_strnstr(*line, "$$", ft_strlen(*line)) \
-		|| (ft_strchr(*line, '$') && ft_strlen(*line) != 1))
+	temp = append_str(NULL, *line);
+	free(*line);
+	while (if_expand(temp))
 	{
-		temp = ft_strchr(*line, '$');
-		if (ft_strnstr(*line, "$?", ft_strlen(*line)))
-			handle_error_code_heredoc(line, env);
-		if (ft_strnstr(*line, "$$", ft_strlen(*line)))
-			here_double_dollar(line);
-		if (ft_strlen(temp) > 1 && (char_to_expand(temp[1]) || temp[1] == '{'))
+		dollar_ptr = find_dollar(temp);
+		if (if_error_expansion_here(temp))
+			temp = handle_error_code_heredoc(temp, env);
+		if (if_double_dollar_here(temp))
+			temp = here_double_dollar(temp);
+		if (ft_strlen(dollar_ptr) > 1 && (char_to_expand(dollar_ptr[1]) || dollar_ptr[1] == '{'))
 		{
-			if (ft_strchr(*line, '$') && ft_strlen(*line) != 1)
-				here_dollar(line, env->env);
+			if (if_here_dollar(temp))
+				temp = here_dollar(temp, env->env);
 		}
 	}
+	*line = concat_input(temp);
 }

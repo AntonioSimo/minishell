@@ -362,6 +362,7 @@ char		*find_expandable(t_envepval	*env, char	*key);
 int			ft_strcmp(char *s1, char *s2);
 int			is_word(t_type type);
 int			count_cmds(t_command *cmds);
+int			strlen_2d(char **str);
 
 //lexer3
 int			is_divider(t_type type);
@@ -369,6 +370,17 @@ int			if_not_space(t_token *tokens);
 
 //heredoc_expander
 void		expand_heredoc(char **line, t_env *env);
-void		handle_error_code_heredoc(char **line, t_env *env);
+char		**handle_error_code_heredoc(char **line, t_env *env);
+char 		**append_str(char **array, char *str);
+
+//heredoc_expander_utils
+int			if_expand(char **line);
+char		*find_dollar(char **str);
+int			if_error_expansion_here(char **str);
+int			if_double_dollar_here(char **str);
+int			if_here_dollar(char **str);
+char		**append_str(char **array, char *str);
+char		**make_2d_expanded(char *expanded, char	*str, int start, int end);
+char		**append_strings(char **line, char **extra_strings, int pos);
 
 #endif

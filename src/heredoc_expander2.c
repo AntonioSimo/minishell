@@ -20,30 +20,83 @@ void	free_and_shuffle(char *temp, char **line, char *error_code)
 	free(temp);
 }
 
-void	handle_error_code_heredoc(char **line, t_env *env)
+char	**make_2d_expanded(char *expanded, char	*str, int start, int end)
+{
+	char	*before;
+	char	*after;
+	char	**new_arr;
+
+	new_arr = NULL;
+	before = ptr_check(ft_substr(str, 0, start - 1));
+	after = ptr_check(ft_substr(str, end, ft_strlen(str) - end));
+	if (ft_strlen(before) > 0)
+		new_arr = append_str(NULL, before);
+	new_arr = append_str(new_arr, expanded);
+	if (ft_strlen(after))
+		new_arr = append_str(new_arr, after);
+	free(before);
+	free(after);
+	return (new_arr);
+}
+
+char	**append_strings(char **line, char **extra_strings, int pos)
+{
+	char	**new_line;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	new_line = ptr_check(malloc(sizeof(char *) * (strlen_2d(line) \
+				+ strlen_2d(extra_strings))));
+	while (i < pos)
+	{
+		new_line[i] = ptr_check(ft_strdup(line[i]));
+		i++;
+	}
+	while (extra_strings[j])
+	{
+		new_line[i + j] = ptr_check(ft_strdup(extra_strings[j]));
+		j++;
+	}
+	while (line[i + 1])
+	{
+		new_line[i + j] = ptr_check(ft_strdup(line[i + 1]));
+		i++;
+	}
+	double_free(line);
+	new_line[i + j] = NULL;
+	return (new_line);
+}
+
+char	**handle_error_code_heredoc(char **line, t_env *env)
 {
 	char	*error_code;
 	size_t	i;
-	char	*new_command;
-	char	*temp;
+	char	**new_command;
+	int		j;
 
-	temp = ft_strdup(*line);
-	i = 0;
+	j = 0;
 	error_code = ptr_check(ft_itoa(env->exit_status));
-	while (i < ft_strlen(temp))
+	while (line[j])
 	{
-		if (temp[i + 1] && temp[i] == '$'
-			&& temp[i + 1] == '?')
+		i = 0;
+		while (i < ft_strlen(line[j]))
 		{
-			i = ft_strlen(temp) - ft_strlen(ft_strnstr \
-				(temp, "$?", ft_strlen(temp)));
-			new_command = replace_string(error_code, temp, i + 1, i + 2);
-			free(temp);
-			temp = ptr_check(ft_strdup(new_command));
-			free(new_command);
-			break ;
+			if (line[j][i + 1] && line[j][i] == '$'
+				&& line[j][i + 1] == '?')
+			{
+				i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
+					(line[j], "$?", ft_strlen(line[j])));
+				new_command = make_2d_expanded(error_code, line[j], i + 1, i + 2);
+				line = append_strings(line, new_command, j);
+				free(new_command);
+				j = 0;
+				break ;
+			}
+			i++;
 		}
-		i++;
+		j++;
 	}
-	free_and_shuffle(temp, line, error_code);
+	return (line);
 }
