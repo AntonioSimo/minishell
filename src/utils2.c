@@ -89,3 +89,15 @@ void	*ft_ptrdel(void *ptr)
 	}
 	return (NULL);
 }
+
+int	strlen_2d(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (i);
+	while (str[i])
+		i++;
+	return (i);
+}
