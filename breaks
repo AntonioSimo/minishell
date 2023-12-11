@@ -1,0 +1,2 @@
+break src/heredoc.c:107
+set follow-fork-mode child

@@ -90,7 +90,7 @@ char	**handle_error_code_heredoc(char **line, t_env *env)
 					(line[j], "$?", ft_strlen(line[j])));
 				new_command = make_2d_expanded(error_code, line[j], i + 1, i + 2);
 				line = append_strings(line, new_command, j);
-				free(new_command);
+				double_free(new_command);
 				j = 0;
 				break ;
 			}
@@ -98,5 +98,6 @@ char	**handle_error_code_heredoc(char **line, t_env *env)
 		}
 		j++;
 	}
+	free(error_code);
 	return (line);
 }
