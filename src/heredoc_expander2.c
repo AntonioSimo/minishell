@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   heredoc_expander2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/05 18:00:38 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:17:09 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,12 @@ char	**append_strings(char **line, char **extra_strings, int pos)
 	int		i;
 	int		j;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	new_line = ptr_check(malloc(sizeof(char *) * (strlen_2d(line) \
 				+ strlen_2d(extra_strings))));
-	while (i < pos)
-	{
+	while (++i < pos)
 		new_line[i] = ptr_check(ft_strdup(line[i]));
-		i++;
-	}
 	while (extra_strings[j])
 	{
 		new_line[i + j] = ptr_check(ft_strdup(extra_strings[j]));
@@ -73,7 +70,6 @@ char	**handle_error_code_heredoc(char **line, t_env *env)
 {
 	char	*error_code;
 	size_t	i;
-	char	**new_command;
 	int		j;
 
 	j = 0;
@@ -86,11 +82,7 @@ char	**handle_error_code_heredoc(char **line, t_env *env)
 			if (line[j][i + 1] && line[j][i] == '$'
 				&& line[j][i + 1] == '?')
 			{
-				i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
-					(line[j], "$?", ft_strlen(line[j])));
-				new_command = make_2d_expanded(error_code, line[j], i + 1, i + 2);
-				line = append_strings(line, new_command, j);
-				double_free(new_command);
+				line = get_new_line(line, j, error_code, 0);
 				j = 0;
 				break ;
 			}
@@ -99,5 +91,26 @@ char	**handle_error_code_heredoc(char **line, t_env *env)
 		j++;
 	}
 	free(error_code);
+	return (line);
+}
+
+char	**get_new_line(char **line, int j, char *pid, int check)
+{
+	int		i;
+	char	**new_command;
+
+	if (check)
+	{
+		i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
+			(line[j], "$$", ft_strlen(line[j])));
+	}
+	else
+	{
+		i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
+			(line[j], "$?", ft_strlen(line[j])));
+	}
+	new_command = make_2d_expanded(pid, line[j], i + 1, i + 2);
+	line = append_strings(line, new_command, j);
+	double_free(new_command);
 	return (line);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   heredoc_expander.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:15:54 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 13:46:54 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:16:51 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 char	**here_double_dollar(char **line)
 {
-	char	**new_command;
 	char	*pid;
 	size_t	i;
 	int		j;
@@ -29,11 +28,7 @@ char	**here_double_dollar(char **line)
 			if (ft_strlen(line[j] + i) > 1 && line[j][i] == '$'
 				&& line[j][i + 1] == '$')
 			{
-				i = ft_strlen(line[j]) - ft_strlen(ft_strnstr \
-					(line[j], "$$", ft_strlen(line[j])));
-				new_command = make_2d_expanded(pid, line[j], i + 1, i + 2);
-				line = append_strings(line, new_command, j);
-				double_free(new_command);
+				line = get_new_line(line, j, pid, 1);
 				j = 0;
 				break ;
 			}
@@ -80,10 +75,7 @@ char	**here_dollar(char **line, t_envepval *my_env)
 			if (line[j][i] == '$' && !line[j][i + 1])
 				break ;
 			if (line[j][i] && line[j][i] == '$')
-			{
 				line = expand_here_dollar(i, line, my_env, j);
-				j = 0;
-			}
 			else
 			{
 				i++;
@@ -125,7 +117,8 @@ char	*expand_heredoc(char *line, t_env *env)
 			temp = handle_error_code_heredoc(temp, env);
 		if (if_double_dollar_here(temp))
 			temp = here_double_dollar(temp);
-		if (ft_strlen(dollar_ptr) > 1 && (char_to_expand(dollar_ptr[1]) || dollar_ptr[1] == '{'))
+		if (ft_strlen(dollar_ptr) > 1 && (char_to_expand(dollar_ptr[1]) \
+			|| dollar_ptr[1] == '{'))
 		{
 			if (if_here_dollar(temp))
 				temp = here_dollar(temp, env->env);

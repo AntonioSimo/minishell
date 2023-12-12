@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   heredoc_expander_utils2.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:15:54 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/10/12 13:46:54 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:16:35 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	**append_str(char **array, char *str)
 {
-	int	i;
+	int		i;
 	char	**new_array;
 
 	i = 0;
@@ -22,7 +22,6 @@ char	**append_str(char **array, char *str)
 		return (NULL);
 	if (array && !str)
 		return (array);
-
 	new_array = ptr_check(malloc((strlen_2d(array) + 2) * sizeof(char *)));
 	i = 0;
 	if (array)
