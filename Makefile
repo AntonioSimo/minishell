@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: asimone <asimone@student.42.fr>            +#+  +:+       +#+         #
+#    By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:29:32 by asimone           #+#    #+#              #
-#    Updated: 2023/12/05 14:49:39 by asimone          ###   ########.fr        #
+#    Updated: 2023/12/12 11:47:48 by pskrucha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SOURCES := $(SRC_DIR)/*.c
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror -g -fsanitize=address
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  

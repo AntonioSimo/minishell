@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/12/05 17:25:47 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:15:19 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,7 @@ int			if_not_space(t_token *tokens);
 //heredoc_expander
 char		*expand_heredoc(char *line, t_env *env);
 char		**handle_error_code_heredoc(char **line, t_env *env);
+char		**get_new_line(char **line, int j, char *pid, int check);
 
 //heredoc_expander_utils
 int			if_expand(char **line);
