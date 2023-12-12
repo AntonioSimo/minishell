@@ -111,13 +111,13 @@ char	*concat_input(char **str)
 	return (new_line);
 }
 
-void	expand_heredoc(char **line, t_env *env)
+char	*expand_heredoc(char *line, t_env *env)
 {
 	char	*dollar_ptr;
 	char	**temp;
 
-	temp = append_str(NULL, *line);
-	free(*line);
+	temp = append_str(NULL, line);
+	free(line);
 	while (if_expand(temp))
 	{
 		dollar_ptr = find_dollar(temp);
@@ -131,6 +131,7 @@ void	expand_heredoc(char **line, t_env *env)
 				temp = here_dollar(temp, env->env);
 		}
 	}
-	*line = concat_input(temp);
+	line = concat_input(temp);
 	double_free(temp);
+	return (line);
 }

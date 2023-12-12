@@ -75,7 +75,7 @@ void	child_process_here_doc(t_redir_lst *redir, int *pipe_fd, t_env *env)
 			break ;
 		}
 		if (!redir->quotes)
-			expand_heredoc(&line, env);
+			line = expand_heredoc(line, env);
 		write(pipe_fd[1], line, ft_strlen(line));
 		write(pipe_fd[1], "\n", 1);
 		free(line);

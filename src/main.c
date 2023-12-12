@@ -42,11 +42,6 @@ void	minishell(t_env *my_env)
 		rl_on_new_line();
 	}
 }
-void	smth(char **str)
-{
-	free(str[0]);
-	str[0] = ft_strdup("hihi");
-}
 
 int	main(int argc, char **argv, char **env)
 {

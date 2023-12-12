@@ -22,12 +22,8 @@ char	**append_str(char **array, char *str)
 		return (NULL);
 	if (array && !str)
 		return (array);
-	if (array)
-	{
-		while (array[i])
-			i++;
-	}
-	new_array = ptr_check(malloc(sizeof(char *) * (i + 2)));
+
+	new_array = ptr_check(malloc((strlen_2d(array) + 2) * sizeof(char *)));
 	i = 0;
 	if (array)
 	{

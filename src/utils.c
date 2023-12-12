@@ -81,7 +81,7 @@ void	*double_free(char **ptr)
 	i = 0;
 	if (ptr)
 	{
-		while (ptr[i])
+		while (ptr[i] != NULL)
 		{
 			free(ptr[i]);
 			i++;
