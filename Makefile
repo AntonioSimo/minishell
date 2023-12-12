@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+         #
+#    By: asimone <asimone@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:29:32 by asimone           #+#    #+#              #
-#    Updated: 2023/12/05 18:19:56 by pskrucha         ###   ########.fr        #
+#    Updated: 2023/12/12 11:39:00 by asimone          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,53 @@ OBJ_DIR := obj
 LIBFT_DIR := lib/Libft
 LIBFT := $(LIBFT_DIR)/libft.a
 HEAD := ./include/minishell.h
-SOURCES := $(SRC_DIR)/*.c 
+SOURCES := 	$(SRC_DIR)/builtin.c \
+			$(SRC_DIR)/cd.c \
+			$(SRC_DIR)/commands_utils.c \
+			$(SRC_DIR)/dollar_expansion.c \
+			$(SRC_DIR)/echo.c \
+			$(SRC_DIR)/env.c \
+			$(SRC_DIR)/env2.c \
+			$(SRC_DIR)/env3.c \
+			$(SRC_DIR)/error.c \
+			$(SRC_DIR)/execution.c \
+			$(SRC_DIR)/execution2.c \
+			$(SRC_DIR)/exit.c \
+			$(SRC_DIR)/expander_checkers.c \
+			$(SRC_DIR)/expander_utils.c \
+			$(SRC_DIR)/expander.c \
+			$(SRC_DIR)/export_utils.c \
+			$(SRC_DIR)/export.c \
+			$(SRC_DIR)/heredoc_expander_utils.c \
+			$(SRC_DIR)/heredoc_expander_utils2.c \
+			$(SRC_DIR)/heredoc_expander.c \
+			$(SRC_DIR)/heredoc_expander2.c  \
+			$(SRC_DIR)/heredoc.c \
+			$(SRC_DIR)/lexer.c \
+			$(SRC_DIR)/lexer2.c \
+			$(SRC_DIR)/lexer3.c \
+			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/parsing.c \
+			$(SRC_DIR)/parsing2.c \
+			$(SRC_DIR)/parsing3.c \
+			$(SRC_DIR)/pwd.c \
+			$(SRC_DIR)/quotes.c \
+			$(SRC_DIR)/redirections_utils.c \
+			$(SRC_DIR)/redirections_utils2.c \
+			$(SRC_DIR)/redirections_utils3.c \
+			$(SRC_DIR)/redirections.c \
+			$(SRC_DIR)/signals.c \
+			$(SRC_DIR)/status_exe.c \
+			$(SRC_DIR)/tilde.c \
+			$(SRC_DIR)/tokenization.c \
+			$(SRC_DIR)/tokens_symbols.c \
+			$(SRC_DIR)/tokens_utils.c \
+			$(SRC_DIR)/tokens_utils2.c \
+			$(SRC_DIR)/tokens_utils3.c \
+			$(SRC_DIR)/unset.c \
+			$(SRC_DIR)/utils.c \
+			$(SRC_DIR)/utils2.c \
+			$(SRC_DIR)/utils3.c \
 #HEADERS := $(shell find include -type f -name '*.h')
 #SOURCES = $(shell find $(SRC_DIR) -type f -name '*.c')
 
