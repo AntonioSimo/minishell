@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+         #
+#    By: asimone <asimone@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:29:32 by asimone           #+#    #+#              #
-#    Updated: 2023/12/12 13:34:11 by pskrucha         ###   ########.fr        #
+#    Updated: 2023/12/12 18:18:25 by asimone          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,12 +65,10 @@ SOURCES := 	$(SRC_DIR)/builtin.c \
 			$(SRC_DIR)/utils.c \
 			$(SRC_DIR)/utils2.c \
 			$(SRC_DIR)/utils3.c \
-#HEADERS := $(shell find include -type f -name '*.h')
-#SOURCES = $(shell find $(SRC_DIR) -type f -name '*.c')
 
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS := -Wall -Wextra -Werror
 LFLAGS := -lreadline -lhistory
 IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
  
