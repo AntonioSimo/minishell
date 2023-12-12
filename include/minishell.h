@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/12/12 12:47:10 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:35:20 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,8 +382,5 @@ int			if_here_dollar(char **str);
 char		**append_str(char **array, char *str);
 char		**make_2d_expanded(char *expanded, char	*str, int start, int end);
 char		**append_strings(char **line, char **extra_strings, int pos);
-
-char	*process_extra_line(int *fd);
-void	ctrl_c_heredoc(int sig);
 
 #endif

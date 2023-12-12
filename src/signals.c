@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 15:49:20 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/12 12:46:55 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:35:32 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,6 @@ void	manage_signals(int control)
 		signal(SIGINT, ctrl_c_child);
 		signal(SIGQUIT, SIG_DFL);
 	}
-	else if (control == 4)
-	{
-		signal(SIGINT, ctrl_c_heredoc);
-		signal(SIGQUIT, SIG_DFL);
-	}
 }
 
 void	ctrl_c_handler(int sig)
@@ -72,12 +67,3 @@ void	ctrl_c_handler(int sig)
 	}
 }
 
-void	ctrl_c_heredoc(int sig)
-{
-	if (sig == SIGINT)
-	{
-		g_signal = 1;
-		ft_putstr_fd("\n", STDIN_FILENO);
-		rl_replace_line("", 0);
-	}
-}
