@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 15:49:20 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/12 13:35:32 by pskrucha         ###   ########.fr       */
+/*   Updated: 2023/12/12 13:37:11 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,3 @@ void	ctrl_c_handler(int sig)
 		rl_redisplay();
 	}
 }
-
