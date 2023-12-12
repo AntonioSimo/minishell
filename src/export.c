@@ -6,23 +6,23 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 16:20:24 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/12 17:28:05 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 17:43:13 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	add_env_variable(t_envepval *lst, t_envepval *new)
+void	add_env_variable(t_env *env, t_envepval *new)
 {
 	t_envepval	*previous_variable;
 	t_envepval	*p;
 
-	previous_variable = lst;
-	if (previous_variable == NULL)
+	if (env->env == NULL)
 	{
-		previous_variable = new;
+		env->env = new;
 		return ;
 	}
+	previous_variable = env->env;
 	while (previous_variable && ft_strcmp(previous_variable->key, \
 	new->key) != 0)
 	{
@@ -30,7 +30,7 @@ void	add_env_variable(t_envepval *lst, t_envepval *new)
 	}
 	if (!previous_variable)
 	{
-		p = lstenv(lst);
+		p = lstenv(env->env);
 		p->next = new;
 		return ;
 	}
@@ -72,7 +72,7 @@ static void	check_export_variable(char **args, t_env *env)
 			if (!ft_strcmp(expander, ""))
 			{
 				empty_variable = create_env_emptynode(args[i]);
-				add_env_variable(env->env, empty_variable);
+				add_env_variable(env, empty_variable);
 			}
 			free(expander);
 		}
@@ -80,7 +80,7 @@ static void	check_export_variable(char **args, t_env *env)
 		{
 			new_variable = set_newvariable(args[i]);
 			if (new_variable != NULL)
-				add_env_variable((env->env), new_variable);
+				add_env_variable(env, new_variable);
 		}
 	}
 }

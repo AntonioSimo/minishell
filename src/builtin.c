@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:12:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/12 17:02:33 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 17:44:40 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	exe_builtin(t_command *cmd, t_env *env, int exit_status)
 	else if (ft_strcmp(cmd->command, "exit") == 0)
 		ft_exit(cmd->arguments, env);
 	else if (ft_strcmp(cmd->command, "export") == 0)
-		ft_export(&env, cmd->arguments);
+		ft_export(env, cmd->arguments);
 	else if (ft_strcmp(cmd->command, "env") == 0)
 		print_my_env(env);
 	else if (ft_strcmp(cmd->command, "unset") == 0)

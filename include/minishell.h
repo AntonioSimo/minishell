@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:31:52 by asimone           #+#    #+#             */
-/*   Updated: 2023/12/12 17:28:17 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 17:47:19 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,7 @@ int			ft_isvariable(char *args);
 
 //export
 t_envepval	*set_newvariable(char *args);
-void		add_env_variable(t_envepval *lst, t_envepval *new);
+void		add_env_variable(t_env *env, t_envepval *new);
 void		ft_export(t_env *env, char **args);
 
 //heredoc
