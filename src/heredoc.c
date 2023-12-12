@@ -6,7 +6,7 @@
 /*   By: asimone <asimone@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:22:07 by pskrucha          #+#    #+#             */
-/*   Updated: 2023/12/05 18:00:38 by asimone          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:31:27 by asimone          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	child_process_here_doc(t_redir_lst *redir, int *pipe_fd, t_env *env)
 }
 
 static int	handle_parent_heredoc(t_redir_lst *redir, int child_pid, \
-			int *pipe_fd)
+			int *pipe_fd, t_env *env)
 {
 	int	status;
 
@@ -93,7 +93,12 @@ static int	handle_parent_heredoc(t_redir_lst *redir, int child_pid, \
 	waitpid(child_pid, &status, 0);
 	manage_signals(3);
 	if (WIFSIGNALED(status))
+	{
+		ft_putstr_fd("\n", STDIN_FILENO);
+		rl_replace_line("", 0);
+		env->exit_status = 130;
 		return (1);
+	}
 	return (0);
 }
 
@@ -116,7 +121,9 @@ int	heredoc(t_redir_lst *redir, t_env *env)
 	}
 	else if (child_pid > 0)
 	{
-		if (handle_parent_heredoc(redir, child_pid, pipe_fd) == 0)
+		if (handle_parent_heredoc(redir, child_pid, pipe_fd, env) == 1)
+			return (1);
+		else
 			return (0);
 	}
 	else
